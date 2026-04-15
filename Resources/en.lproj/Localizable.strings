@@ -1,2 +1,47 @@
-/* Placeholder */
+/* Common */
 "common.ok" = "OK";
+"common.cancel" = "Cancel";
+"common.delete" = "Delete";
+"common.share" = "Share";
+"common.save" = "Save";
+
+/* Tabs */
+"tab.camera" = "Camera";
+"tab.gallery" = "Gallery";
+"tab.settings" = "Settings";
+
+/* Camera */
+"camera.record.start" = "Start Recording";
+"camera.record.stop" = "Stop Recording";
+"camera.preRecord.indicator" = "Pre-recording %d s";
+"camera.permission.denied.title" = "Camera Access Required";
+"camera.permission.denied.message" = "Provika needs camera access to record evidence videos. Please enable it in Settings.";
+"camera.zoom.label" = "%.1fx";
+
+/* Gallery */
+"gallery.title" = "Recordings";
+"gallery.empty.title" = "No recordings yet";
+"gallery.empty.message" = "Recorded videos will appear here, organized by date.";
+"gallery.detail.hash" = "Integrity Hash (SHA-256)";
+"gallery.detail.signature.valid" = "Signature Verified ✓";
+"gallery.detail.signature.invalid" = "Signature Invalid ✗";
+"gallery.detail.markReported" = "Mark as Reported";
+"gallery.detail.delete.confirm" = "Delete this recording? This cannot be undone.";
+
+/* Settings */
+"settings.title" = "Settings";
+"settings.section.recording" = "Recording";
+"settings.quality" = "Video Quality";
+"settings.codec" = "Codec";
+"settings.preRecord" = "Pre-recording Buffer";
+"settings.section.storage" = "Storage";
+"settings.autoDelete" = "Auto-delete";
+"settings.section.overlay" = "Overlay";
+"settings.overlay.timestamp" = "Show Timestamp";
+"settings.overlay.location" = "Show GPS";
+"settings.overlay.device" = "Show Device Info";
+"settings.section.security" = "Security";
+"settings.publicKey.show" = "View Public Key";
+"settings.signingKey.regenerate" = "Regenerate Signing Key";
+"settings.section.about" = "About";
+"settings.version" = "Version";

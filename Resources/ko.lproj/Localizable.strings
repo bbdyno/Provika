@@ -1,2 +1,47 @@
-/* Placeholder */
+/* 공통 */
 "common.ok" = "확인";
+"common.cancel" = "취소";
+"common.delete" = "삭제";
+"common.share" = "공유";
+"common.save" = "저장";
+
+/* 탭 */
+"tab.camera" = "카메라";
+"tab.gallery" = "갤러리";
+"tab.settings" = "설정";
+
+/* 카메라 */
+"camera.record.start" = "녹화 시작";
+"camera.record.stop" = "녹화 종료";
+"camera.preRecord.indicator" = "선녹화 %d초";
+"camera.permission.denied.title" = "카메라 권한 필요";
+"camera.permission.denied.message" = "Provika는 증거 영상 녹화를 위해 카메라 접근이 필요합니다. 설정에서 허용해주세요.";
+"camera.zoom.label" = "%.1f배";
+
+/* 갤러리 */
+"gallery.title" = "녹화 영상";
+"gallery.empty.title" = "녹화된 영상이 없습니다";
+"gallery.empty.message" = "녹화한 영상이 날짜별로 정리되어 표시됩니다.";
+"gallery.detail.hash" = "무결성 해시 (SHA-256)";
+"gallery.detail.signature.valid" = "서명 검증됨 ✓";
+"gallery.detail.signature.invalid" = "서명 무효 ✗";
+"gallery.detail.markReported" = "신고 완료로 표시";
+"gallery.detail.delete.confirm" = "이 영상을 삭제하시겠습니까? 되돌릴 수 없습니다.";
+
+/* 설정 */
+"settings.title" = "설정";
+"settings.section.recording" = "녹화";
+"settings.quality" = "영상 품질";
+"settings.codec" = "코덱";
+"settings.preRecord" = "선녹화 버퍼";
+"settings.section.storage" = "저장소";
+"settings.autoDelete" = "자동 삭제";
+"settings.section.overlay" = "오버레이";
+"settings.overlay.timestamp" = "시간 표시";
+"settings.overlay.location" = "GPS 표시";
+"settings.overlay.device" = "기기 정보 표시";
+"settings.section.security" = "보안";
+"settings.publicKey.show" = "공개키 보기";
+"settings.signingKey.regenerate" = "서명 키 재생성";
+"settings.section.about" = "정보";
+"settings.version" = "버전";

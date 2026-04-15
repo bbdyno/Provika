@@ -4,14 +4,7 @@ import SwiftUI
 struct ProvikaApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
-    }
-}
-
-struct ContentView: View {
-    var body: some View {
-        Text("Provika")
-            .font(.largeTitle)
     }
 }
