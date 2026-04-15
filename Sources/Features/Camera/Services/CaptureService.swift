@@ -1,18 +1,36 @@
 import AVFoundation
+import CoreLocation
+import UIKit
 import os
 
 @Observable
-final class CaptureService {
+final class CaptureService: NSObject {
 
     let session = AVCaptureSession()
     var isSessionRunning = false
+    var isRecording = false
     var currentZoomFactor: CGFloat = 1.0
     var minZoomFactor: CGFloat = 1.0
     var maxZoomFactor: CGFloat = 5.0
+    var recordingStartTime: Date?
+    var elapsedTime: TimeInterval = 0
+
+    var onRecordingFinished: ((URL, URL) -> Void)?
 
     private var videoDeviceInput: AVCaptureDeviceInput?
+    private var videoDataOutput: AVCaptureVideoDataOutput?
+    private var audioDataOutput: AVCaptureAudioDataOutput?
+
     private let sessionQueue = DispatchQueue(label: "com.bbdyno.app.provika.capture")
+    private let writerQueue = DispatchQueue(label: "com.bbdyno.app.provika.writer")
     private let logger = Logger(subsystem: "com.bbdyno.app.provika", category: "Capture")
+
+    private let videoWriter = VideoWriter()
+    private let overlayRenderer = OverlayRenderer()
+
+    var currentLocation: CLLocation?
+    private var locationTrack: [RecordingMetadata.LocationPoint] = []
+    private var recordingTimer: Timer?
 
     func configureSession() {
         sessionQueue.async { [weak self] in
@@ -39,6 +57,60 @@ final class CaptureService {
                 self.isSessionRunning = self.session.isRunning
             }
             logger.info("캡처 세션 중지")
+        }
+    }
+
+    func startRecording() {
+        guard !isRecording else { return }
+
+        let now = Date()
+        let videoURL = FileStorage.generateFileURL(for: now, extension: "mov")
+
+        do {
+            try videoWriter.startWriting(
+                to: videoURL,
+                width: 1920,
+                height: 1080,
+                codec: .hevc
+            )
+            isRecording = true
+            recordingStartTime = now
+            elapsedTime = 0
+            locationTrack = []
+
+            DispatchQueue.main.async { [weak self] in
+                self?.startTimer()
+            }
+
+            logger.info("녹화 시작: \(videoURL.lastPathComponent)")
+        } catch {
+            logger.error("녹화 시작 실패: \(error.localizedDescription)")
+        }
+    }
+
+    func stopRecording() {
+        guard isRecording else { return }
+        isRecording = false
+
+        DispatchQueue.main.async { [weak self] in
+            self?.stopTimer()
+        }
+
+        Task { [weak self] in
+            guard let self else { return }
+            guard let videoURL = await videoWriter.finishWriting() else {
+                logger.error("비디오 파일 저장 실패")
+                return
+            }
+
+            let sidecarURL = videoURL.deletingPathExtension().appendingPathExtension("json")
+            saveSidecarJSON(videoURL: videoURL, sidecarURL: sidecarURL)
+
+            await MainActor.run {
+                self.recordingStartTime = nil
+                self.elapsedTime = 0
+                self.onRecordingFinished?(videoURL, sidecarURL)
+            }
         }
     }
 
@@ -134,6 +206,28 @@ final class CaptureService {
             }
         }
 
+        // 비디오 데이터 출력
+        let vOutput = AVCaptureVideoDataOutput()
+        vOutput.setSampleBufferDelegate(self, queue: writerQueue)
+        vOutput.videoSettings = [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
+        ]
+        vOutput.alwaysDiscardsLateVideoFrames = true
+
+        if session.canAddOutput(vOutput) {
+            session.addOutput(vOutput)
+            videoDataOutput = vOutput
+        }
+
+        // 오디오 데이터 출력
+        let aOutput = AVCaptureAudioDataOutput()
+        aOutput.setSampleBufferDelegate(self, queue: writerQueue)
+
+        if session.canAddOutput(aOutput) {
+            session.addOutput(aOutput)
+            audioDataOutput = aOutput
+        }
+
         // 줌 범위 설정
         DispatchQueue.main.async { [weak self] in
             guard let self, let device = videoDeviceInput?.device else { return }
@@ -141,8 +235,8 @@ final class CaptureService {
             self.maxZoomFactor = min(device.maxAvailableVideoZoomFactor, 10.0)
         }
 
-        // 안정화 설정
-        if let connection = session.connections.first(where: { $0.output is AVCaptureVideoDataOutput || $0.inputPorts.contains(where: { $0.mediaType == .video }) }) {
+        // 안정화
+        if let connection = vOutput.connection(with: .video) {
             if connection.isVideoStabilizationSupported {
                 connection.preferredVideoStabilizationMode = .cinematic
             }
@@ -180,6 +274,104 @@ final class CaptureService {
             device.unlockForConfiguration()
         } catch {
             logger.warning("포커스/노출 리셋 실패: \(error.localizedDescription)")
+        }
+    }
+
+    private func startTimer() {
+        recordingTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self, let start = recordingStartTime else { return }
+            self.elapsedTime = Date().timeIntervalSince(start)
+        }
+    }
+
+    private func stopTimer() {
+        recordingTimer?.invalidate()
+        recordingTimer = nil
+    }
+
+    private func deviceInfo() -> OverlayRenderer.DeviceInfo {
+        let model = UIDevice.current.name
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        return OverlayRenderer.DeviceInfo(model: model, appVersion: appVersion)
+    }
+
+    private func saveSidecarJSON(videoURL: URL, sidecarURL: URL) {
+        let model = UIDevice.current.name
+        let systemVersion = UIDevice.current.systemVersion
+        let vendorId = UIDevice.current.identifierForVendor?.uuidString
+
+        let device = RecordingMetadata.DeviceInfo(
+            model: model,
+            systemVersion: "iOS \(systemVersion)",
+            identifierForVendor: vendorId
+        )
+
+        let startDate = recordingStartTime ?? Date()
+        let id = videoURL.deletingPathExtension().lastPathComponent
+
+        var metadata = RecordingMetadata.create(
+            id: id,
+            device: device,
+            resolution: "1920x1080",
+            frameRate: 30,
+            codec: "hevc",
+            startedAt: startDate
+        )
+        metadata.locationTrack = locationTrack
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+
+        do {
+            let data = try encoder.encode(metadata)
+            try data.write(to: sidecarURL)
+            logger.info("사이드카 JSON 저장: \(sidecarURL.lastPathComponent)")
+        } catch {
+            logger.error("사이드카 JSON 저장 실패: \(error.localizedDescription)")
+        }
+    }
+}
+
+// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate & AVCaptureAudioDataOutputSampleBufferDelegate
+
+extension CaptureService: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+
+    func captureOutput(
+        _ output: AVCaptureOutput,
+        didOutput sampleBuffer: CMSampleBuffer,
+        from connection: AVCaptureConnection
+    ) {
+        guard isRecording else { return }
+
+        if output is AVCaptureVideoDataOutput {
+            guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+
+            // 위치 트랙 업데이트 (1Hz)
+            if let loc = currentLocation {
+                let isoFormatter = ISO8601DateFormatter()
+                isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+                let point = RecordingMetadata.LocationPoint(
+                    ts: isoFormatter.string(from: Date()),
+                    lat: loc.coordinate.latitude,
+                    lng: loc.coordinate.longitude,
+                    speed: max(0, loc.speed * 3.6),
+                    heading: max(0, loc.course)
+                )
+                locationTrack.append(point)
+            }
+
+            // 오버레이 렌더링
+            guard let renderedBuffer = overlayRenderer.render(
+                pixelBuffer: pixelBuffer,
+                location: currentLocation,
+                deviceInfo: deviceInfo()
+            ) else { return }
+
+            let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+            videoWriter.appendVideoBuffer(renderedBuffer, at: presentationTime)
+        } else if output is AVCaptureAudioDataOutput {
+            videoWriter.appendAudioBuffer(sampleBuffer)
         }
     }
 }

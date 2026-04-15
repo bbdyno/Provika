@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CameraView: View {
+    @Environment(AppEnvironment.self) private var appEnvironment
     @State private var viewModel = CameraViewModel()
     @State private var pinchStartZoom: CGFloat = 1.0
 
@@ -15,6 +16,7 @@ struct CameraView: View {
             }
         }
         .onAppear {
+            viewModel.setLocationManager(appEnvironment.locationManager)
             viewModel.onAppear()
         }
         .onDisappear {
@@ -47,12 +49,83 @@ struct CameraView: View {
                 pinchStartZoom = viewModel.captureService.currentZoomFactor
             }
 
-            CameraControlsView(
-                isFlashOn: viewModel.isFlashOn,
-                zoomFactor: viewModel.captureService.currentZoomFactor,
-                onFlashToggle: { viewModel.toggleFlash() },
-                onGalleryTap: { }
-            )
+            // 녹화 중 빨간 테두리
+            if viewModel.isRecording {
+                RoundedRectangle(cornerRadius: 0)
+                    .stroke(.red, lineWidth: 4)
+                    .ignoresSafeArea()
+            }
+
+            VStack {
+                // 상단: 녹화 인디케이터
+                HStack {
+                    if viewModel.isRecording {
+                        RecordingIndicatorView(elapsedTime: viewModel.elapsedTime)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+
+                Spacer()
+
+                // 줌 레벨
+                Text(String(format: "%.1fx", viewModel.captureService.currentZoomFactor))
+                    .font(.system(.caption, design: .monospaced))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 4)
+                    .background(.black.opacity(0.5))
+                    .clipShape(Capsule())
+
+                // 녹화 버튼
+                recordButton
+                    .padding(.vertical, 20)
+
+                // 하단 컨트롤
+                HStack {
+                    Button(action: { }) {
+                        Image(systemName: "photo.on.rectangle")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                            .frame(width: 50, height: 50)
+                    }
+
+                    Spacer()
+
+                    Button(action: { viewModel.toggleFlash() }) {
+                        Image(systemName: viewModel.isFlashOn ? "bolt.fill" : "bolt.slash")
+                            .font(.title2)
+                            .foregroundStyle(viewModel.isFlashOn ? .yellow : .white)
+                            .frame(width: 50, height: 50)
+                    }
+                }
+                .padding(.horizontal, 40)
+                .padding(.bottom, 8)
+            }
+        }
+        .onReceive(Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()) { _ in
+            viewModel.updateState()
+        }
+    }
+
+    private var recordButton: some View {
+        Button(action: { viewModel.toggleRecording() }) {
+            ZStack {
+                Circle()
+                    .stroke(.white, lineWidth: 4)
+                    .frame(width: 72, height: 72)
+
+                if viewModel.isRecording {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(.red)
+                        .frame(width: 30, height: 30)
+                } else {
+                    Circle()
+                        .fill(.red)
+                        .frame(width: 60, height: 60)
+                }
+            }
         }
     }
 
