@@ -4,8 +4,6 @@ import UIKit
 
 final class OverlayRenderer {
     private let ciContext: CIContext
-    private var cachedTimestampImage: CIImage?
-    private var cachedTimestampSecond: Int = -1
 
     struct DeviceInfo {
         let model: String
@@ -25,46 +23,43 @@ final class OverlayRenderer {
         let baseImage = CIImage(cvPixelBuffer: pixelBuffer)
         let width = CVPixelBufferGetWidth(pixelBuffer)
         let height = CVPixelBufferGetHeight(pixelBuffer)
-        let fontSize = CGFloat(height) * 0.03
+        let fontSize = CGFloat(height) * 0.018
+        let margin: CGFloat = 16
+        let lineSpacing: CGFloat = fontSize * 1.4
 
-        // 타임스탬프 (좌상단)
+        // 좌상단 1행: 타임스탬프
         let timestampText = timestamp.overlayString
-        let topLeftImage = renderText(
+        let topLine1 = renderText(
             timestampText,
             fontSize: fontSize,
-            position: CGPoint(x: 20, y: CGFloat(height) - fontSize - 20),
-            maxWidth: CGFloat(width)
+            position: CGPoint(x: margin, y: CGFloat(height) - fontSize - margin)
         )
 
-        // GPS (우상단)
+        // 좌상단 2행: GPS
         let locationText = locationString(location)
-        let topRightImage = renderText(
+        let topLine2 = renderText(
             locationText,
-            fontSize: fontSize * 0.85,
-            position: CGPoint(
-                x: CGFloat(width) - measureTextWidth(locationText, fontSize: fontSize * 0.85) - 20,
-                y: CGFloat(height) - fontSize - 20
-            ),
-            maxWidth: CGFloat(width)
+            fontSize: fontSize * 0.9,
+            position: CGPoint(x: margin, y: CGFloat(height) - fontSize - margin - lineSpacing)
         )
 
-        // 기기 정보 (하단 중앙)
+        // 하단 중앙: 기기 정보
         let footerText = "Provika v\(deviceInfo.appVersion) · \(deviceInfo.model)"
-        let footerWidth = measureTextWidth(footerText, fontSize: fontSize * 0.75)
+        let footerFontSize = fontSize * 0.85
+        let footerWidth = measureTextWidth(footerText, fontSize: footerFontSize)
         let footerImage = renderText(
             footerText,
-            fontSize: fontSize * 0.75,
+            fontSize: footerFontSize,
             position: CGPoint(
                 x: (CGFloat(width) - footerWidth) / 2,
-                y: 20
-            ),
-            maxWidth: CGFloat(width)
+                y: margin
+            )
         )
 
         // 합성
         var composited = baseImage
-        composited = topLeftImage.composited(over: composited)
-        composited = topRightImage.composited(over: composited)
+        composited = topLine1.composited(over: composited)
+        composited = topLine2.composited(over: composited)
         composited = footerImage.composited(over: composited)
 
         // 새 CVPixelBuffer로 출력
@@ -95,8 +90,7 @@ final class OverlayRenderer {
     private func renderText(
         _ text: String,
         fontSize: CGFloat,
-        position: CGPoint,
-        maxWidth: CGFloat
+        position: CGPoint
     ) -> CIImage {
         let font = UIFont(name: "Menlo-Bold", size: fontSize) ?? UIFont.monospacedSystemFont(ofSize: fontSize, weight: .bold)
         let attributes: [NSAttributedString.Key: Any] = [
