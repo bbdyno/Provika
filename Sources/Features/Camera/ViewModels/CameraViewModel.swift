@@ -28,8 +28,8 @@ final class CameraViewModel {
         self.locationManager = locationManager
         self.modelContext = modelContext
 
-        captureService.onRecordingFinished = { [weak self] videoURL, sidecarURL in
-            self?.saveRecording(videoURL: videoURL, sidecarURL: sidecarURL)
+        captureService.onRecordingFinished = { [weak self] videoURL, sidecarURL, duration in
+            self?.saveRecording(videoURL: videoURL, sidecarURL: sidecarURL, duration: duration)
         }
     }
 
@@ -111,7 +111,7 @@ final class CameraViewModel {
         captureService.startSession()
     }
 
-    private func saveRecording(videoURL: URL, sidecarURL: URL) {
+    private func saveRecording(videoURL: URL, sidecarURL: URL, duration: TimeInterval) {
         guard let modelContext else { return }
 
         var hash = ""
@@ -121,7 +121,6 @@ final class CameraViewModel {
 
         let loc = locationManager?.currentLocation
         let startDate = captureService.recordingStartTime ?? Date()
-        let duration = captureService.elapsedTime
 
         let recording = Recording(
             id: videoURL.deletingPathExtension().lastPathComponent,

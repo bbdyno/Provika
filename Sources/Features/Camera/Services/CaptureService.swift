@@ -22,7 +22,7 @@ final class CaptureService: NSObject {
     var recordingStartTime: Date?
     var elapsedTime: TimeInterval = 0
 
-    var onRecordingFinished: ((URL, URL) -> Void)?
+    var onRecordingFinished: ((URL, URL, TimeInterval) -> Void)?
 
     private var videoDeviceInput: AVCaptureDeviceInput?
     private var videoDataOutput: AVCaptureVideoDataOutput?
@@ -114,6 +114,7 @@ final class CaptureService: NSObject {
     func stopRecording() {
         guard isRecording else { return }
         isRecording = false
+        let finalDuration = elapsedTime
 
         DispatchQueue.main.async { [weak self] in
             self?.stopTimer()
@@ -130,9 +131,9 @@ final class CaptureService: NSObject {
             await saveSidecarJSON(videoURL: videoURL, sidecarURL: sidecarURL)
 
             await MainActor.run {
+                self.onRecordingFinished?(videoURL, sidecarURL, finalDuration)
                 self.recordingStartTime = nil
                 self.elapsedTime = 0
-                self.onRecordingFinished?(videoURL, sidecarURL)
             }
         }
     }

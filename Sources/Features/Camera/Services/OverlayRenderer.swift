@@ -32,7 +32,7 @@ final class OverlayRenderer {
         let height = CVPixelBufferGetHeight(pixelBuffer)
         let fontSize = CGFloat(height) * 0.016
         let margin: CGFloat = 12
-        let lineHeight: CGFloat = fontSize * 1.5
+        let lineHeight: CGFloat = fontSize * 2.0
         let h = CGFloat(height)
         let w = CGFloat(width)
 
