@@ -17,14 +17,15 @@ struct ZoomRecordButton: View {
 
     @State private var isDragging = false
     @State private var dragStartZoom: CGFloat = 1.0
+    @State private var dragStartTime: Date?
     @State private var buttonScale: CGFloat = 1.0
 
     private let buttonSize: CGFloat = 72
     private let innerSize: CGFloat = 60
+    private let dragThreshold: CGFloat = 8
 
     var body: some View {
         ZStack {
-            // 드래그 중 반원 줌 게이지
             if isDragging {
                 ZoomGaugeView(
                     zoomFactor: zoomFactor,
@@ -34,7 +35,6 @@ struct ZoomRecordButton: View {
                 .transition(.opacity)
             }
 
-            // 녹화 버튼
             ZStack {
                 Circle()
                     .stroke(.white, lineWidth: 4)
@@ -51,50 +51,47 @@ struct ZoomRecordButton: View {
                 }
             }
             .scaleEffect(buttonScale)
+            .contentShape(Circle().scale(1.5))
             .gesture(
-                LongPressGesture(minimumDuration: 0.2)
-                    .onEnded { _ in
-                        isDragging = true
-                        dragStartZoom = zoomFactor
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            buttonScale = 1.15
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        if dragStartTime == nil {
+                            dragStartTime = Date()
+                            dragStartZoom = zoomFactor
+                        }
+
+                        let distance = abs(value.translation.width) + abs(value.translation.height)
+                        if distance > dragThreshold && !isDragging {
+                            isDragging = true
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                buttonScale = 1.15
+                            }
+                        }
+
+                        if isDragging {
+                            // 위로 드래그하면 줌인, 아래로 줌아웃 (좌우도 지원)
+                            let dragAmount = -value.translation.height + value.translation.width
+                            let sensitivity: CGFloat = 250
+                            let normalizedDrag = dragAmount / sensitivity
+                            let zoomRange = maxZoom - minZoom
+                            let newZoom = dragStartZoom + normalizedDrag * zoomRange
+                            let clamped = min(max(newZoom, minZoom), maxZoom)
+                            onZoomChange(clamped)
                         }
                     }
-                    .sequenced(before:
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                guard isDragging else { return }
-                                // 좌우 드래그로 줌 제어
-                                let dragX = value.translation.width
-                                let sensitivity: CGFloat = 200
-                                let normalizedDrag = dragX / sensitivity
-                                let zoomRange = maxZoom - minZoom
-                                let newZoom = dragStartZoom + normalizedDrag * zoomRange
-                                let clamped = min(max(newZoom, minZoom), maxZoom)
-                                onZoomChange(clamped)
-                            }
-                            .onEnded { _ in
-                                endDrag()
-                            }
-                    )
-            )
-            .simultaneousGesture(
-                TapGesture()
-                    .onEnded {
+                    .onEnded { _ in
                         if !isDragging {
                             onTap()
+                        }
+                        isDragging = false
+                        dragStartTime = nil
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            buttonScale = 1.0
                         }
                     }
             )
         }
         .frame(height: 140)
-    }
-
-    private func endDrag() {
-        isDragging = false
-        withAnimation(.easeInOut(duration: 0.15)) {
-            buttonScale = 1.0
-        }
     }
 }
 
@@ -111,12 +108,10 @@ struct ZoomGaugeView: View {
 
     var body: some View {
         ZStack {
-            // 배경 호
             Arc(startAngle: .degrees(startAngle), endAngle: .degrees(endAngle))
                 .stroke(.white.opacity(0.3), lineWidth: 4)
                 .frame(width: gaugeRadius * 2, height: gaugeRadius * 2)
 
-            // 채워진 호
             let progress = (zoomFactor - minZoom) / max(maxZoom - minZoom, 0.01)
             let fillEnd = startAngle + (endAngle - startAngle) * Double(progress)
 
@@ -124,7 +119,6 @@ struct ZoomGaugeView: View {
                 .stroke(.yellow, lineWidth: 4)
                 .frame(width: gaugeRadius * 2, height: gaugeRadius * 2)
 
-            // 줌 수치
             Text(String(format: "%.1fx", zoomFactor))
                 .font(.system(.caption2, design: .monospaced))
                 .fontWeight(.bold)
