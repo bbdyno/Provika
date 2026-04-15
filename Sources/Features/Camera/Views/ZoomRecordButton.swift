@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// MARK: - 줌 다이얼 컨트롤 (아이폰 카메라 스타일)
-
 struct ZoomDialControl: View {
     let zoomFactor: CGFloat
     let minZoom: CGFloat
@@ -17,6 +15,7 @@ struct ZoomDialControl: View {
 
     @State private var isExpanded = false
     @State private var dragStartZoom: CGFloat = 1.0
+    @State private var collapseTask: DispatchWorkItem?
 
     private let dialWidth: CGFloat = 280
     private let dialHeight: CGFloat = 44
@@ -24,78 +23,83 @@ struct ZoomDialControl: View {
     var body: some View {
         ZStack {
             if isExpanded {
-                // 확장된 줌 다이얼
                 expandedDial
                     .transition(.scale.combined(with: .opacity))
-            } else {
-                // 줌 레벨 버튼
-                zoomButton
             }
-        }
-        .animation(.easeInOut(duration: 0.2), value: isExpanded)
-    }
 
-    private var zoomButton: some View {
-        Text(String(format: "%.1fx", zoomFactor))
-            .font(.system(.subheadline, design: .monospaced))
-            .fontWeight(.semibold)
-            .foregroundStyle(.yellow)
-            .frame(width: 52, height: 36)
-            .background(.black.opacity(0.5))
-            .clipShape(Capsule())
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { value in
-                        if !isExpanded {
+            // 줌 버튼 (항상 존재, 확장 시 투명)
+            Text(String(format: "%.1fx", zoomFactor))
+                .font(.system(.subheadline, design: .monospaced))
+                .fontWeight(.semibold)
+                .foregroundStyle(.yellow)
+                .frame(width: 52, height: 36)
+                .background(.black.opacity(isExpanded ? 0 : 0.5))
+                .clipShape(Capsule())
+                .opacity(isExpanded ? 0 : 1)
+        }
+        // 제스처 영역: 화면 너비 × 세로 200pt — 손가락이 위아래로 벗어나도 추적
+        .frame(width: UIScreen.main.bounds.width, height: 200)
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { value in
+                    cancelCollapse()
+
+                    if !isExpanded {
+                        withAnimation(.easeInOut(duration: 0.2)) {
                             isExpanded = true
-                            dragStartZoom = zoomFactor
                         }
-                        applyDrag(value.translation.width)
+                        dragStartZoom = zoomFactor
                     }
-                    .onEnded { _ in
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            isExpanded = false
-                        }
-                    }
-            )
+
+                    // translation 기반 — 손가락이 어디에 있든 좌우 이동량만 추적
+                    let translationX = value.translation.width
+                    let sensitivity: CGFloat = 250
+                    let normalizedDrag = translationX / sensitivity
+                    let zoomRange = maxZoom - minZoom
+                    let newZoom = dragStartZoom + normalizedDrag * zoomRange
+                    let clamped = min(max(newZoom, minZoom), maxZoom)
+                    onZoomChange(clamped)
+                }
+                .onEnded { _ in
+                    scheduleCollapse()
+                }
+        )
+        .animation(.easeInOut(duration: 0.2), value: isExpanded)
     }
 
     private var expandedDial: some View {
         ZStack {
-            // 배경 캡슐
             Capsule()
                 .fill(.black.opacity(0.7))
                 .frame(width: dialWidth, height: dialHeight)
 
-            // 눈금 마크
+            // 눈금
             HStack(spacing: 0) {
-                ForEach(tickMarks, id: \.self) { value in
-                    VStack(spacing: 2) {
-                        if isMainTick(value) {
-                            Text(String(format: "%.0f", value))
-                                .font(.system(.caption2, design: .monospaced))
-                                .fontWeight(.bold)
-                                .foregroundStyle(
-                                    isCurrentRange(value) ? .yellow : .white.opacity(0.6)
-                                )
-                        } else {
-                            Rectangle()
-                                .fill(isCurrentRange(value) ? .yellow : .white.opacity(0.3))
-                                .frame(width: 1, height: 8)
-                        }
+                ForEach(tickValues, id: \.self) { value in
+                    if value.truncatingRemainder(dividingBy: 1.0) == 0 {
+                        Text(String(format: "%.0f", value))
+                            .font(.system(.caption2, design: .monospaced))
+                            .fontWeight(.bold)
+                            .foregroundStyle(value <= zoomFactor ? .yellow : .white.opacity(0.5))
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Rectangle()
+                            .fill(value <= zoomFactor ? .yellow : .white.opacity(0.25))
+                            .frame(width: 1, height: 8)
+                            .frame(maxWidth: .infinity)
                     }
-                    .frame(maxWidth: .infinity)
                 }
             }
-            .frame(width: dialWidth - 32)
+            .frame(width: dialWidth - 40)
 
-            // 현재 위치 인디케이터
+            // 인디케이터
             let progress = (zoomFactor - minZoom) / max(maxZoom - minZoom, 0.01)
-            let xOffset = (progress - 0.5) * (dialWidth - 48)
+            let xOffset = (progress - 0.5) * (dialWidth - 52)
 
             Circle()
                 .fill(.yellow)
-                .frame(width: 28, height: 28)
+                .frame(width: 30, height: 30)
                 .overlay {
                     Text(String(format: "%.1f", zoomFactor))
                         .font(.system(size: 10, weight: .bold, design: .monospaced))
@@ -103,48 +107,31 @@ struct ZoomDialControl: View {
                 }
                 .offset(x: xOffset)
         }
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { value in
-                    // 다이얼 위에서 직접 드래그
-                    let normalizedX = (value.location.x / dialWidth)
-                    let newZoom = minZoom + normalizedX * (maxZoom - minZoom)
-                    let clamped = min(max(newZoom, minZoom), maxZoom)
-                    onZoomChange(clamped)
-                }
-                .onEnded { _ in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        isExpanded = false
-                    }
-                }
-        )
+        .allowsHitTesting(false) // 제스처는 부모에서 처리
     }
 
-    private var tickMarks: [CGFloat] {
-        let step: CGFloat = 0.5
+    private var tickValues: [CGFloat] {
         var marks: [CGFloat] = []
         var v = minZoom
         while v <= maxZoom {
             marks.append(v)
-            v += step
+            v += 0.5
         }
         return marks
     }
 
-    private func isMainTick(_ value: CGFloat) -> Bool {
-        value.truncatingRemainder(dividingBy: 1.0) == 0
+    private func scheduleCollapse() {
+        let item = DispatchWorkItem {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isExpanded = false
+            }
+        }
+        collapseTask = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: item)
     }
 
-    private func isCurrentRange(_ value: CGFloat) -> Bool {
-        value <= zoomFactor
-    }
-
-    private func applyDrag(_ translationX: CGFloat) {
-        let sensitivity: CGFloat = 300
-        let normalizedDrag = translationX / sensitivity
-        let zoomRange = maxZoom - minZoom
-        let newZoom = dragStartZoom + normalizedDrag * zoomRange
-        let clamped = min(max(newZoom, minZoom), maxZoom)
-        onZoomChange(clamped)
+    private func cancelCollapse() {
+        collapseTask?.cancel()
+        collapseTask = nil
     }
 }
