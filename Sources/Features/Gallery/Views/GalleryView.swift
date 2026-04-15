@@ -52,19 +52,22 @@ struct GalleryView: View {
                         }
                     }
                 }
-
+            }
+            .safeAreaInset(edge: .bottom) {
                 if isSelectionMode && !selectedIDs.isEmpty {
-                    ToolbarItem(placement: .bottomBar) {
-                        Button(role: .destructive) {
-                            showDeleteConfirm = true
-                        } label: {
-                            Label(
-                                "\(ProvikaStrings.Localizable.Common.delete) (\(selectedIDs.count))",
-                                systemImage: "trash"
-                            )
-                        }
-                        .tint(.red)
+                    Button(role: .destructive) {
+                        showDeleteConfirm = true
+                    } label: {
+                        Label(
+                            "\(ProvikaStrings.Localizable.Common.delete) (\(selectedIDs.count))",
+                            systemImage: "trash"
+                        )
+                        .frame(maxWidth: .infinity)
                     }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+                    .padding()
+                    .background(.bar)
                 }
             }
             .alert(
