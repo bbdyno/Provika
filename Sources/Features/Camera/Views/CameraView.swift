@@ -127,23 +127,16 @@ struct CameraView: View {
     }
 
     private var recordButton: some View {
-        Button(action: { viewModel.toggleRecording() }) {
-            ZStack {
-                Circle()
-                    .stroke(.white, lineWidth: 4)
-                    .frame(width: 72, height: 72)
-
-                if viewModel.isRecording {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(.red)
-                        .frame(width: 30, height: 30)
-                } else {
-                    Circle()
-                        .fill(.red)
-                        .frame(width: 60, height: 60)
-                }
+        ZoomRecordButton(
+            isRecording: viewModel.isRecording,
+            zoomFactor: viewModel.captureService.currentZoomFactor,
+            minZoom: viewModel.captureService.minZoomFactor,
+            maxZoom: viewModel.captureService.maxZoomFactor,
+            onTap: { viewModel.toggleRecording() },
+            onZoomChange: { factor in
+                viewModel.captureService.setZoom(factor)
             }
-        }
+        )
     }
 
     private var permissionDeniedView: some View {
