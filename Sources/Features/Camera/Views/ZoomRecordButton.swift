@@ -27,7 +27,7 @@ struct ZoomDialControl: View {
                     .transition(.scale.combined(with: .opacity))
             }
 
-            // 줌 버튼 (항상 존재, 확장 시 투명)
+            // 줌 버튼
             Text(String(format: "%.1fx", zoomFactor))
                 .font(.system(.subheadline, design: .monospaced))
                 .fontWeight(.semibold)
@@ -37,7 +37,6 @@ struct ZoomDialControl: View {
                 .clipShape(Capsule())
                 .opacity(isExpanded ? 0 : 1)
         }
-        // 제스처 영역: 화면 너비 × 세로 200pt — 손가락이 위아래로 벗어나도 추적
         .frame(width: UIScreen.main.bounds.width, height: 200)
         .contentShape(Rectangle())
         .gesture(
@@ -52,7 +51,6 @@ struct ZoomDialControl: View {
                         dragStartZoom = zoomFactor
                     }
 
-                    // translation 기반 — 손가락이 어디에 있든 좌우 이동량만 추적
                     let translationX = value.translation.width
                     let sensitivity: CGFloat = 250
                     let normalizedDrag = translationX / sensitivity
@@ -74,7 +72,10 @@ struct ZoomDialControl: View {
                 .fill(.black.opacity(0.7))
                 .frame(width: dialWidth, height: dialHeight)
 
-            // 눈금
+            // 눈금 — 현재 줌 값이 중앙에 오도록 스크롤
+            let progress = (zoomFactor - minZoom) / max(maxZoom - minZoom, 0.01)
+            let scaleOffset = (0.5 - progress) * (dialWidth - 40)
+
             HStack(spacing: 0) {
                 ForEach(tickValues, id: \.self) { value in
                     if value.truncatingRemainder(dividingBy: 1.0) == 0 {
@@ -91,12 +92,14 @@ struct ZoomDialControl: View {
                     }
                 }
             }
-            .frame(width: dialWidth - 40)
+            .frame(width: dialWidth * 1.5)
+            .offset(x: scaleOffset)
+            .mask {
+                Capsule()
+                    .frame(width: dialWidth - 8, height: dialHeight)
+            }
 
-            // 인디케이터
-            let progress = (zoomFactor - minZoom) / max(maxZoom - minZoom, 0.01)
-            let xOffset = (progress - 0.5) * (dialWidth - 52)
-
+            // 노브 — 항상 중앙 고정
             Circle()
                 .fill(.yellow)
                 .frame(width: 30, height: 30)
@@ -105,9 +108,8 @@ struct ZoomDialControl: View {
                         .font(.system(size: 10, weight: .bold, design: .monospaced))
                         .foregroundStyle(.black)
                 }
-                .offset(x: xOffset)
         }
-        .allowsHitTesting(false) // 제스처는 부모에서 처리
+        .allowsHitTesting(false)
     }
 
     private var tickValues: [CGFloat] {
