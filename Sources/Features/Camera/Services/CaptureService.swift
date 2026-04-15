@@ -28,6 +28,7 @@ final class CaptureService: NSObject {
     private let videoWriter = VideoWriter()
     private let overlayRenderer = OverlayRenderer()
     private let signatureService = SignatureService()
+    let preRecordBuffer = PreRecordBuffer()
 
     var currentLocation: CLLocation?
     private var locationTrack: [RecordingMetadata.LocationPoint] = []
@@ -79,11 +80,21 @@ final class CaptureService: NSObject {
             elapsedTime = 0
             locationTrack = []
 
+            // 선녹화 버퍼 플러시
+            let buffered = preRecordBuffer.flush()
+            for (sampleBuffer, renderedBuffer) in buffered.video {
+                let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                videoWriter.appendVideoBuffer(renderedBuffer, at: time)
+            }
+            for audioBuffer in buffered.audio {
+                videoWriter.appendAudioBuffer(audioBuffer)
+            }
+
             DispatchQueue.main.async { [weak self] in
                 self?.startTimer()
             }
 
-            logger.info("녹화 시작: \(videoURL.lastPathComponent)")
+            logger.info("녹화 시작: \(videoURL.lastPathComponent) (선녹화 \(buffered.video.count)프레임)")
         } catch {
             logger.error("녹화 시작 실패: \(error.localizedDescription)")
         }
@@ -363,37 +374,44 @@ extension CaptureService: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
-        guard isRecording else { return }
-
         if output is AVCaptureVideoDataOutput {
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
 
-            // 위치 트랙 업데이트 (1Hz)
-            if let loc = currentLocation {
-                let isoFormatter = ISO8601DateFormatter()
-                isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-                let point = RecordingMetadata.LocationPoint(
-                    ts: isoFormatter.string(from: Date()),
-                    lat: loc.coordinate.latitude,
-                    lng: loc.coordinate.longitude,
-                    speed: max(0, loc.speed * 3.6),
-                    heading: max(0, loc.course)
-                )
-                locationTrack.append(point)
-            }
-
-            // 오버레이 렌더링
+            // 오버레이 렌더링 (녹화/선녹화 공통)
             guard let renderedBuffer = overlayRenderer.render(
                 pixelBuffer: pixelBuffer,
                 location: currentLocation,
                 deviceInfo: deviceInfo()
             ) else { return }
 
-            let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-            videoWriter.appendVideoBuffer(renderedBuffer, at: presentationTime)
+            if isRecording {
+                // 위치 트랙 업데이트
+                if let loc = currentLocation {
+                    let isoFormatter = ISO8601DateFormatter()
+                    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+                    let point = RecordingMetadata.LocationPoint(
+                        ts: isoFormatter.string(from: Date()),
+                        lat: loc.coordinate.latitude,
+                        lng: loc.coordinate.longitude,
+                        speed: max(0, loc.speed * 3.6),
+                        heading: max(0, loc.course)
+                    )
+                    locationTrack.append(point)
+                }
+
+                let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                videoWriter.appendVideoBuffer(renderedBuffer, at: presentationTime)
+            } else {
+                // 선녹화 버퍼에 저장
+                preRecordBuffer.appendVideo(sampleBuffer: sampleBuffer, renderedBuffer: renderedBuffer)
+            }
         } else if output is AVCaptureAudioDataOutput {
-            videoWriter.appendAudioBuffer(sampleBuffer)
+            if isRecording {
+                videoWriter.appendAudioBuffer(sampleBuffer)
+            } else {
+                preRecordBuffer.appendAudio(sampleBuffer: sampleBuffer)
+            }
         }
     }
 }

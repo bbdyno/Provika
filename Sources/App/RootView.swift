@@ -19,7 +19,7 @@ struct RootView: View {
                     )
                 }
 
-            SettingsPlaceholderView()
+            SettingsView()
                 .tabItem {
                     Label(
                         ProvikaStrings.Localizable.Tab.settings,
