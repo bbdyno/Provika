@@ -119,13 +119,22 @@ final class CameraViewModel {
             hash = computed
         }
 
+        // 실제 영상 파일에서 duration 읽기
+        let asset = AVAsset(url: videoURL)
+        let actualDuration: TimeInterval
+        if let track = asset.tracks(withMediaType: .video).first {
+            actualDuration = CMTimeGetSeconds(track.timeRange.duration)
+        } else {
+            actualDuration = duration
+        }
+
         let loc = locationManager?.currentLocation
         let startDate = captureService.recordingStartTime ?? Date()
 
         let recording = Recording(
             id: videoURL.deletingPathExtension().lastPathComponent,
             createdAt: startDate,
-            duration: duration,
+            duration: actualDuration,
             fileURL: videoURL,
             sidecarURL: sidecarURL,
             fileHash: hash,
