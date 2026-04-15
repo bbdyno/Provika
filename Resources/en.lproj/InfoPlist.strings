@@ -1,0 +1,4 @@
+"NSCameraUsageDescription" = "Provika uses the camera to record traffic violation evidence videos.";
+"NSMicrophoneUsageDescription" = "Provika records audio for evidence integrity.";
+"NSLocationWhenInUseUsageDescription" = "Provika records GPS coordinates for evidence credibility.";
+"NSPhotoLibraryAddUsageDescription" = "Provika can save recorded videos to your photo library.";

@@ -1,0 +1,23 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserdata/
+*.xcworkspace
+*.xcodeproj
+
+# Tuist
+**/Derived/**
+.tuist-version
+.build/
+
+# macOS
+.DS_Store
+
+# Swift
+*.swp
+.swiftpm/
+
+# Secrets
+*.p12
+*.mobileprovision
+ExportOptions.plist

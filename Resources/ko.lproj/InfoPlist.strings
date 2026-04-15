@@ -1,0 +1,4 @@
+"NSCameraUsageDescription" = "Provika는 교통위반 증거 영상 녹화를 위해 카메라를 사용합니다.";
+"NSMicrophoneUsageDescription" = "Provika는 증거 무결성을 위해 음성을 함께 녹음합니다.";
+"NSLocationWhenInUseUsageDescription" = "Provika는 증거 신뢰성을 위해 GPS 좌표를 기록합니다.";
+"NSPhotoLibraryAddUsageDescription" = "Provika가 녹화한 영상을 사진 보관함에 저장할 수 있습니다.";
