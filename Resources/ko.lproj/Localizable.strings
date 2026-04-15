@@ -4,6 +4,7 @@
 "common.delete" = "삭제";
 "common.share" = "공유";
 "common.save" = "저장";
+"common.select" = "선택";
 
 /* 탭 */
 "tab.camera" = "카메라";

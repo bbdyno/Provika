@@ -4,6 +4,7 @@
 "common.delete" = "Delete";
 "common.share" = "Share";
 "common.save" = "Save";
+"common.select" = "Select";
 
 /* Tabs */
 "tab.camera" = "Camera";

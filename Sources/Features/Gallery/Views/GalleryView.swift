@@ -13,11 +13,13 @@ struct GalleryView: View {
     @Query(sort: \Recording.createdAt, order: .reverse) private var recordings: [Recording]
     @State private var viewModel = GalleryViewModel()
     @State private var selectedDate = Date()
+    @State private var isSelectionMode = false
+    @State private var selectedIDs: Set<String> = []
+    @State private var showDeleteConfirm = false
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // 캘린더
                 DatePicker(
                     "날짜 선택",
                     selection: $selectedDate,
@@ -29,7 +31,6 @@ struct GalleryView: View {
 
                 Divider()
 
-                // 녹화 목록
                 let filteredRecordings = viewModel.recordings(for: selectedDate, from: recordings)
 
                 if filteredRecordings.isEmpty {
@@ -39,6 +40,44 @@ struct GalleryView: View {
                 }
             }
             .navigationTitle(ProvikaStrings.Localizable.Gallery.title)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if isSelectionMode {
+                        Button(ProvikaStrings.Localizable.Common.cancel) {
+                            exitSelectionMode()
+                        }
+                    } else {
+                        Button(ProvikaStrings.Localizable.Common.select) {
+                            isSelectionMode = true
+                        }
+                    }
+                }
+
+                if isSelectionMode && !selectedIDs.isEmpty {
+                    ToolbarItem(placement: .bottomBar) {
+                        Button(role: .destructive) {
+                            showDeleteConfirm = true
+                        } label: {
+                            Label(
+                                "\(ProvikaStrings.Localizable.Common.delete) (\(selectedIDs.count))",
+                                systemImage: "trash"
+                            )
+                        }
+                        .tint(.red)
+                    }
+                }
+            }
+            .alert(
+                ProvikaStrings.Localizable.Common.delete,
+                isPresented: $showDeleteConfirm
+            ) {
+                Button(ProvikaStrings.Localizable.Common.cancel, role: .cancel) {}
+                Button(ProvikaStrings.Localizable.Common.delete, role: .destructive) {
+                    deleteSelected()
+                }
+            } message: {
+                Text(ProvikaStrings.Localizable.Gallery.Detail.Delete.confirm)
+            }
             .onAppear {
                 viewModel.loadRecordingDates(recordings: recordings)
             }
@@ -70,12 +109,79 @@ struct GalleryView: View {
                 GridItem(.flexible(), spacing: 8)
             ], spacing: 8) {
                 ForEach(items, id: \.id) { recording in
-                    NavigationLink(destination: VideoDetailView(recording: recording)) {
-                        VideoThumbnailView(recording: recording, viewModel: viewModel)
+                    if isSelectionMode {
+                        selectableThumbnail(recording)
+                    } else {
+                        NavigationLink(destination: VideoDetailView(recording: recording)) {
+                            VideoThumbnailView(recording: recording, viewModel: viewModel)
+                        }
                     }
                 }
             }
             .padding(8)
         }
+        .gesture(isSelectionMode ? dragSelectGesture(items) : nil)
+    }
+
+    private func selectableThumbnail(_ recording: Recording) -> some View {
+        let isSelected = selectedIDs.contains(recording.id)
+        return VideoThumbnailView(recording: recording, viewModel: viewModel)
+            .overlay(alignment: .topLeading) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? .blue : .white)
+                    .shadow(radius: 2)
+                    .padding(8)
+            }
+            .overlay {
+                if isSelected {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(.blue, lineWidth: 3)
+                }
+            }
+            .opacity(isSelected ? 0.8 : 1.0)
+            .onTapGesture {
+                toggleSelection(recording.id)
+            }
+    }
+
+    private func dragSelectGesture(_ items: [Recording]) -> some Gesture {
+        DragGesture(minimumDistance: 0)
+            .onChanged { value in
+                // 드래그 중 터치 위치의 아이템 선택
+                let itemWidth = (UIScreen.main.bounds.width - 24) / 2
+                let itemHeight = itemWidth * 9 / 16
+                let col = Int(value.location.x / (itemWidth + 8))
+                let row = Int(value.location.y / (itemHeight + 8))
+                let index = row * 2 + min(col, 1)
+
+                if index >= 0 && index < items.count {
+                    let id = items[index].id
+                    if !selectedIDs.contains(id) {
+                        selectedIDs.insert(id)
+                    }
+                }
+            }
+    }
+
+    private func toggleSelection(_ id: String) {
+        if selectedIDs.contains(id) {
+            selectedIDs.remove(id)
+        } else {
+            selectedIDs.insert(id)
+        }
+    }
+
+    private func deleteSelected() {
+        let toDelete = recordings.filter { selectedIDs.contains($0.id) }
+        for recording in toDelete {
+            viewModel.deleteRecording(recording, context: modelContext)
+        }
+        exitSelectionMode()
+    }
+
+    private func exitSelectionMode() {
+        isSelectionMode = false
+        selectedIDs.removeAll()
     }
 }
