@@ -42,6 +42,10 @@ final class CaptureService: NSObject {
     private var recordingTimer: Timer?
 
     func configureSession() {
+        // 설정에서 선녹화 버퍼 길이 반영
+        let preRecordSeconds = UserDefaults.standard.integer(forKey: "preRecordDuration")
+        preRecordBuffer.updateDuration(TimeInterval(preRecordSeconds))
+
         sessionQueue.async { [weak self] in
             self?.setupSession()
         }

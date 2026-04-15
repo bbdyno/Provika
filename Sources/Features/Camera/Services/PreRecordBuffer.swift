@@ -17,7 +17,7 @@ final class PreRecordBuffer {
     var isEnabled: Bool { bufferDuration > 0 }
     var currentBufferSeconds: Int { Int(bufferDuration) }
 
-    init(duration: TimeInterval = 15.0) {
+    init(duration: TimeInterval = 0) {
         self.bufferDuration = duration
     }
 
