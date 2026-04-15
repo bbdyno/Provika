@@ -69,7 +69,7 @@ struct ZoomDialControl: View {
     private var expandedDial: some View {
         let scaleWidth: CGFloat = 400
         let progress = (zoomFactor - minZoom) / max(maxZoom - minZoom, 0.01)
-        let scaleOffset = (progress - 0.5) * scaleWidth
+        let scaleOffset = (0.5 - progress) * scaleWidth
 
         return ZStack {
             Capsule()
