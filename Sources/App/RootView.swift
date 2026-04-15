@@ -10,6 +10,7 @@ struct RootView: View {
                         systemImage: "camera.fill"
                     )
                 }
+                .accessibilityLabel(ProvikaStrings.Localizable.Tab.camera)
 
             GalleryView()
                 .tabItem {
@@ -18,6 +19,7 @@ struct RootView: View {
                         systemImage: "photo.on.rectangle"
                     )
                 }
+                .accessibilityLabel(ProvikaStrings.Localizable.Tab.gallery)
 
             SettingsView()
                 .tabItem {
@@ -26,52 +28,8 @@ struct RootView: View {
                         systemImage: "gearshape.fill"
                     )
                 }
+                .accessibilityLabel(ProvikaStrings.Localizable.Tab.settings)
         }
         .tint(.red)
-    }
-}
-
-struct CameraPlaceholderView: View {
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Image(systemName: "camera.fill")
-                    .font(.system(size: 60))
-                    .foregroundStyle(.secondary)
-                Text(ProvikaStrings.Localizable.Tab.camera)
-                    .font(.title2)
-            }
-            .navigationTitle(ProvikaStrings.Localizable.Tab.camera)
-        }
-    }
-}
-
-struct GalleryPlaceholderView: View {
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Image(systemName: "photo.on.rectangle")
-                    .font(.system(size: 60))
-                    .foregroundStyle(.secondary)
-                Text(ProvikaStrings.Localizable.Gallery.title)
-                    .font(.title2)
-            }
-            .navigationTitle(ProvikaStrings.Localizable.Gallery.title)
-        }
-    }
-}
-
-struct SettingsPlaceholderView: View {
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Image(systemName: "gearshape.fill")
-                    .font(.system(size: 60))
-                    .foregroundStyle(.secondary)
-                Text(ProvikaStrings.Localizable.Settings.title)
-                    .font(.title2)
-            }
-            .navigationTitle(ProvikaStrings.Localizable.Settings.title)
-        }
     }
 }
