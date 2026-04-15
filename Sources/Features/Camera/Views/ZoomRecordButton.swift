@@ -15,6 +15,8 @@ struct ZoomDialControl: View {
 
     @State private var isExpanded = false
     @State private var dragStartZoom: CGFloat = 1.0
+    @State private var dragStartX: CGFloat = 0
+    @State private var zoomActive = false
     @State private var collapseTask: DispatchWorkItem?
 
     private let dialWidth: CGFloat = 280
@@ -49,17 +51,30 @@ struct ZoomDialControl: View {
                             isExpanded = true
                         }
                         dragStartZoom = zoomFactor
+                        dragStartX = value.location.x
+                        zoomActive = false
+                        return
                     }
 
-                    let translationX = value.translation.width
+                    // 최초 터치 위치 대비 이동량으로 계산
+                    let deltaX = value.location.x - dragStartX
+                    if !zoomActive {
+                        if abs(deltaX) > 5 {
+                            zoomActive = true
+                        } else {
+                            return
+                        }
+                    }
+
                     let sensitivity: CGFloat = 250
-                    let normalizedDrag = translationX / sensitivity
+                    let normalizedDrag = deltaX / sensitivity
                     let zoomRange = maxZoom - minZoom
                     let newZoom = dragStartZoom + normalizedDrag * zoomRange
                     let clamped = min(max(newZoom, minZoom), maxZoom)
                     onZoomChange(clamped)
                 }
                 .onEnded { _ in
+                    zoomActive = false
                     scheduleCollapse()
                 }
         )
