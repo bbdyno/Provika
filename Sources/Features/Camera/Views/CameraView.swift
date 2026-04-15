@@ -49,6 +49,9 @@ struct CameraView: View {
                 session: viewModel.captureService.session,
                 onTapLocation: { point in
                     viewModel.handleTapFocus(at: point)
+                },
+                onPreviewLayerReady: { previewLayer in
+                    viewModel.captureService.attachPreviewLayer(previewLayer)
                 }
             )
             .ignoresSafeArea()

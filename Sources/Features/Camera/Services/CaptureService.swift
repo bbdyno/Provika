@@ -40,11 +40,32 @@ final class CaptureService: NSObject {
     var currentLocation: CLLocation?
     private var locationTrack: [RecordingMetadata.LocationPoint] = []
     private var recordingTimer: Timer?
+    private weak var previewLayer: AVCaptureVideoPreviewLayer?
+    private var orientationObserver: NSObjectProtocol?
+    private var currentPreviewRotationAngle: CGFloat = 90
+    private var currentCaptureRotationAngle: CGFloat = 90
+    private var latestVideoDimensions = CMVideoDimensions(width: 1080, height: 1920)
+    private var recordedVideoDimensions = CMVideoDimensions(width: 1080, height: 1920)
+    private var isRotationLocked = false
+
+    deinit {
+        if let orientationObserver {
+            NotificationCenter.default.removeObserver(orientationObserver)
+        }
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+    }
+
+    func attachPreviewLayer(_ previewLayer: AVCaptureVideoPreviewLayer) {
+        self.previewLayer = previewLayer
+        applyCurrentOrientation(clearBuffer: false)
+    }
 
     func configureSession() {
         // 설정에서 선녹화 버퍼 길이 반영
         let preRecordSeconds = UserDefaults.standard.integer(forKey: "preRecordDuration")
         preRecordBuffer.updateDuration(TimeInterval(preRecordSeconds))
+
+        startObservingOrientationChangesIfNeeded()
 
         sessionQueue.async { [weak self] in
             self?.setupSession()
@@ -78,14 +99,18 @@ final class CaptureService: NSObject {
 
         let now = Date()
         let videoURL = FileStorage.generateFileURL(for: now, extension: "mov")
+        let recordingDimensions = currentRecordingDimensions()
+
+        isRotationLocked = true
+        recordedVideoDimensions = recordingDimensions
 
         writerQueue.async { [weak self] in
             guard let self else { return }
             do {
                 try videoWriter.startWriting(
                     to: videoURL,
-                    width: 1080,
-                    height: 1920,
+                    width: Int(recordingDimensions.width),
+                    height: Int(recordingDimensions.height),
                     codec: .hevc
                 )
 
@@ -110,6 +135,7 @@ final class CaptureService: NSObject {
 
                 logger.info("녹화 시작: \(videoURL.lastPathComponent)")
             } catch {
+                isRotationLocked = false
                 logger.error("녹화 시작 실패: \(error.localizedDescription)")
             }
         }
@@ -119,9 +145,12 @@ final class CaptureService: NSObject {
         guard isRecording else { return }
         isRecording = false
         let finalDuration = elapsedTime
+        isRotationLocked = false
 
         DispatchQueue.main.async { [weak self] in
             self?.stopTimer()
+            self?.applyPreviewRotation(self?.currentPreviewRotationAngle ?? 90)
+            self?.applyCaptureRotation(self?.currentCaptureRotationAngle ?? 90, clearBuffer: true)
         }
 
         Task { [weak self] in
@@ -272,11 +301,8 @@ final class CaptureService: NSObject {
             self.maxZoomFactor = min(device.maxAvailableVideoZoomFactor, 10.0)
         }
 
-        // 세로 모드 회전 + 안정화
+        // 안정화
         if let connection = vOutput.connection(with: .video) {
-            if connection.isVideoRotationAngleSupported(90) {
-                connection.videoRotationAngle = 90
-            }
             if connection.isVideoStabilizationSupported {
                 connection.preferredVideoStabilizationMode = .cinematic
             }
@@ -299,7 +325,99 @@ final class CaptureService: NSObject {
         }
 
         session.commitConfiguration()
+        DispatchQueue.main.async { [weak self] in
+            self?.applyCurrentOrientation(clearBuffer: false)
+        }
         logger.info("캡처 세션 구성 완료")
+    }
+
+    private func startObservingOrientationChangesIfNeeded() {
+        guard orientationObserver == nil else { return }
+
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        orientationObserver = NotificationCenter.default.addObserver(
+            forName: UIDevice.orientationDidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.applyCurrentOrientation(clearBuffer: true)
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            self?.applyCurrentOrientation(clearBuffer: false)
+        }
+    }
+
+    private func applyCurrentOrientation(clearBuffer: Bool) {
+        guard let angle = captureRotationAngle(for: UIDevice.current.orientation) ?? fallbackCaptureAngle() else {
+            return
+        }
+
+        currentPreviewRotationAngle = angle
+        currentCaptureRotationAngle = angle
+        applyPreviewRotation(angle)
+        applyCaptureRotation(angle, clearBuffer: clearBuffer)
+    }
+
+    private func applyPreviewRotation(_ angle: CGFloat) {
+        guard !isRotationLocked,
+              let connection = previewLayer?.connection,
+              connection.isVideoRotationAngleSupported(angle) else { return }
+
+        connection.videoRotationAngle = angle
+    }
+
+    private func applyCaptureRotation(_ angle: CGFloat, clearBuffer: Bool) {
+        guard !isRotationLocked else { return }
+
+        sessionQueue.async { [weak self] in
+            guard let self,
+                  let connection = self.videoDataOutput?.connection(with: .video),
+                  connection.isVideoRotationAngleSupported(angle) else { return }
+            connection.videoRotationAngle = angle
+        }
+
+        guard clearBuffer else { return }
+        writerQueue.async { [weak self] in
+            self?.preRecordBuffer.clear()
+        }
+    }
+
+    private func captureRotationAngle(for orientation: UIDeviceOrientation) -> CGFloat? {
+        switch orientation {
+        case .portrait:
+            return 90
+        case .portraitUpsideDown:
+            return 270
+        case .landscapeLeft:
+            return 0
+        case .landscapeRight:
+            return 180
+        default:
+            return nil
+        }
+    }
+
+    private func fallbackCaptureAngle() -> CGFloat? {
+        if currentCaptureRotationAngle >= 0 {
+            return currentCaptureRotationAngle
+        }
+        return 90
+    }
+
+    private func currentRecordingDimensions() -> CMVideoDimensions {
+        guard latestVideoDimensions.width > 0, latestVideoDimensions.height > 0 else {
+            return defaultVideoDimensions(for: currentCaptureRotationAngle)
+        }
+
+        return latestVideoDimensions
+    }
+
+    private func defaultVideoDimensions(for angle: CGFloat) -> CMVideoDimensions {
+        let isPortrait = Int(angle.rounded()) % 180 != 0
+        return isPortrait
+            ? CMVideoDimensions(width: 1080, height: 1920)
+            : CMVideoDimensions(width: 1920, height: 1080)
     }
 
     private func resetFocusAndExposure(device: AVCaptureDevice) {
@@ -352,7 +470,7 @@ final class CaptureService: NSObject {
         var metadata = RecordingMetadata.create(
             id: id,
             device: device,
-            resolution: "1920x1080",
+            resolution: "\(recordedVideoDimensions.width)x\(recordedVideoDimensions.height)",
             frameRate: 30,
             codec: "hevc",
             startedAt: startDate
@@ -404,6 +522,14 @@ extension CaptureService: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     ) {
         if output is AVCaptureVideoDataOutput {
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+            let currentDimensions = CMVideoDimensions(
+                width: Int32(CVPixelBufferGetWidth(pixelBuffer)),
+                height: Int32(CVPixelBufferGetHeight(pixelBuffer))
+            )
+
+            if !isRotationLocked {
+                latestVideoDimensions = currentDimensions
+            }
 
             // 오버레이 렌더링 (녹화/선녹화 공통)
             guard let renderedBuffer = overlayRenderer.render(

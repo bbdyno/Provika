@@ -11,11 +11,13 @@ import SwiftUI
 struct CameraPreviewView: UIViewRepresentable {
     let session: AVCaptureSession
     var onTapLocation: ((CGPoint) -> Void)?
+    var onPreviewLayerReady: ((AVCaptureVideoPreviewLayer) -> Void)?
 
     func makeUIView(context: Context) -> PreviewUIView {
         let view = PreviewUIView()
         view.previewLayer.session = session
         view.previewLayer.videoGravity = .resizeAspectFill
+        onPreviewLayerReady?(view.previewLayer)
 
         let tapGesture = UITapGestureRecognizer(
             target: context.coordinator,
@@ -28,6 +30,7 @@ struct CameraPreviewView: UIViewRepresentable {
 
     func updateUIView(_ uiView: PreviewUIView, context: Context) {
         context.coordinator.onTapLocation = onTapLocation
+        onPreviewLayerReady?(uiView.previewLayer)
     }
 
     func makeCoordinator() -> Coordinator {

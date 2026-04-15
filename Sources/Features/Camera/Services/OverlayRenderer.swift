@@ -28,55 +28,110 @@ final class OverlayRenderer {
         timestamp: Date = Date()
     ) -> CVPixelBuffer? {
         let baseImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let width = CVPixelBufferGetWidth(pixelBuffer)
-        let height = CVPixelBufferGetHeight(pixelBuffer)
-        let fontSize = CGFloat(height) * 0.016
-        let margin: CGFloat = 12
-        let lineHeight: CGFloat = fontSize * 3.0
-        let h = CGFloat(height)
-        let w = CGFloat(width)
+        let width = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
+        let height = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
+        let layout = OverlayLayout(width: width, height: height)
 
-        // 좌하단 1행: 타임스탬프
         let timestampText = timestamp.overlayString
-        let topLine1 = renderText(
-            timestampText,
-            fontSize: fontSize,
-            position: CGPoint(x: margin, y: margin + lineHeight)
-        )
-
-        // 좌하단 2행: GPS 좌표
         let locationText = locationString(location)
-        let topLine2 = renderText(
-            locationText,
-            fontSize: fontSize,
-            position: CGPoint(x: margin, y: margin)
-        )
-
-        // 우하단: 기기 정보
         let footerText = "Provika v\(deviceInfo.appVersion) · \(deviceInfo.model)"
-        let footerFontSize = fontSize * 0.9
-        let footerWidth = measureTextWidth(footerText, fontSize: footerFontSize)
-        let footerImage = renderText(
-            footerText,
-            fontSize: footerFontSize,
-            position: CGPoint(
-                x: w - footerWidth - margin,
-                y: margin
-            )
-        )
 
         // 합성
         var composited = baseImage
-        composited = topLine1.composited(over: composited)
-        composited = topLine2.composited(over: composited)
-        composited = footerImage.composited(over: composited)
+
+        if layout.isPortrait {
+            let maxWidth = width - (layout.margin * 2)
+            let footerFontSize = fittedFontSize(
+                footerText,
+                preferredSize: layout.footerFontSize,
+                maximumWidth: maxWidth
+            )
+            let locationFontSize = fittedFontSize(
+                locationText,
+                preferredSize: layout.fontSize,
+                maximumWidth: maxWidth
+            )
+            let timestampFontSize = fittedFontSize(
+                timestampText,
+                preferredSize: layout.fontSize,
+                maximumWidth: maxWidth
+            )
+
+            let bottomY = layout.margin
+            let middleY = bottomY + (layout.lineHeight(for: footerFontSize) + layout.lineSpacing)
+            let topY = middleY + (layout.lineHeight(for: locationFontSize) + layout.lineSpacing)
+
+            let footerImage = renderText(
+                footerText,
+                fontSize: footerFontSize,
+                position: CGPoint(x: layout.margin, y: bottomY)
+            )
+            let locationImage = renderText(
+                locationText,
+                fontSize: locationFontSize,
+                position: CGPoint(x: layout.margin, y: middleY)
+            )
+            let timestampImage = renderText(
+                timestampText,
+                fontSize: timestampFontSize,
+                position: CGPoint(x: layout.margin, y: topY)
+            )
+
+            composited = footerImage.composited(over: composited)
+            composited = locationImage.composited(over: composited)
+            composited = timestampImage.composited(over: composited)
+        } else {
+            let footerFontSize = fittedFontSize(
+                footerText,
+                preferredSize: layout.footerFontSize,
+                maximumWidth: width * 0.36
+            )
+            let footerWidth = measureTextWidth(footerText, fontSize: footerFontSize)
+            let leftMaximumWidth = max(width - footerWidth - (layout.margin * 3), width * 0.44)
+            let timestampFontSize = fittedFontSize(
+                timestampText,
+                preferredSize: layout.fontSize,
+                maximumWidth: leftMaximumWidth
+            )
+            let locationFontSize = fittedFontSize(
+                locationText,
+                preferredSize: layout.fontSize,
+                maximumWidth: leftMaximumWidth
+            )
+
+            let locationImage = renderText(
+                locationText,
+                fontSize: locationFontSize,
+                position: CGPoint(x: layout.margin, y: layout.margin)
+            )
+            let timestampImage = renderText(
+                timestampText,
+                fontSize: timestampFontSize,
+                position: CGPoint(
+                    x: layout.margin,
+                    y: layout.margin + layout.lineHeight(for: locationFontSize) + layout.lineSpacing
+                )
+            )
+            let footerImage = renderText(
+                footerText,
+                fontSize: footerFontSize,
+                position: CGPoint(
+                    x: width - footerWidth - layout.margin,
+                    y: layout.margin
+                )
+            )
+
+            composited = timestampImage.composited(over: composited)
+            composited = locationImage.composited(over: composited)
+            composited = footerImage.composited(over: composited)
+        }
 
         // 새 CVPixelBuffer로 출력
         var output: CVPixelBuffer?
         CVPixelBufferCreate(
             kCFAllocatorDefault,
-            width,
-            height,
+            Int(width),
+            Int(height),
             CVPixelBufferGetPixelFormatType(pixelBuffer),
             nil,
             &output
@@ -123,9 +178,46 @@ final class OverlayRenderer {
             .transformed(by: CGAffineTransform(translationX: position.x, y: position.y))
     }
 
+    private func fittedFontSize(
+        _ text: String,
+        preferredSize: CGFloat,
+        maximumWidth: CGFloat
+    ) -> CGFloat {
+        let minimumScale: CGFloat = 0.76
+        let minimumSize = preferredSize * minimumScale
+        var size = preferredSize
+
+        while size > minimumSize && measureTextWidth(text, fontSize: size) > maximumWidth {
+            size -= 1
+        }
+
+        return max(size, minimumSize)
+    }
+
     private func measureTextWidth(_ text: String, fontSize: CGFloat) -> CGFloat {
         let font = UIFont(name: "Menlo-Bold", size: fontSize) ?? UIFont.monospacedSystemFont(ofSize: fontSize, weight: .bold)
         let attributes: [NSAttributedString.Key: Any] = [.font: font]
         return (text as NSString).size(withAttributes: attributes).width
+    }
+}
+
+private struct OverlayLayout {
+    let isPortrait: Bool
+    let margin: CGFloat
+    let fontSize: CGFloat
+    let footerFontSize: CGFloat
+    let lineSpacing: CGFloat
+
+    init(width: CGFloat, height: CGFloat) {
+        let shortSide = min(width, height)
+        self.isPortrait = height >= width
+        self.margin = max(12, shortSide * 0.018)
+        self.fontSize = shortSide * (isPortrait ? 0.0175 : 0.0185)
+        self.footerFontSize = fontSize * 0.9
+        self.lineSpacing = fontSize * 0.34
+    }
+
+    func lineHeight(for fontSize: CGFloat) -> CGFloat {
+        fontSize * 1.12
     }
 }
