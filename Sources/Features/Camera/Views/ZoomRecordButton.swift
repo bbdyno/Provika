@@ -67,37 +67,56 @@ struct ZoomDialControl: View {
     }
 
     private var expandedDial: some View {
-        ZStack {
+        let scaleWidth: CGFloat = 400
+        let progress = (zoomFactor - minZoom) / max(maxZoom - minZoom, 0.01)
+        let scaleOffset = (0.5 - progress) * scaleWidth
+
+        return ZStack {
             Capsule()
                 .fill(.black.opacity(0.7))
                 .frame(width: dialWidth, height: dialHeight)
 
-            // 눈금 — 현재 줌 값이 중앙에 오도록 스크롤
-            let progress = (zoomFactor - minZoom) / max(maxZoom - minZoom, 0.01)
-            let scaleOffset = (0.5 - progress) * (dialWidth - 40)
+            // 눈금 — 현재 줌이 중앙에 오도록 전체 스케일을 이동
+            Canvas { context, size in
+                let ticks = tickValues
+                let count = ticks.count
+                guard count > 1 else { return }
 
-            HStack(spacing: 0) {
-                ForEach(tickValues, id: \.self) { value in
-                    if value.truncatingRemainder(dividingBy: 1.0) == 0 {
-                        Text(String(format: "%.0f", value))
+                for (i, value) in ticks.enumerated() {
+                    // 각 눈금의 위치를 scaleWidth 기준으로 계산
+                    let tickProgress = CGFloat(i) / CGFloat(count - 1)
+                    let x = tickProgress * scaleWidth + scaleOffset + size.width / 2 - scaleWidth / 2
+
+                    guard x > 4 && x < size.width - 4 else { continue }
+
+                    let isMain = value.truncatingRemainder(dividingBy: 1.0) == 0
+                    let isFilled = value <= zoomFactor
+
+                    if isMain {
+                        let text = Text(String(format: "%.0f", value))
                             .font(.system(.caption2, design: .monospaced))
                             .fontWeight(.bold)
-                            .foregroundStyle(value <= zoomFactor ? .yellow : .white.opacity(0.5))
-                            .frame(maxWidth: .infinity)
+                            .foregroundColor(isFilled ? .yellow : .white.opacity(0.5))
+                        context.draw(
+                            context.resolve(text),
+                            at: CGPoint(x: x, y: size.height / 2)
+                        )
                     } else {
-                        Rectangle()
-                            .fill(value <= zoomFactor ? .yellow : .white.opacity(0.25))
-                            .frame(width: 1, height: 8)
-                            .frame(maxWidth: .infinity)
+                        let rect = CGRect(
+                            x: x - 0.5,
+                            y: (size.height - 8) / 2,
+                            width: 1,
+                            height: 8
+                        )
+                        context.fill(
+                            Path(rect),
+                            with: .color(isFilled ? .yellow : .white.opacity(0.25))
+                        )
                     }
                 }
             }
-            .frame(width: dialWidth * 1.5)
-            .offset(x: scaleOffset)
-            .mask {
-                Capsule()
-                    .frame(width: dialWidth - 8, height: dialHeight)
-            }
+            .frame(width: dialWidth - 8, height: dialHeight)
+            .clipShape(Capsule())
 
             // 노브 — 항상 중앙 고정
             Circle()
