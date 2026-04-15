@@ -27,6 +27,7 @@ final class CaptureService: NSObject {
 
     private let videoWriter = VideoWriter()
     private let overlayRenderer = OverlayRenderer()
+    private let signatureService = SignatureService()
 
     var currentLocation: CLLocation?
     private var locationTrack: [RecordingMetadata.LocationPoint] = []
@@ -104,7 +105,7 @@ final class CaptureService: NSObject {
             }
 
             let sidecarURL = videoURL.deletingPathExtension().appendingPathExtension("json")
-            saveSidecarJSON(videoURL: videoURL, sidecarURL: sidecarURL)
+            await saveSidecarJSON(videoURL: videoURL, sidecarURL: sidecarURL)
 
             await MainActor.run {
                 self.recordingStartTime = nil
@@ -295,10 +296,10 @@ final class CaptureService: NSObject {
         return OverlayRenderer.DeviceInfo(model: model, appVersion: appVersion)
     }
 
-    private func saveSidecarJSON(videoURL: URL, sidecarURL: URL) {
-        let model = UIDevice.current.name
-        let systemVersion = UIDevice.current.systemVersion
-        let vendorId = UIDevice.current.identifierForVendor?.uuidString
+    private func saveSidecarJSON(videoURL: URL, sidecarURL: URL) async {
+        let model = await MainActor.run { UIDevice.current.name }
+        let systemVersion = await MainActor.run { UIDevice.current.systemVersion }
+        let vendorId = await MainActor.run { UIDevice.current.identifierForVendor?.uuidString }
 
         let device = RecordingMetadata.DeviceInfo(
             model: model,
@@ -318,6 +319,27 @@ final class CaptureService: NSObject {
             startedAt: startDate
         )
         metadata.locationTrack = locationTrack
+
+        // 해시 계산
+        do {
+            let hash = try HashCalculator.sha256(of: videoURL)
+            logger.info("SHA-256 해시: \(hash)")
+
+            // 서명
+            let hashData = Data(hash.utf8)
+            let signature = try signatureService.sign(data: hashData)
+            let publicKeyPEM = try signatureService.publicKeyPEM()
+
+            metadata.integrity = RecordingMetadata.IntegrityInfo(
+                algorithm: "SHA-256",
+                hash: hash,
+                signatureAlgorithm: "ECDSA-P256-SHA256",
+                signature: signature.base64EncodedString(),
+                publicKey: publicKeyPEM
+            )
+        } catch {
+            logger.error("무결성 정보 생성 실패: \(error.localizedDescription)")
+        }
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
