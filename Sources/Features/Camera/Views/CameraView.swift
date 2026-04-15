@@ -6,6 +6,8 @@ struct CameraView: View {
     @State private var viewModel = CameraViewModel()
     @State private var pinchStartZoom: CGFloat = 1.0
 
+    let isActiveTab: Bool
+
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -23,8 +25,12 @@ struct CameraView: View {
             )
             viewModel.onAppear()
         }
-        .onDisappear {
-            viewModel.onDisappear()
+        .onChange(of: isActiveTab) { _, active in
+            if active {
+                viewModel.onAppear()
+            } else {
+                viewModel.onDisappear()
+            }
         }
     }
 

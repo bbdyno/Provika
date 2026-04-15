@@ -68,35 +68,39 @@ final class CaptureService: NSObject {
         let now = Date()
         let videoURL = FileStorage.generateFileURL(for: now, extension: "mov")
 
-        do {
-            try videoWriter.startWriting(
-                to: videoURL,
-                width: 1920,
-                height: 1080,
-                codec: .hevc
-            )
-            isRecording = true
-            recordingStartTime = now
-            elapsedTime = 0
-            locationTrack = []
+        writerQueue.async { [weak self] in
+            guard let self else { return }
+            do {
+                try videoWriter.startWriting(
+                    to: videoURL,
+                    width: 1920,
+                    height: 1080,
+                    codec: .hevc
+                )
 
-            // 선녹화 버퍼 플러시
-            let buffered = preRecordBuffer.flush()
-            for (sampleBuffer, renderedBuffer) in buffered.video {
-                let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                videoWriter.appendVideoBuffer(renderedBuffer, at: time)
-            }
-            for audioBuffer in buffered.audio {
-                videoWriter.appendAudioBuffer(audioBuffer)
-            }
+                // 선녹화 버퍼 플러시
+                let buffered = preRecordBuffer.flush()
+                for (sampleBuffer, renderedBuffer) in buffered.video {
+                    let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                    videoWriter.appendVideoBuffer(renderedBuffer, at: time)
+                }
+                for audioBuffer in buffered.audio {
+                    videoWriter.appendAudioBuffer(audioBuffer)
+                }
 
-            DispatchQueue.main.async { [weak self] in
-                self?.startTimer()
-            }
+                isRecording = true
+                recordingStartTime = now
+                elapsedTime = 0
+                locationTrack = []
 
-            logger.info("녹화 시작: \(videoURL.lastPathComponent) (선녹화 \(buffered.video.count)프레임)")
-        } catch {
-            logger.error("녹화 시작 실패: \(error.localizedDescription)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.startTimer()
+                }
+
+                logger.info("녹화 시작: \(videoURL.lastPathComponent)")
+            } catch {
+                logger.error("녹화 시작 실패: \(error.localizedDescription)")
+            }
         }
     }
 

@@ -23,35 +23,37 @@ final class OverlayRenderer {
         let baseImage = CIImage(cvPixelBuffer: pixelBuffer)
         let width = CVPixelBufferGetWidth(pixelBuffer)
         let height = CVPixelBufferGetHeight(pixelBuffer)
-        let fontSize = CGFloat(height) * 0.018
-        let margin: CGFloat = 16
-        let lineSpacing: CGFloat = fontSize * 1.4
+        let fontSize = CGFloat(height) * 0.016
+        let margin: CGFloat = 12
+        let lineHeight: CGFloat = fontSize * 1.5
+        let h = CGFloat(height)
+        let w = CGFloat(width)
 
-        // 좌상단 1행: 타임스탬프
+        // 좌하단 1행: 타임스탬프
         let timestampText = timestamp.overlayString
         let topLine1 = renderText(
             timestampText,
             fontSize: fontSize,
-            position: CGPoint(x: margin, y: CGFloat(height) - fontSize - margin)
+            position: CGPoint(x: margin, y: margin + lineHeight)
         )
 
-        // 좌상단 2행: GPS
+        // 좌하단 2행: GPS 좌표
         let locationText = locationString(location)
         let topLine2 = renderText(
             locationText,
-            fontSize: fontSize * 0.9,
-            position: CGPoint(x: margin, y: CGFloat(height) - fontSize - margin - lineSpacing)
+            fontSize: fontSize,
+            position: CGPoint(x: margin, y: margin)
         )
 
-        // 하단 중앙: 기기 정보
+        // 우하단: 기기 정보
         let footerText = "Provika v\(deviceInfo.appVersion) · \(deviceInfo.model)"
-        let footerFontSize = fontSize * 0.85
+        let footerFontSize = fontSize * 0.9
         let footerWidth = measureTextWidth(footerText, fontSize: footerFontSize)
         let footerImage = renderText(
             footerText,
             fontSize: footerFontSize,
             position: CGPoint(
-                x: (CGFloat(width) - footerWidth) / 2,
+                x: w - footerWidth - margin,
                 y: margin
             )
         )
@@ -80,11 +82,9 @@ final class OverlayRenderer {
 
     private func locationString(_ location: CLLocation?) -> String {
         guard let loc = location else { return "GPS: --" }
-        let lat = String(format: "%.4f", loc.coordinate.latitude)
-        let lng = String(format: "%.4f", loc.coordinate.longitude)
-        let speed = loc.speed >= 0 ? String(format: "%.0f km/h", loc.speed * 3.6) : "-- km/h"
-        let heading = loc.course >= 0 ? String(format: "%.0f°", loc.course) : "--°"
-        return "\(lat), \(lng) · \(speed) · \(heading)"
+        let lat = String(format: "%.6f", loc.coordinate.latitude)
+        let lng = String(format: "%.6f", loc.coordinate.longitude)
+        return "GPS: \(lat), \(lng)"
     }
 
     private func renderText(

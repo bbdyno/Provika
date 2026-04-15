@@ -1,15 +1,22 @@
 import SwiftUI
 
+enum AppTab: Int {
+    case camera, gallery, settings
+}
+
 struct RootView: View {
+    @State private var selectedTab = AppTab.camera
+
     var body: some View {
-        TabView {
-            CameraView()
+        TabView(selection: $selectedTab) {
+            CameraView(isActiveTab: selectedTab == .camera)
                 .tabItem {
                     Label(
                         ProvikaStrings.Localizable.Tab.camera,
                         systemImage: "camera.fill"
                     )
                 }
+                .tag(AppTab.camera)
                 .accessibilityLabel(ProvikaStrings.Localizable.Tab.camera)
 
             GalleryView()
@@ -19,6 +26,7 @@ struct RootView: View {
                         systemImage: "photo.on.rectangle"
                     )
                 }
+                .tag(AppTab.gallery)
                 .accessibilityLabel(ProvikaStrings.Localizable.Tab.gallery)
 
             SettingsView()
@@ -28,6 +36,7 @@ struct RootView: View {
                         systemImage: "gearshape.fill"
                     )
                 }
+                .tag(AppTab.settings)
                 .accessibilityLabel(ProvikaStrings.Localizable.Tab.settings)
         }
         .tint(.red)
