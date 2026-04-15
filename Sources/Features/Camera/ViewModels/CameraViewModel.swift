@@ -1,4 +1,5 @@
 import AVFoundation
+import SwiftData
 import UIKit
 import os
 
@@ -14,9 +15,15 @@ final class CameraViewModel {
 
     private let logger = Logger(subsystem: "com.bbdyno.app.provika", category: "CameraVM")
     private var locationManager: LocationManager?
+    private var modelContext: ModelContext?
 
-    func setLocationManager(_ manager: LocationManager) {
-        locationManager = manager
+    func configure(locationManager: LocationManager, modelContext: ModelContext) {
+        self.locationManager = locationManager
+        self.modelContext = modelContext
+
+        captureService.onRecordingFinished = { [weak self] videoURL, sidecarURL in
+            self?.saveRecording(videoURL: videoURL, sidecarURL: sidecarURL)
+        }
     }
 
     func checkCameraPermission() {
@@ -95,5 +102,32 @@ final class CameraViewModel {
     private func setupCamera() {
         captureService.configureSession()
         captureService.startSession()
+    }
+
+    private func saveRecording(videoURL: URL, sidecarURL: URL) {
+        guard let modelContext else { return }
+
+        var hash = ""
+        if let computed = try? HashCalculator.sha256(of: videoURL) {
+            hash = computed
+        }
+
+        let loc = locationManager?.currentLocation
+        let startDate = captureService.recordingStartTime ?? Date()
+        let duration = captureService.elapsedTime
+
+        let recording = Recording(
+            id: videoURL.deletingPathExtension().lastPathComponent,
+            createdAt: startDate,
+            duration: duration,
+            fileURL: videoURL,
+            sidecarURL: sidecarURL,
+            fileHash: hash,
+            startLatitude: loc?.coordinate.latitude,
+            startLongitude: loc?.coordinate.longitude
+        )
+
+        modelContext.insert(recording)
+        logger.info("녹화 저장 완료: \(recording.id)")
     }
 }

@@ -11,7 +11,7 @@ struct RootView: View {
                     )
                 }
 
-            GalleryPlaceholderView()
+            GalleryView()
                 .tabItem {
                     Label(
                         ProvikaStrings.Localizable.Tab.gallery,

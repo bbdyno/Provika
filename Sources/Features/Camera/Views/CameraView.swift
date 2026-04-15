@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CameraView: View {
     @Environment(AppEnvironment.self) private var appEnvironment
+    @Environment(\.modelContext) private var modelContext
     @State private var viewModel = CameraViewModel()
     @State private var pinchStartZoom: CGFloat = 1.0
 
@@ -16,7 +17,10 @@ struct CameraView: View {
             }
         }
         .onAppear {
-            viewModel.setLocationManager(appEnvironment.locationManager)
+            viewModel.configure(
+                locationManager: appEnvironment.locationManager,
+                modelContext: modelContext
+            )
             viewModel.onAppear()
         }
         .onDisappear {

@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 @main
@@ -12,5 +13,6 @@ struct ProvikaApp: App {
                     appEnvironment.locationManager.requestAuthorization()
                 }
         }
+        .modelContainer(for: Recording.self)
     }
 }
