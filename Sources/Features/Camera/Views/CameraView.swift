@@ -1,3 +1,10 @@
+//
+//  CameraView.swift
+//  Provika
+//
+//  Created by bbdyno on 4/16/26.
+//
+
 import SwiftUI
 
 struct CameraView: View {

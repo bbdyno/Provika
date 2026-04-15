@@ -1,3 +1,10 @@
+//
+//  VideoThumbnailView.swift
+//  Provika
+//
+//  Created by bbdyno on 4/16/26.
+//
+
 import SwiftUI
 
 struct VideoThumbnailView: View {

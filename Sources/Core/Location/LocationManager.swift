@@ -1,3 +1,10 @@
+//
+//  LocationManager.swift
+//  Provika
+//
+//  Created by bbdyno on 4/16/26.
+//
+
 import CoreLocation
 import os
 
