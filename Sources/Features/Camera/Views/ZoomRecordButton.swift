@@ -7,140 +7,144 @@
 
 import SwiftUI
 
-struct ZoomRecordButton: View {
-    let isRecording: Bool
+// MARK: - 줌 다이얼 컨트롤 (아이폰 카메라 스타일)
+
+struct ZoomDialControl: View {
     let zoomFactor: CGFloat
     let minZoom: CGFloat
     let maxZoom: CGFloat
-    let onTap: () -> Void
     let onZoomChange: (CGFloat) -> Void
 
-    @State private var isDragging = false
+    @State private var isExpanded = false
     @State private var dragStartZoom: CGFloat = 1.0
-    @State private var dragStartTime: Date?
-    @State private var buttonScale: CGFloat = 1.0
 
-    private let buttonSize: CGFloat = 72
-    private let innerSize: CGFloat = 60
-    private let dragThreshold: CGFloat = 8
+    private let dialWidth: CGFloat = 280
+    private let dialHeight: CGFloat = 44
 
     var body: some View {
         ZStack {
-            if isDragging {
-                ZoomGaugeView(
-                    zoomFactor: zoomFactor,
-                    minZoom: minZoom,
-                    maxZoom: maxZoom
-                )
-                .transition(.opacity)
+            if isExpanded {
+                // 확장된 줌 다이얼
+                expandedDial
+                    .transition(.scale.combined(with: .opacity))
+            } else {
+                // 줌 레벨 버튼
+                zoomButton
             }
+        }
+        .animation(.easeInOut(duration: 0.2), value: isExpanded)
+    }
 
-            ZStack {
-                Circle()
-                    .stroke(.white, lineWidth: 4)
-                    .frame(width: buttonSize, height: buttonSize)
-
-                if isRecording {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(.red)
-                        .frame(width: 30, height: 30)
-                } else {
-                    Circle()
-                        .fill(.red)
-                        .frame(width: innerSize, height: innerSize)
-                }
-            }
-            .scaleEffect(buttonScale)
-            .contentShape(Circle().scale(1.5))
+    private var zoomButton: some View {
+        Text(String(format: "%.1fx", zoomFactor))
+            .font(.system(.subheadline, design: .monospaced))
+            .fontWeight(.semibold)
+            .foregroundStyle(.yellow)
+            .frame(width: 52, height: 36)
+            .background(.black.opacity(0.5))
+            .clipShape(Capsule())
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
-                        if dragStartTime == nil {
-                            dragStartTime = Date()
+                        if !isExpanded {
+                            isExpanded = true
                             dragStartZoom = zoomFactor
                         }
-
-                        let distance = abs(value.translation.width) + abs(value.translation.height)
-                        if distance > dragThreshold && !isDragging {
-                            isDragging = true
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                buttonScale = 1.15
-                            }
-                        }
-
-                        if isDragging {
-                            // 위로 드래그하면 줌인, 아래로 줌아웃 (좌우도 지원)
-                            let dragAmount = -value.translation.height + value.translation.width
-                            let sensitivity: CGFloat = 250
-                            let normalizedDrag = dragAmount / sensitivity
-                            let zoomRange = maxZoom - minZoom
-                            let newZoom = dragStartZoom + normalizedDrag * zoomRange
-                            let clamped = min(max(newZoom, minZoom), maxZoom)
-                            onZoomChange(clamped)
-                        }
+                        applyDrag(value.translation.width)
                     }
                     .onEnded { _ in
-                        if !isDragging {
-                            onTap()
-                        }
-                        isDragging = false
-                        dragStartTime = nil
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            buttonScale = 1.0
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            isExpanded = false
                         }
                     }
             )
-        }
-        .frame(height: 140)
     }
-}
 
-// MARK: - 반원형 줌 게이지
-
-struct ZoomGaugeView: View {
-    let zoomFactor: CGFloat
-    let minZoom: CGFloat
-    let maxZoom: CGFloat
-
-    private let gaugeRadius: CGFloat = 55
-    private let startAngle: Double = 210
-    private let endAngle: Double = 330
-
-    var body: some View {
+    private var expandedDial: some View {
         ZStack {
-            Arc(startAngle: .degrees(startAngle), endAngle: .degrees(endAngle))
-                .stroke(.white.opacity(0.3), lineWidth: 4)
-                .frame(width: gaugeRadius * 2, height: gaugeRadius * 2)
+            // 배경 캡슐
+            Capsule()
+                .fill(.black.opacity(0.7))
+                .frame(width: dialWidth, height: dialHeight)
 
+            // 눈금 마크
+            HStack(spacing: 0) {
+                ForEach(tickMarks, id: \.self) { value in
+                    VStack(spacing: 2) {
+                        if isMainTick(value) {
+                            Text(String(format: "%.0f", value))
+                                .font(.system(.caption2, design: .monospaced))
+                                .fontWeight(.bold)
+                                .foregroundStyle(
+                                    isCurrentRange(value) ? .yellow : .white.opacity(0.6)
+                                )
+                        } else {
+                            Rectangle()
+                                .fill(isCurrentRange(value) ? .yellow : .white.opacity(0.3))
+                                .frame(width: 1, height: 8)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
+            .frame(width: dialWidth - 32)
+
+            // 현재 위치 인디케이터
             let progress = (zoomFactor - minZoom) / max(maxZoom - minZoom, 0.01)
-            let fillEnd = startAngle + (endAngle - startAngle) * Double(progress)
+            let xOffset = (progress - 0.5) * (dialWidth - 48)
 
-            Arc(startAngle: .degrees(startAngle), endAngle: .degrees(fillEnd))
-                .stroke(.yellow, lineWidth: 4)
-                .frame(width: gaugeRadius * 2, height: gaugeRadius * 2)
-
-            Text(String(format: "%.1fx", zoomFactor))
-                .font(.system(.caption2, design: .monospaced))
-                .fontWeight(.bold)
-                .foregroundStyle(.yellow)
-                .offset(y: -gaugeRadius - 14)
+            Circle()
+                .fill(.yellow)
+                .frame(width: 28, height: 28)
+                .overlay {
+                    Text(String(format: "%.1f", zoomFactor))
+                        .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        .foregroundStyle(.black)
+                }
+                .offset(x: xOffset)
         }
-    }
-}
-
-struct Arc: Shape {
-    let startAngle: Angle
-    let endAngle: Angle
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.addArc(
-            center: CGPoint(x: rect.midX, y: rect.midY),
-            radius: rect.width / 2,
-            startAngle: startAngle,
-            endAngle: endAngle,
-            clockwise: false
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { value in
+                    // 다이얼 위에서 직접 드래그
+                    let normalizedX = (value.location.x / dialWidth)
+                    let newZoom = minZoom + normalizedX * (maxZoom - minZoom)
+                    let clamped = min(max(newZoom, minZoom), maxZoom)
+                    onZoomChange(clamped)
+                }
+                .onEnded { _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        isExpanded = false
+                    }
+                }
         )
-        return path
+    }
+
+    private var tickMarks: [CGFloat] {
+        let step: CGFloat = 0.5
+        var marks: [CGFloat] = []
+        var v = minZoom
+        while v <= maxZoom {
+            marks.append(v)
+            v += step
+        }
+        return marks
+    }
+
+    private func isMainTick(_ value: CGFloat) -> Bool {
+        value.truncatingRemainder(dividingBy: 1.0) == 0
+    }
+
+    private func isCurrentRange(_ value: CGFloat) -> Bool {
+        value <= zoomFactor
+    }
+
+    private func applyDrag(_ translationX: CGFloat) {
+        let sensitivity: CGFloat = 300
+        let normalizedDrag = translationX / sensitivity
+        let zoomRange = maxZoom - minZoom
+        let newZoom = dragStartZoom + normalizedDrag * zoomRange
+        let clamped = min(max(newZoom, minZoom), maxZoom)
+        onZoomChange(clamped)
     }
 }

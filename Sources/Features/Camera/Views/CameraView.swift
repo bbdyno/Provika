@@ -86,18 +86,20 @@ struct CameraView: View {
 
                 Spacer()
 
-                // 줌 레벨
-                Text(String(format: "%.1fx", viewModel.captureService.currentZoomFactor))
-                    .font(.system(.caption, design: .monospaced))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 4)
-                    .background(.black.opacity(0.5))
-                    .clipShape(Capsule())
+                // 줌 다이얼
+                ZoomDialControl(
+                    zoomFactor: viewModel.captureService.currentZoomFactor,
+                    minZoom: viewModel.captureService.minZoomFactor,
+                    maxZoom: viewModel.captureService.maxZoomFactor,
+                    onZoomChange: { factor in
+                        viewModel.captureService.setZoom(factor)
+                    }
+                )
+                .padding(.bottom, 8)
 
                 // 녹화 버튼
                 recordButton
-                    .padding(.vertical, 20)
+                    .padding(.vertical, 16)
 
                 // 하단 컨트롤
                 HStack {
@@ -127,16 +129,23 @@ struct CameraView: View {
     }
 
     private var recordButton: some View {
-        ZoomRecordButton(
-            isRecording: viewModel.isRecording,
-            zoomFactor: viewModel.captureService.currentZoomFactor,
-            minZoom: viewModel.captureService.minZoomFactor,
-            maxZoom: viewModel.captureService.maxZoomFactor,
-            onTap: { viewModel.toggleRecording() },
-            onZoomChange: { factor in
-                viewModel.captureService.setZoom(factor)
+        Button(action: { viewModel.toggleRecording() }) {
+            ZStack {
+                Circle()
+                    .stroke(.white, lineWidth: 4)
+                    .frame(width: 72, height: 72)
+
+                if viewModel.isRecording {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(.red)
+                        .frame(width: 30, height: 30)
+                } else {
+                    Circle()
+                        .fill(.red)
+                        .frame(width: 60, height: 60)
+                }
             }
-        )
+        }
     }
 
     private var permissionDeniedView: some View {
