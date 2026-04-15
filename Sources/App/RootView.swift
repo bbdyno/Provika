@@ -3,7 +3,7 @@ import SwiftUI
 struct RootView: View {
     var body: some View {
         TabView {
-            CameraPlaceholderView()
+            CameraView()
                 .tabItem {
                     Label(
                         ProvikaStrings.Localizable.Tab.camera,
