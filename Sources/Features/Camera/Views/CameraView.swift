@@ -13,6 +13,8 @@ struct CameraView: View {
     @State private var viewModel = CameraViewModel()
     @State private var pinchStartZoom: CGFloat = 1.0
 
+    private let zoomDialBottomPadding: CGFloat = 108
+
     let isActiveTab: Bool
 
     var body: some View {
@@ -85,45 +87,45 @@ struct CameraView: View {
                 .padding(.top, 8)
 
                 Spacer()
-
-                // 줌 다이얼
-                ZoomDialControl(
-                    zoomFactor: viewModel.captureService.currentZoomFactor,
-                    minZoom: viewModel.captureService.minZoomFactor,
-                    maxZoom: viewModel.captureService.maxZoomFactor,
-                    onZoomChange: { factor in
-                        viewModel.captureService.setZoom(factor)
-                    }
-                )
-                // 녹화 버튼
-                recordButton
-                    .padding(.vertical, 16)
-
-                // 하단 컨트롤
-                HStack {
-                    Button(action: { }) {
-                        Image(systemName: "photo.on.rectangle")
-                            .font(.title2)
-                            .foregroundStyle(.white)
-                            .frame(width: 50, height: 50)
-                    }
-
-                    Spacer()
-
-                    Button(action: { viewModel.toggleFlash() }) {
-                        Image(systemName: viewModel.isFlashOn ? "bolt.fill" : "bolt.slash")
-                            .font(.title2)
-                            .foregroundStyle(viewModel.isFlashOn ? .yellow : .white)
-                            .frame(width: 50, height: 50)
-                    }
-                }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 8)
             }
+        }
+        .overlay(alignment: .bottom) {
+            bottomControls
+        }
+        .overlay(alignment: .bottom) {
+            ZoomDialControl(
+                zoomFactor: viewModel.captureService.currentZoomFactor,
+                minZoom: viewModel.captureService.minZoomFactor,
+                maxZoom: viewModel.captureService.maxZoomFactor,
+                onZoomChange: { factor in
+                    viewModel.captureService.setZoom(factor)
+                }
+            )
+            .padding(.bottom, zoomDialBottomPadding)
         }
         .onReceive(Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()) { _ in
             viewModel.updateState()
         }
+    }
+
+    private var bottomControls: some View {
+        VStack(spacing: 0) {
+            recordButton
+                .padding(.bottom, 16)
+
+            HStack {
+                Spacer()
+
+                Button(action: { viewModel.toggleFlash() }) {
+                    Image(systemName: viewModel.isFlashOn ? "bolt.fill" : "bolt.slash")
+                        .font(.title2)
+                        .foregroundStyle(viewModel.isFlashOn ? .yellow : .white)
+                        .frame(width: 50, height: 50)
+                }
+            }
+            .padding(.horizontal, 40)
+        }
+        .padding(.bottom, 8)
     }
 
     private var recordButton: some View {
