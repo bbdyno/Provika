@@ -185,6 +185,15 @@ final class CaptureService: NSObject {
 
     private func setupSession() {
         session.beginConfiguration()
+
+        // 기존 입출력 제거 (중복 방지)
+        for input in session.inputs {
+            session.removeInput(input)
+        }
+        for output in session.outputs {
+            session.removeOutput(output)
+        }
+
         session.sessionPreset = .hd1920x1080
 
         // 비디오 입력
