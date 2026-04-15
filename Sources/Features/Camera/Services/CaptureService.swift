@@ -84,8 +84,8 @@ final class CaptureService: NSObject {
             do {
                 try videoWriter.startWriting(
                     to: videoURL,
-                    width: 1920,
-                    height: 1080,
+                    width: 1080,
+                    height: 1920,
                     codec: .hevc
                 )
 
@@ -272,8 +272,11 @@ final class CaptureService: NSObject {
             self.maxZoomFactor = min(device.maxAvailableVideoZoomFactor, 10.0)
         }
 
-        // 안정화
+        // 세로 모드 회전 + 안정화
         if let connection = vOutput.connection(with: .video) {
+            if connection.isVideoRotationAngleSupported(90) {
+                connection.videoRotationAngle = 90
+            }
             if connection.isVideoStabilizationSupported {
                 connection.preferredVideoStabilizationMode = .cinematic
             }

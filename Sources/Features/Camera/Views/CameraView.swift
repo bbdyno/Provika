@@ -95,8 +95,6 @@ struct CameraView: View {
                         viewModel.captureService.setZoom(factor)
                     }
                 )
-                .padding(.bottom, 8)
-
                 // 녹화 버튼
                 recordButton
                     .padding(.vertical, 16)

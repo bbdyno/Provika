@@ -37,8 +37,8 @@ struct ZoomDialControl: View {
                 .clipShape(Capsule())
                 .opacity(isExpanded ? 0 : 1)
         }
-        .frame(width: UIScreen.main.bounds.width, height: 200)
-        .contentShape(Rectangle())
+        .frame(height: 44)
+        .contentShape(Rectangle().size(width: UIScreen.main.bounds.width, height: 200).offset(x: 0, y: -80))
         .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
