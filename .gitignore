@@ -23,3 +23,4 @@ DerivedData/
 *.p12
 *.mobileprovision
 ExportOptions.plist
+GoogleService-Info.plist
