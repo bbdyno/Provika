@@ -50,3 +50,11 @@
 "settings.signingKey.regenerate" = "Regenerate Signing Key";
 "settings.section.about" = "About";
 "settings.version" = "Version";
+
+/* Support Developer */
+"support.title" = "Support the Developer";
+"support.footer" = "Provika is built and maintained by a solo developer. If this app helped you report a violation or just drive with more peace of mind, consider a one-time tip. Every coffee counts.";
+"support.thanks.title" = "Thank you! ❤️";
+"support.thanks.message" = "Your support keeps Provika independent and ad-free.";
+"support.unavailable.title" = "Tips Unavailable";
+"support.unavailable.message" = "Tip products could not be loaded. Check your internet connection and try again.";

@@ -12,6 +12,7 @@
 		1009AD338650F79CFCA492E9 /* VideoThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B42520B7D66C3FD4544C7B /* VideoThumbnailView.swift */; };
 		16C319F53C99F0EB84B5FEB9 /* FileStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EB9FE5FD62F75F2EE6AA3B /* FileStorage.swift */; };
 		1A676B6005F299A4F8C8EFD3 /* ProvikaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C58B706B05F5FF518C2E6F /* ProvikaApp.swift */; };
+		22CD1FB0E5BABCAC04467C79 /* TipStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81BF3EC0CD8FBCE71B23592 /* TipStore.swift */; };
 		28607123281853D7E625DBDE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5C40C842625EF68D688407 /* SettingsViewModel.swift */; };
 		2E072D19B28F5C5A7AC09BE4 /* SignatureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFF1876C28499A031E3BD01 /* SignatureService.swift */; };
 		31B7B04C38A5CD4254AB8BB5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D80704B4AEE17C2419FC517 /* LocationManager.swift */; };
@@ -49,6 +50,7 @@
 		D5835A6AF20ECA9D75B378B8 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8524F9C25FD3E26741606 /* CameraPreviewView.swift */; };
 		D7673CED95F36651AF3621BE /* TuistStrings+Provika.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64E8F3675633F5F5BE62803 /* TuistStrings+Provika.swift */; };
 		DCEB4C83BC839CBC8E1F91FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B33BB15FE93C0C4A1A60B7B /* Assets.xcassets */; };
+		DD33F515A56DFB7A4453477A /* SupportDeveloperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465758B9B6F8FD0E17D784E7 /* SupportDeveloperView.swift */; };
 		DECF6B327040F2355AB4928A /* RecordingMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9706D8FE5B5152299B46352 /* RecordingMetadata.swift */; };
 		EC2AEDE0CA467DCD9D67D8E1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCFB905145CEFE7CAC1288ED /* RootView.swift */; };
 		EF7240FA614F7388C69C623E /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0FBACF6DA1AF54595DF116 /* VideoWriter.swift */; };
@@ -131,6 +133,7 @@
 		3B33BB15FE93C0C4A1A60B7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3B5B484AD5E80BBE00B22777 /* CaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureService.swift; sourceTree = "<group>"; };
 		3C6F37080236BE1FBB28A47E /* HashCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashCalculatorTests.swift; sourceTree = "<group>"; };
+		465758B9B6F8FD0E17D784E7 /* SupportDeveloperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportDeveloperView.swift; sourceTree = "<group>"; };
 		4BF78FEDD27C32A531D9FB20 /* Provika.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Provika.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C8D019E8354B5A79209420D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		559F2EE960F8F0A8AA97CA7F /* CameraControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlsView.swift; sourceTree = "<group>"; };
@@ -162,6 +165,7 @@
 		CD2D89240FE53EB080C45334 /* TuistStrings+ProvikaWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+ProvikaWidgets.swift"; sourceTree = "<group>"; };
 		CD6C3D3EC031AB508819F1E7 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D238CD0328212004231004D2 /* FileStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageTests.swift; sourceTree = "<group>"; };
+		D81BF3EC0CD8FBCE71B23592 /* TipStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipStore.swift; sourceTree = "<group>"; };
 		D9F4F85A92B4766AFEF6F06E /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAA33B6861FF2873B88AD014 /* PendingLaunchAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingLaunchAction.swift; sourceTree = "<group>"; };
 		DB0FBACF6DA1AF54595DF116 /* VideoWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
@@ -273,6 +277,7 @@
 				83A15117F1C589A0F338EFA0 /* DI */,
 				7D9B0E63AC63522EEA7794BC /* Extensions */,
 				B9C5B660C69A67F1456F49A9 /* Location */,
+				6D831F35E86C6513BAA5C07F /* Purchase */,
 				9FBB686E254E260D55A440F1 /* Security */,
 				C761881D1B0AE704E8CA0202 /* Storage */,
 			);
@@ -292,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				4C8D019E8354B5A79209420D /* SettingsView.swift */,
+				465758B9B6F8FD0E17D784E7 /* SupportDeveloperView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -342,6 +348,14 @@
 				0DBC013AF85D115A7F9FBE37 /* LaunchCameraControlWidget.swift */,
 			);
 			path = Controls;
+			sourceTree = "<group>";
+		};
+		6D831F35E86C6513BAA5C07F /* Purchase */ = {
+			isa = PBXGroup;
+			children = (
+				D81BF3EC0CD8FBCE71B23592 /* TipStore.swift */,
+			);
+			path = Purchase;
 			sourceTree = "<group>";
 		};
 		77477E48B6A1BA0C4C1561E5 /* Sources */ = {
@@ -673,6 +687,7 @@
 				F766783561FD67969BF5C91D /* AppEnvironment.swift in Sources */,
 				78DFABB744F630FE2997C850 /* Date+Format.swift in Sources */,
 				31B7B04C38A5CD4254AB8BB5 /* LocationManager.swift in Sources */,
+				22CD1FB0E5BABCAC04467C79 /* TipStore.swift in Sources */,
 				087B208C47C470309D99C154 /* HashCalculator.swift in Sources */,
 				2E072D19B28F5C5A7AC09BE4 /* SignatureService.swift in Sources */,
 				16C319F53C99F0EB84B5FEB9 /* FileStorage.swift in Sources */,
@@ -694,6 +709,7 @@
 				1009AD338650F79CFCA492E9 /* VideoThumbnailView.swift in Sources */,
 				28607123281853D7E625DBDE /* SettingsViewModel.swift in Sources */,
 				F52261D8687518EAFDF1C3EF /* SettingsView.swift in Sources */,
+				DD33F515A56DFB7A4453477A /* SupportDeveloperView.swift in Sources */,
 				3B09F9CF9E12E37119099BBD /* StartRecordingIntent.swift in Sources */,
 				756592CAAFD47ECB9AD6B8DB /* PendingLaunchAction.swift in Sources */,
 			);

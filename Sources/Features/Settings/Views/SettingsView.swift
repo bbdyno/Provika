@@ -63,6 +63,16 @@ struct SettingsView: View {
                     }
                 }
 
+                // 개발자 후원
+                Section {
+                    NavigationLink {
+                        SupportDeveloperView()
+                    } label: {
+                        Label(ProvikaStrings.Localizable.Support.title, systemImage: "heart.fill")
+                            .foregroundStyle(.red)
+                    }
+                }
+
                 // 정보
                 Section(ProvikaStrings.Localizable.Settings.Section.about) {
                     HStack {
