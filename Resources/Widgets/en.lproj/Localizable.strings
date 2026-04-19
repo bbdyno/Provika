@@ -1,0 +1,8 @@
+/* Control Widget — Launch Camera */
+"widget.launchCamera.title" = "Record";
+"widget.launchCamera.displayName" = "Provika Record";
+"widget.launchCamera.description" = "Launch Provika and start recording immediately.";
+
+/* Shared AppIntent — localized via widget bundle for Control Center/Action Button surfaces */
+"intent.startRecording.title" = "Start Recording";
+"intent.startRecording.description" = "Launches Provika and begins a new evidence recording.";

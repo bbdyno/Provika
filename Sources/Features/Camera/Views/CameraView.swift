@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CameraView: View {
     @Environment(AppEnvironment.self) private var appEnvironment
+    @Environment(PendingLaunchAction.self) private var pendingLaunchAction
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = CameraViewModel()
     @State private var pinchStartZoom: CGFloat = 1.0
@@ -33,13 +34,49 @@ struct CameraView: View {
                 modelContext: modelContext
             )
             viewModel.onAppear()
+            startRecordingIfRequested()
         }
         .onChange(of: isActiveTab) { _, active in
             if active {
                 viewModel.onAppear()
+                startRecordingIfRequested()
             } else {
                 viewModel.onDisappear()
             }
+        }
+        .onChange(of: pendingLaunchAction.shouldStartRecording) { _, shouldStart in
+            if shouldStart {
+                startRecordingIfRequested()
+            }
+        }
+        .onChange(of: viewModel.cameraPermissionGranted) { _, granted in
+            // 권한을 나중에 승인한 경우에도 pending 요청 소비.
+            if granted {
+                startRecordingIfRequested()
+            }
+        }
+    }
+
+    // 위젯·액션 버튼 경로로 들어온 녹화 요청을 카메라 준비 상태에서 소비한다.
+    // 세션이 활성화되지 않았거나 이미 녹화 중이면 스킵하고 플래그는 유지하여 다음 기회에 재시도.
+    private func startRecordingIfRequested() {
+        guard pendingLaunchAction.shouldStartRecording else { return }
+        guard isActiveTab else { return }
+        guard viewModel.cameraPermissionGranted else { return }
+        guard !viewModel.isRecording else {
+            pendingLaunchAction.shouldStartRecording = false
+            return
+        }
+        // 세션 startSession() 직후 첫 프레임이 올 때까지 약간의 딜레이 필요.
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(400))
+            guard pendingLaunchAction.shouldStartRecording else { return }
+            guard !viewModel.isRecording else {
+                pendingLaunchAction.shouldStartRecording = false
+                return
+            }
+            viewModel.toggleRecording()
+            pendingLaunchAction.shouldStartRecording = false
         }
     }
 
@@ -105,9 +142,6 @@ struct CameraView: View {
                 }
             )
             .padding(.bottom, zoomDialBottomPadding)
-        }
-        .onReceive(Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()) { _ in
-            viewModel.updateState()
         }
     }
 

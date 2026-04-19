@@ -15,28 +15,40 @@
 		28607123281853D7E625DBDE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5C40C842625EF68D688407 /* SettingsViewModel.swift */; };
 		2E072D19B28F5C5A7AC09BE4 /* SignatureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFF1876C28499A031E3BD01 /* SignatureService.swift */; };
 		31B7B04C38A5CD4254AB8BB5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D80704B4AEE17C2419FC517 /* LocationManager.swift */; };
+		35C3815E0148F16DD3ACEEFB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 492BA495E1E7E70A69128294 /* Localizable.strings */; };
 		3A4338A22FD8356CAA012A33 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = C326702CBB242E6F4A827D5C /* Recording.swift */; };
+		3B09F9CF9E12E37119099BBD /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3857AA00755A29FEDFADEC4A /* StartRecordingIntent.swift */; };
 		47F79DA5B65DE2F743F31875 /* CaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B484AD5E80BBE00B22777 /* CaptureService.swift */; };
 		60AC3F6697D104219F0E5EBD /* ZoomRecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87419D9EC22932AE9E909F47 /* ZoomRecordButton.swift */; };
 		6AB4CBB4D746BDF2BDC41C63 /* OverlayRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C1047DACE6600E9E01DFD1 /* OverlayRenderer.swift */; };
+		6FA37DC27356B67C86F6A094 /* TuistAssets+ProvikaWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1A45854BCD85D892DCCCFE /* TuistAssets+ProvikaWidgets.swift */; };
+		72ECB5DCFD21822AB1993F6A /* ProvikaWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 63A8B7FC7A923489B46A1EAE /* ProvikaWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7496E28AF6EFB41D467925A5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B88E335EA995850BC8D26EC6 /* Localizable.strings */; };
+		756592CAAFD47ECB9AD6B8DB /* PendingLaunchAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA33B6861FF2873B88AD014 /* PendingLaunchAction.swift */; };
 		78DFABB744F630FE2997C850 /* Date+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499387DAC69EAF4C2A2603F /* Date+Format.swift */; };
 		7D936AABFA0F2791E1C58C5A /* TuistBundle+Provika.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B76B52AB39DBD4B4EB1EC7 /* TuistBundle+Provika.swift */; };
 		8109ECC3678F0B7EE745CF88 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A913EACE59F9B61865EFC193 /* InfoPlist.strings */; };
 		818483828DC8294B1B4747A3 /* PreRecordBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B91AF8CBC11E57A45D8E923 /* PreRecordBuffer.swift */; };
 		87B36001D1642766D3CA2EEF /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDEFACB42B8997CFD6A4EB6 /* CameraViewModel.swift */; };
+		8AFA043998CF26326B6C47E9 /* ProvikaWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43FB67EA0788ABFE3251049 /* ProvikaWidgetBundle.swift */; };
 		8B825102BBB3A3CF566307A1 /* GalleryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E864051A595461C5CCCAC8 /* GalleryViewModel.swift */; };
 		903E5CCE0168FF331488E477 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09270A6C5990C4B6312E0EA /* CameraView.swift */; };
+		911EDBD622363104A82E5FEF /* PendingLaunchAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA33B6861FF2873B88AD014 /* PendingLaunchAction.swift */; };
 		94C5915BD78EC69FE466D9A5 /* HashCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6F37080236BE1FBB28A47E /* HashCalculatorTests.swift */; };
 		97B4AF15BF6A37C0259E4415 /* FileStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D238CD0328212004231004D2 /* FileStorageTests.swift */; };
 		A44C19A705B1DDD4B657931F /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FB57E869DF28F927C4E42B /* GalleryView.swift */; };
+		ADF6A2E0537B091E5FAF30A6 /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3857AA00755A29FEDFADEC4A /* StartRecordingIntent.swift */; };
 		B9917E08B7119C637AC37338 /* CameraControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559F2EE960F8F0A8AA97CA7F /* CameraControlsView.swift */; };
 		BF0CD484CF78EA65D7974AF4 /* TuistAssets+Provika.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CED0FD780B4C5946EC0D49D /* TuistAssets+Provika.swift */; };
 		C133B38DEAC36CB2E8E825FD /* ProvikaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7702F000824C506F67D161 /* ProvikaTests.swift */; };
+		C3DBC794015455FB83B47AAC /* LaunchCameraControlWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC013AF85D115A7F9FBE37 /* LaunchCameraControlWidget.swift */; };
 		C9794CF1A2E1EBB559CC651D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2C654C6F1E36E3DF09D1C93 /* Assets.xcassets */; };
+		CA9FA59E6E3268BC49C04928 /* TuistBundle+ProvikaWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162F371FA2BF15DE8E8324A7 /* TuistBundle+ProvikaWidgets.swift */; };
+		CCBC188E5AE8B7218F1D37DB /* TuistStrings+ProvikaWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2D89240FE53EB080C45334 /* TuistStrings+ProvikaWidgets.swift */; };
 		CD8CB9F4C80677B009403422 /* VideoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9DF06CA497E0817C4AFEC34 /* VideoDetailView.swift */; };
 		D5835A6AF20ECA9D75B378B8 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8524F9C25FD3E26741606 /* CameraPreviewView.swift */; };
 		D7673CED95F36651AF3621BE /* TuistStrings+Provika.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64E8F3675633F5F5BE62803 /* TuistStrings+Provika.swift */; };
+		DCEB4C83BC839CBC8E1F91FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B33BB15FE93C0C4A1A60B7B /* Assets.xcassets */; };
 		DECF6B327040F2355AB4928A /* RecordingMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9706D8FE5B5152299B46352 /* RecordingMetadata.swift */; };
 		EC2AEDE0CA467DCD9D67D8E1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCFB905145CEFE7CAC1288ED /* RootView.swift */; };
 		EF7240FA614F7388C69C623E /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0FBACF6DA1AF54595DF116 /* VideoWriter.swift */; };
@@ -45,6 +57,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3A1BCE2AB33C81D3E0EC7D87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E739B1C8976743FED75A7BB7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 469C83504DDCD49E9124A70A;
+			remoteInfo = ProvikaWidgets;
+		};
 		435178AC1DCC64520667328B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E739B1C8976743FED75A7BB7 /* Project object */;
@@ -55,6 +74,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		4AD6F07A44EC02E25F5C6BCE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8AC22B6132FF60CF69739DFD /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -63,6 +92,16 @@
 			files = (
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFD18F29297F45BCFC3C8ABE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstSubfolderSpec = 13;
+			files = (
+				72ECB5DCFD21822AB1993F6A /* ProvikaWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D3E3DEBF622E88DB64B05805 /* Embed Frameworks */ = {
@@ -80,18 +119,25 @@
 /* Begin PBXFileReference section */
 		0539539E7B513B335D640CDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0D80704B4AEE17C2419FC517 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		0DBC013AF85D115A7F9FBE37 /* LaunchCameraControlWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCameraControlWidget.swift; sourceTree = "<group>"; };
 		10E864051A595461C5CCCAC8 /* GalleryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewModel.swift; sourceTree = "<group>"; };
 		10EF5A3FE27C0B40AC147BEA /* Provika-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Provika-Info.plist"; sourceTree = "<group>"; };
+		162F371FA2BF15DE8E8324A7 /* TuistBundle+ProvikaWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+ProvikaWidgets.swift"; sourceTree = "<group>"; };
 		1CED0FD780B4C5946EC0D49D /* TuistAssets+Provika.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+Provika.swift"; sourceTree = "<group>"; };
+		21BD6365077ED76CBD02269D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		22B76B52AB39DBD4B4EB1EC7 /* TuistBundle+Provika.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+Provika.swift"; sourceTree = "<group>"; };
 		2B93807919B4843CE09F1F9E /* RecordingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingIndicatorView.swift; sourceTree = "<group>"; };
+		3857AA00755A29FEDFADEC4A /* StartRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingIntent.swift; sourceTree = "<group>"; };
+		3B33BB15FE93C0C4A1A60B7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3B5B484AD5E80BBE00B22777 /* CaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureService.swift; sourceTree = "<group>"; };
 		3C6F37080236BE1FBB28A47E /* HashCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashCalculatorTests.swift; sourceTree = "<group>"; };
 		4BF78FEDD27C32A531D9FB20 /* Provika.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Provika.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C8D019E8354B5A79209420D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		559F2EE960F8F0A8AA97CA7F /* CameraControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlsView.swift; sourceTree = "<group>"; };
 		5BBF781BE94FB4A1D7F2F7EA /* HashCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashCalculator.swift; sourceTree = "<group>"; };
+		62412F53E55C30EE806299DB /* ProvikaWidgets-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ProvikaWidgets-Info.plist"; sourceTree = "<group>"; };
 		62FB57E869DF28F927C4E42B /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		63A8B7FC7A923489B46A1EAE /* ProvikaWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ProvikaWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6538EE46B15FBF1EF0EA4937 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		68DA84F1624B210ABA7767EF /* ProvikaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProvikaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7499387DAC69EAF4C2A2603F /* Date+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Format.swift"; sourceTree = "<group>"; };
@@ -102,8 +148,10 @@
 		9B5C40C842625EF68D688407 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		9B91AF8CBC11E57A45D8E923 /* PreRecordBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreRecordBuffer.swift; sourceTree = "<group>"; };
 		A3B8524F9C25FD3E26741606 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		AB1A45854BCD85D892DCCCFE /* TuistAssets+ProvikaWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+ProvikaWidgets.swift"; sourceTree = "<group>"; };
 		B0E4787D69716EC3D7E58AF9 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		B2C58B706B05F5FF518C2E6F /* ProvikaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvikaApp.swift; sourceTree = "<group>"; };
+		B43FB67EA0788ABFE3251049 /* ProvikaWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvikaWidgetBundle.swift; sourceTree = "<group>"; };
 		B4EB9FE5FD62F75F2EE6AA3B /* FileStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorage.swift; sourceTree = "<group>"; };
 		B64E8F3675633F5F5BE62803 /* TuistStrings+Provika.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+Provika.swift"; sourceTree = "<group>"; };
 		BCFF1876C28499A031E3BD01 /* SignatureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureService.swift; sourceTree = "<group>"; };
@@ -111,8 +159,11 @@
 		C2C654C6F1E36E3DF09D1C93 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C326702CBB242E6F4A827D5C /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
 		CCFB905145CEFE7CAC1288ED /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		CD2D89240FE53EB080C45334 /* TuistStrings+ProvikaWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+ProvikaWidgets.swift"; sourceTree = "<group>"; };
 		CD6C3D3EC031AB508819F1E7 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D238CD0328212004231004D2 /* FileStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageTests.swift; sourceTree = "<group>"; };
+		D9F4F85A92B4766AFEF6F06E /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DAA33B6861FF2873B88AD014 /* PendingLaunchAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingLaunchAction.swift; sourceTree = "<group>"; };
 		DB0FBACF6DA1AF54595DF116 /* VideoWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
 		DC2F55AC6E25ADDB283E66DA /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9706D8FE5B5152299B46352 /* RecordingMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingMetadata.swift; sourceTree = "<group>"; };
@@ -123,6 +174,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		3B467FB61C61E2CF44E14577 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		81C2AEB3505974C8FDA7E8C1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -144,17 +202,30 @@
 			children = (
 				A913EACE59F9B61865EFC193 /* InfoPlist.strings */,
 				B88E335EA995850BC8D26EC6 /* Localizable.strings */,
+				D3F5E8EF8B3B69781D484035 /* Widgets */,
 				C2C654C6F1E36E3DF09D1C93 /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		06A612643D2F7D12F8C71F89 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				6A374B99BFD814B769C01E1B /* Controls */,
+				B43FB67EA0788ABFE3251049 /* ProvikaWidgetBundle.swift */,
+			);
+			path = Widgets;
 			sourceTree = "<group>";
 		};
 		088203ED10D221CAAAE0AD68 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				1CED0FD780B4C5946EC0D49D /* TuistAssets+Provika.swift */,
+				AB1A45854BCD85D892DCCCFE /* TuistAssets+ProvikaWidgets.swift */,
 				22B76B52AB39DBD4B4EB1EC7 /* TuistBundle+Provika.swift */,
+				162F371FA2BF15DE8E8324A7 /* TuistBundle+ProvikaWidgets.swift */,
 				B64E8F3675633F5F5BE62803 /* TuistStrings+Provika.swift */,
+				CD2D89240FE53EB080C45334 /* TuistStrings+ProvikaWidgets.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -167,6 +238,14 @@
 				315E3A6B4DDDB0B6EB3E2BE4 /* Settings */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		288B8D53C9E654830A660145 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				3857AA00755A29FEDFADEC4A /* StartRecordingIntent.swift */,
+			);
+			path = Intents;
 			sourceTree = "<group>";
 		};
 		2F762792E76CEF4399E307D7 /* Tests */ = {
@@ -200,6 +279,15 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
+		417E3375896FE87ACAA92A2E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				288B8D53C9E654830A660145 /* Intents */,
+				FB6E7AF089583E746767A908 /* Launch */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		47448A7CAE66EAE760C34067 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +309,7 @@
 			children = (
 				4BF78FEDD27C32A531D9FB20 /* Provika.app */,
 				68DA84F1624B210ABA7767EF /* ProvikaTests.xctest */,
+				63A8B7FC7A923489B46A1EAE /* ProvikaWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -247,12 +336,22 @@
 			name = Project;
 			sourceTree = "<group>";
 		};
+		6A374B99BFD814B769C01E1B /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				0DBC013AF85D115A7F9FBE37 /* LaunchCameraControlWidget.swift */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
 		77477E48B6A1BA0C4C1561E5 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				FF3BD9E7530ED66530EE7EEE /* App */,
 				37C0F672DC0D7F396647E258 /* Core */,
 				21B908564CBDC289D95D0FC0 /* Features */,
+				417E3375896FE87ACAA92A2E /* Shared */,
+				06A612643D2F7D12F8C71F89 /* Widgets */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -270,6 +369,7 @@
 			children = (
 				10EF5A3FE27C0B40AC147BEA /* Provika-Info.plist */,
 				87789DF88A28508BFFA71724 /* ProvikaTests-Info.plist */,
+				62412F53E55C30EE806299DB /* ProvikaWidgets-Info.plist */,
 			);
 			path = InfoPlists;
 			sourceTree = "<group>";
@@ -360,6 +460,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		D3F5E8EF8B3B69781D484035 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				492BA495E1E7E70A69128294 /* Localizable.strings */,
+				3B33BB15FE93C0C4A1A60B7B /* Assets.xcassets */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
 		EA917D36391B68859723642F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -391,6 +500,14 @@
 			path = Gallery;
 			sourceTree = "<group>";
 		};
+		FB6E7AF089583E746767A908 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				DAA33B6861FF2873B88AD014 /* PendingLaunchAction.swift */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
 		FF3BD9E7530ED66530EE7EEE /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -403,6 +520,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		469C83504DDCD49E9124A70A /* ProvikaWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3448D1F420F0E5C2A3EF90C /* Build configuration list for PBXNativeTarget "ProvikaWidgets" */;
+			buildPhases = (
+				057903F07BA294EC82DA40CA /* Sources */,
+				F12ABE6A2FFD4934B0E02EE7 /* Resources */,
+				81C2AEB3505974C8FDA7E8C1 /* Frameworks */,
+				4AD6F07A44EC02E25F5C6BCE /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ProvikaWidgets;
+			packageProductDependencies = (
+			);
+			productName = ProvikaWidgets;
+			productReference = 63A8B7FC7A923489B46A1EAE /* ProvikaWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		95621DCB1EAD1B0DC33C6B92 /* ProvikaTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AA250A246362F4C08BE88480 /* Build configuration list for PBXNativeTarget "ProvikaTests" */;
@@ -430,12 +567,14 @@
 			buildPhases = (
 				93C58835D7ED1A33953AB909 /* Sources */,
 				360B0D354619A1434AE9DE16 /* Resources */,
+				CFD18F29297F45BCFC3C8ABE /* Embed Foundation Extensions */,
 				3B467FB61C61E2CF44E14577 /* Frameworks */,
 				8AC22B6132FF60CF69739DFD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E93032403ABC2F4A2415C2D5 /* PBXTargetDependency */,
 			);
 			name = Provika;
 			packageProductDependencies = (
@@ -473,6 +612,7 @@
 			targets = (
 				F2B49D206062C686B294059E /* Provika */,
 				95621DCB1EAD1B0DC33C6B92 /* ProvikaTests */,
+				469C83504DDCD49E9124A70A /* ProvikaWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -495,9 +635,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F12ABE6A2FFD4934B0E02EE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCEB4C83BC839CBC8E1F91FB /* Assets.xcassets in Resources */,
+				35C3815E0148F16DD3ACEEFB /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		057903F07BA294EC82DA40CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FA37DC27356B67C86F6A094 /* TuistAssets+ProvikaWidgets.swift in Sources */,
+				CA9FA59E6E3268BC49C04928 /* TuistBundle+ProvikaWidgets.swift in Sources */,
+				CCBC188E5AE8B7218F1D37DB /* TuistStrings+ProvikaWidgets.swift in Sources */,
+				ADF6A2E0537B091E5FAF30A6 /* StartRecordingIntent.swift in Sources */,
+				911EDBD622363104A82E5FEF /* PendingLaunchAction.swift in Sources */,
+				C3DBC794015455FB83B47AAC /* LaunchCameraControlWidget.swift in Sources */,
+				8AFA043998CF26326B6C47E9 /* ProvikaWidgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		93C58835D7ED1A33953AB909 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -531,6 +694,8 @@
 				1009AD338650F79CFCA492E9 /* VideoThumbnailView.swift in Sources */,
 				28607123281853D7E625DBDE /* SettingsViewModel.swift in Sources */,
 				F52261D8687518EAFDF1C3EF /* SettingsView.swift in Sources */,
+				3B09F9CF9E12E37119099BBD /* StartRecordingIntent.swift in Sources */,
+				756592CAAFD47ECB9AD6B8DB /* PendingLaunchAction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,9 +718,24 @@
 			target = F2B49D206062C686B294059E /* Provika */;
 			targetProxy = 435178AC1DCC64520667328B /* PBXContainerItemProxy */;
 		};
+		E93032403ABC2F4A2415C2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ProvikaWidgets;
+			target = 469C83504DDCD49E9124A70A /* ProvikaWidgets */;
+			targetProxy = 3A1BCE2AB33C81D3E0EC7D87 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		492BA495E1E7E70A69128294 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				21BD6365077ED76CBD02269D /* en */,
+				D9F4F85A92B4766AFEF6F06E /* ko */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		A913EACE59F9B61865EFC193 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -585,7 +765,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Derived/InfoPlists/Provika-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -661,7 +841,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -670,13 +850,44 @@
 			};
 			name = Release;
 		};
+		5CDB65EAA195BF2A203E4596 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = "Derived/InfoPlists/ProvikaWidgets-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bbdyno.app.provika.widgets;
+				PRODUCT_NAME = ProvikaWidgets;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
+					"$(inherited)",
+					DEBUG,
+				);
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		8989E979D12E20346D15AC4C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Derived/InfoPlists/ProvikaTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -708,7 +919,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Derived/InfoPlists/Provika-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -735,7 +946,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "Derived/InfoPlists/ProvikaTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -820,7 +1031,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -828,6 +1039,33 @@
 				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
+		};
+		E2F259994C9CBCDEFB66DB61 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = "Derived/InfoPlists/ProvikaWidgets-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bbdyno.app.provika.widgets;
+				PRODUCT_NAME = ProvikaWidgets;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -846,6 +1084,15 @@
 			buildConfigurations = (
 				913D11AAB39F969E6BF3CBB4 /* Debug */,
 				8989E979D12E20346D15AC4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B3448D1F420F0E5C2A3EF90C /* Build configuration list for PBXNativeTarget "ProvikaWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CDB65EAA195BF2A203E4596 /* Debug */,
+				E2F259994C9CBCDEFB66DB61 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

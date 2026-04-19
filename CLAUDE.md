@@ -42,7 +42,7 @@
 | 항목 | 선택 |
 |---|---|
 | 언어 | Swift 5.9+ |
-| 최소 OS | iOS 17.0 |
+| 최소 OS | **iOS 18.0** (Control Widget 지원 최소 버전) |
 | UI | SwiftUI (카메라 프리뷰만 `UIViewRepresentable`로 UIKit 래핑) |
 | 영상 캡처 | AVFoundation (`AVCaptureSession` + `AVAssetWriter`) |
 | 오버레이 합성 | Core Image (`CIFilter`, `CIContext`) |
@@ -92,7 +92,7 @@ let project = Project(
             "DEVELOPMENT_TEAM": "", // 사용자가 채워야 함
             "MARKETING_VERSION": "1.0.0",
             "CURRENT_PROJECT_VERSION": "1",
-            "IPHONEOS_DEPLOYMENT_TARGET": "17.0",
+            "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "SWIFT_VERSION": "5.9",
             "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
             "GENERATE_INFOPLIST_FILE": "YES"
@@ -108,7 +108,7 @@ let project = Project(
             destinations: .iOS,
             product: .app,
             bundleId: "com.provika.app",
-            deploymentTargets: .iOS("17.0"),
+            deploymentTargets: .iOS("18.0"),
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": "Provika",
                 "CFBundleShortVersionString": "$(MARKETING_VERSION)",
@@ -137,7 +137,7 @@ let project = Project(
             destinations: .iOS,
             product: .unitTests,
             bundleId: "com.provika.app.tests",
-            deploymentTargets: .iOS("17.0"),
+            deploymentTargets: .iOS("18.0"),
             infoPlist: .default,
             sources: ["Tests/**"],
             dependencies: [.target(name: "Provika")]
@@ -823,6 +823,59 @@ rm -rf Derived/
 - [ ] 햅틱 피드백 추가
 - [ ] 모든 Phase 단위 테스트 통과 확인
 - 커밋: `docs: README 및 라이선스 추가`
+
+### Phase 10: 잠금화면/제어 센터/액션 버튼 원터치 녹화 (iOS 18+)
+
+**목적**: 위반 순간을 놓치지 않도록 앱을 열지 않고도 녹화를 시작할 수 있게 한다.
+
+#### 10.1 구조
+- 새 타겟 `ProvikaWidgets` (appExtension) — Widget Extension 번들
+- 공유 코드는 `Sources/Shared/`에 두고 앱·위젯 양쪽 타겟에 include
+- 위젯 리소스는 `Resources/Widgets/`에 두어 앱 리소스와 분리
+
+```
+Sources/
+├── Shared/
+│   ├── Intents/
+│   │   └── StartRecordingIntent.swift   # AppIntent, openAppWhenRun=true
+│   └── Launch/
+│       └── PendingLaunchAction.swift    # @Observable 싱글턴, 앱이 관찰
+└── Widgets/
+    ├── ProvikaWidgetBundle.swift        # @main WidgetBundle
+    └── Controls/
+        └── LaunchCameraControlWidget.swift   # ControlWidget
+Resources/
+└── Widgets/
+    ├── en.lproj/Localizable.strings
+    └── ko.lproj/Localizable.strings
+```
+
+#### 10.2 동작 흐름
+1. 사용자가 제어 센터/잠금화면/액션 버튼에 배치된 Control Widget 탭
+2. 시스템이 `StartRecordingIntent`를 invoke → `openAppWhenRun=true`이므로 앱을 포그라운드로
+3. 인텐트의 `perform()`이 앱 프로세스에서 실행 → `PendingLaunchAction.shared.shouldStartRecording = true`
+4. `RootView`가 플래그 변화 감지 → 카메라 탭으로 전환
+5. `CameraView`가 카메라 세션 준비 상태를 확인 → 400ms 대기 후 `toggleRecording()` 호출 → 플래그 리셋
+
+#### 10.3 구현 체크리스트
+- [x] Project.swift에 `ProvikaWidgets` appExtension 타겟 추가
+- [x] `StartRecordingIntent` (shared) — `openAppWhenRun = true`
+- [x] `PendingLaunchAction` @Observable 싱글턴 (shared)
+- [x] `LaunchCameraControlWidget` (ControlWidget, `ControlWidgetButton(action: StartRecordingIntent())`)
+- [x] `ProvikaWidgetBundle` — `@main WidgetBundle`
+- [x] 위젯 번들용 `Resources/Widgets/{en,ko}.lproj/Localizable.strings` — `widget.launchCamera.*`, `intent.startRecording.*` 키
+- [x] 앱 번들에도 `intent.startRecording.*` 키 추가 (Shortcuts/Siri 표시용)
+- [x] `ProvikaApp`에 `PendingLaunchAction.shared` 환경 주입
+- [x] `RootView`가 플래그 감지 시 카메라 탭으로 전환
+- [x] `CameraView`가 pending 플래그 소비하여 자동 녹화 시작
+- [ ] 실기기(iOS 18+)에서 제어 센터/잠금화면/액션 버튼 배치 후 녹화 시작 확인
+
+#### 10.4 주의사항
+- Widget Extension 프로세스는 AVCaptureSession을 구동할 수 없음 — 반드시 `openAppWhenRun = true`로 앱을 먼저 깨움
+- `StartRecordingIntent`는 shared 파일로 양쪽 타겟에 같은 타입명으로 컴파일됨 (시스템이 타입명 기준 라우팅)
+- 향후 확장: 토글 지원(App Groups + 상태 동기화), Live Activity로 녹화 중 표시, `OpenIntent` 변형으로 특정 모드 진입
+
+- 커밋: `feat: iOS 18 Control Widget으로 잠금화면/제어 센터/액션 버튼 원터치 녹화 구현`
 
 ---
 

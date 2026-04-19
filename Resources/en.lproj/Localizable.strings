@@ -29,6 +29,10 @@
 "gallery.detail.markReported" = "Mark as Reported";
 "gallery.detail.delete.confirm" = "Delete this recording? This cannot be undone.";
 
+/* App Intent (shared with widget bundle) */
+"intent.startRecording.title" = "Start Recording";
+"intent.startRecording.description" = "Launches Provika and begins a new evidence recording.";
+
 /* Settings */
 "settings.title" = "Settings";
 "settings.section.recording" = "Recording";
