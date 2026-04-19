@@ -1,9 +1,8 @@
 # Xcode
 build/
 DerivedData/
-*.xcuserdata/
-*.xcworkspace
-*.xcodeproj
+# 사용자 개인 상태(scheme 순서, UI state 등)만 ignore — 공유 스킴·pbxproj·workspacedata는 유지
+**/xcuserdata/
 
 # Tuist
 **/Derived/**
