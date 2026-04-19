@@ -15,10 +15,12 @@ final class CameraViewModel {
 
     var isFlashOn = false
     var cameraPermissionGranted = false
-    var isRecording = false
-    var elapsedTime: TimeInterval = 0
 
     let captureService = CaptureService()
+
+    // captureService가 @Observable이므로 SwiftUI는 아래 computed 프로퍼티 의존성을 그대로 추적한다.
+    var isRecording: Bool { captureService.isRecording }
+    var elapsedTime: TimeInterval { captureService.elapsedTime }
 
     private let logger = Logger(subsystem: "com.bbdyno.app.provika", category: "CameraVM")
     private var locationManager: LocationManager?
@@ -27,9 +29,10 @@ final class CameraViewModel {
     func configure(locationManager: LocationManager, modelContext: ModelContext) {
         self.locationManager = locationManager
         self.modelContext = modelContext
+        captureService.locationManager = locationManager
 
-        captureService.onRecordingFinished = { [weak self] videoURL, sidecarURL, duration in
-            self?.saveRecording(videoURL: videoURL, sidecarURL: sidecarURL, duration: duration)
+        captureService.onRecordingFinished = { [weak self] videoURL, sidecarURL, duration, hash in
+            self?.saveRecording(videoURL: videoURL, sidecarURL: sidecarURL, duration: duration, hash: hash)
         }
     }
 
@@ -84,26 +87,16 @@ final class CameraViewModel {
         captureService.stopSession()
     }
 
-    func updateState() {
-        isRecording = captureService.isRecording
-        elapsedTime = captureService.elapsedTime
-        captureService.currentLocation = locationManager?.currentLocation
-    }
-
     private func startRecording() {
         let generator = UIImpactFeedbackGenerator(style: .heavy)
         generator.impactOccurred()
-
         captureService.startRecording()
-        isRecording = true
     }
 
     private func stopRecording() {
         let generator = UIImpactFeedbackGenerator(style: .heavy)
         generator.impactOccurred()
-
         captureService.stopRecording()
-        isRecording = false
     }
 
     private func setupCamera() {
@@ -111,22 +104,8 @@ final class CameraViewModel {
         captureService.startSession()
     }
 
-    private func saveRecording(videoURL: URL, sidecarURL: URL, duration: TimeInterval) {
+    private func saveRecording(videoURL: URL, sidecarURL: URL, duration: TimeInterval, hash: String) {
         guard let modelContext else { return }
-
-        var hash = ""
-        if let computed = try? HashCalculator.sha256(of: videoURL) {
-            hash = computed
-        }
-
-        // 실제 영상 파일에서 duration 읽기
-        let asset = AVAsset(url: videoURL)
-        let actualDuration: TimeInterval
-        if let track = asset.tracks(withMediaType: .video).first {
-            actualDuration = CMTimeGetSeconds(track.timeRange.duration)
-        } else {
-            actualDuration = duration
-        }
 
         let loc = locationManager?.currentLocation
         let startDate = captureService.recordingStartTime ?? Date()
@@ -134,7 +113,7 @@ final class CameraViewModel {
         let recording = Recording(
             id: videoURL.deletingPathExtension().lastPathComponent,
             createdAt: startDate,
-            duration: actualDuration,
+            duration: duration,
             fileURL: videoURL,
             sidecarURL: sidecarURL,
             fileHash: hash,

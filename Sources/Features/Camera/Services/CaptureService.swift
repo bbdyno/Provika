@@ -22,7 +22,11 @@ final class CaptureService: NSObject {
     var recordingStartTime: Date?
     var elapsedTime: TimeInterval = 0
 
-    var onRecordingFinished: ((URL, URL, TimeInterval) -> Void)?
+    // 콜백 시그니처: (영상 URL, 사이드카 URL, duration, SHA-256 해시)
+    var onRecordingFinished: ((URL, URL, TimeInterval, String) -> Void)?
+
+    // 위치 데이터는 LocationManager에서 직접 읽는다 (VM 폴링 제거)
+    weak var locationManager: LocationManager?
 
     private var videoDeviceInput: AVCaptureDeviceInput?
     private var videoDataOutput: AVCaptureVideoDataOutput?
@@ -37,13 +41,21 @@ final class CaptureService: NSObject {
     private let signatureService = SignatureService()
     let preRecordBuffer = PreRecordBuffer()
 
-    var currentLocation: CLLocation?
+    private var cachedDeviceInfo = OverlayRenderer.DeviceInfo(model: "iPhone", appVersion: "1.0.0")
+    private static let isoFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
     private var locationTrack: [RecordingMetadata.LocationPoint] = []
+    private var lastLocationTrackTime: Date?
     private var recordingTimer: Timer?
     private weak var previewLayer: AVCaptureVideoPreviewLayer?
     private var orientationObserver: NSObjectProtocol?
     private var currentPreviewRotationAngle: CGFloat = 90
     private var currentCaptureRotationAngle: CGFloat = 90
+    private var recordingStartRotationAngle: CGFloat = 90
     private var latestVideoDimensions = CMVideoDimensions(width: 1080, height: 1920)
     private var recordedVideoDimensions = CMVideoDimensions(width: 1080, height: 1920)
     private var isRotationLocked = false
@@ -64,6 +76,12 @@ final class CaptureService: NSObject {
         // 설정에서 선녹화 버퍼 길이 반영
         let preRecordSeconds = UserDefaults.standard.integer(forKey: "preRecordDuration")
         preRecordBuffer.updateDuration(TimeInterval(preRecordSeconds))
+
+        // UIDevice.current.name은 메인 스레드 전용 — 한 번만 캐싱해서 writerQueue에서 안전하게 사용
+        cachedDeviceInfo = OverlayRenderer.DeviceInfo(
+            model: UIDevice.current.name,
+            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        )
 
         startObservingOrientationChangesIfNeeded()
 
@@ -102,6 +120,7 @@ final class CaptureService: NSObject {
         let recordingDimensions = currentRecordingDimensions()
 
         isRotationLocked = true
+        recordingStartRotationAngle = currentCaptureRotationAngle
         recordedVideoDimensions = recordingDimensions
 
         writerQueue.async { [weak self] in
@@ -116,9 +135,8 @@ final class CaptureService: NSObject {
 
                 // 선녹화 버퍼 플러시
                 let buffered = preRecordBuffer.flush()
-                for (sampleBuffer, renderedBuffer) in buffered.video {
-                    let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-                    videoWriter.appendVideoBuffer(renderedBuffer, at: time)
+                for frame in buffered.video {
+                    videoWriter.appendVideoBuffer(frame.pixelBuffer, at: frame.time)
                 }
                 for audioBuffer in buffered.audio {
                     videoWriter.appendAudioBuffer(audioBuffer)
@@ -128,6 +146,7 @@ final class CaptureService: NSObject {
                 recordingStartTime = now
                 elapsedTime = 0
                 locationTrack = []
+                lastLocationTrackTime = nil
 
                 DispatchQueue.main.async { [weak self] in
                     self?.startTimer()
@@ -149,8 +168,13 @@ final class CaptureService: NSObject {
 
         DispatchQueue.main.async { [weak self] in
             self?.stopTimer()
-            self?.applyPreviewRotation(self?.currentPreviewRotationAngle ?? 90)
-            self?.applyCaptureRotation(self?.currentCaptureRotationAngle ?? 90, clearBuffer: true)
+            // 녹화 도중 방향이 바뀌지 않았다면 세션 재설정 생략
+            guard let self else { return }
+            let currentAngle = self.currentCaptureRotationAngle
+            if currentAngle != self.recordingStartRotationAngle {
+                self.applyPreviewRotation(currentAngle)
+                self.applyCaptureRotation(currentAngle, clearBuffer: true)
+            }
         }
 
         Task { [weak self] in
@@ -161,10 +185,12 @@ final class CaptureService: NSObject {
             }
 
             let sidecarURL = videoURL.deletingPathExtension().appendingPathExtension("json")
-            await saveSidecarJSON(videoURL: videoURL, sidecarURL: sidecarURL)
+            // 해시는 한 번만 계산해 사이드카와 콜백에 재사용
+            let hash = (try? HashCalculator.sha256(of: videoURL)) ?? ""
+            await saveSidecarJSON(videoURL: videoURL, sidecarURL: sidecarURL, hash: hash)
 
             await MainActor.run {
-                self.onRecordingFinished?(videoURL, sidecarURL, finalDuration)
+                self.onRecordingFinished?(videoURL, sidecarURL, finalDuration, hash)
                 self.recordingStartTime = nil
                 self.elapsedTime = 0
             }
@@ -353,10 +379,11 @@ final class CaptureService: NSObject {
             return
         }
 
+        let changed = angle != currentCaptureRotationAngle
         currentPreviewRotationAngle = angle
         currentCaptureRotationAngle = angle
         applyPreviewRotation(angle)
-        applyCaptureRotation(angle, clearBuffer: clearBuffer)
+        applyCaptureRotation(angle, clearBuffer: clearBuffer && changed)
     }
 
     private func applyPreviewRotation(_ angle: CGFloat) {
@@ -380,6 +407,7 @@ final class CaptureService: NSObject {
         guard clearBuffer else { return }
         writerQueue.async { [weak self] in
             self?.preRecordBuffer.clear()
+            self?.overlayRenderer.invalidateCaches()
         }
     }
 
@@ -447,13 +475,7 @@ final class CaptureService: NSObject {
         recordingTimer = nil
     }
 
-    private func deviceInfo() -> OverlayRenderer.DeviceInfo {
-        let model = UIDevice.current.name
-        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        return OverlayRenderer.DeviceInfo(model: model, appVersion: appVersion)
-    }
-
-    private func saveSidecarJSON(videoURL: URL, sidecarURL: URL) async {
+    private func saveSidecarJSON(videoURL: URL, sidecarURL: URL, hash: String) async {
         let model = await MainActor.run { UIDevice.current.name }
         let systemVersion = await MainActor.run { UIDevice.current.systemVersion }
         let vendorId = await MainActor.run { UIDevice.current.identifierForVendor?.uuidString }
@@ -477,25 +499,30 @@ final class CaptureService: NSObject {
         )
         metadata.locationTrack = locationTrack
 
-        // 해시 계산
-        do {
-            let hash = try HashCalculator.sha256(of: videoURL)
+        if !hash.isEmpty {
             logger.info("SHA-256 해시: \(hash)")
+            do {
+                let hashData = Data(hash.utf8)
+                let signature = try signatureService.sign(data: hashData)
+                let publicKeyPEM = try signatureService.publicKeyPEM()
 
-            // 서명
-            let hashData = Data(hash.utf8)
-            let signature = try signatureService.sign(data: hashData)
-            let publicKeyPEM = try signatureService.publicKeyPEM()
-
-            metadata.integrity = RecordingMetadata.IntegrityInfo(
-                algorithm: "SHA-256",
-                hash: hash,
-                signatureAlgorithm: "ECDSA-P256-SHA256",
-                signature: signature.base64EncodedString(),
-                publicKey: publicKeyPEM
-            )
-        } catch {
-            logger.error("무결성 정보 생성 실패: \(error.localizedDescription)")
+                metadata.integrity = RecordingMetadata.IntegrityInfo(
+                    algorithm: "SHA-256",
+                    hash: hash,
+                    signatureAlgorithm: "ECDSA-P256-SHA256",
+                    signature: signature.base64EncodedString(),
+                    publicKey: publicKeyPEM
+                )
+            } catch {
+                logger.error("서명 실패: \(error.localizedDescription)")
+                metadata.integrity = RecordingMetadata.IntegrityInfo(
+                    algorithm: "SHA-256",
+                    hash: hash,
+                    signatureAlgorithm: nil,
+                    signature: nil,
+                    publicKey: nil
+                )
+            }
         }
 
         let encoder = JSONEncoder()
@@ -522,50 +549,57 @@ extension CaptureService: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptur
     ) {
         if output is AVCaptureVideoDataOutput {
             guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-            let currentDimensions = CMVideoDimensions(
-                width: Int32(CVPixelBufferGetWidth(pixelBuffer)),
-                height: Int32(CVPixelBufferGetHeight(pixelBuffer))
-            )
 
             if !isRotationLocked {
-                latestVideoDimensions = currentDimensions
+                latestVideoDimensions = CMVideoDimensions(
+                    width: Int32(CVPixelBufferGetWidth(pixelBuffer)),
+                    height: Int32(CVPixelBufferGetHeight(pixelBuffer))
+                )
             }
 
-            // 오버레이 렌더링 (녹화/선녹화 공통)
+            // 녹화·선녹화 모두 꺼져 있으면 오버레이 렌더 생략 (프리뷰는 별도 레이어)
+            let preRecordEnabled = preRecordBuffer.isEnabled
+            guard isRecording || preRecordEnabled else { return }
+
+            let currentLocation = locationManager?.currentLocation
             guard let renderedBuffer = overlayRenderer.render(
                 pixelBuffer: pixelBuffer,
                 location: currentLocation,
-                deviceInfo: deviceInfo()
+                deviceInfo: cachedDeviceInfo
             ) else { return }
 
             if isRecording {
-                // 위치 트랙 업데이트
-                if let loc = currentLocation {
-                    let isoFormatter = ISO8601DateFormatter()
-                    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-                    let point = RecordingMetadata.LocationPoint(
-                        ts: isoFormatter.string(from: Date()),
-                        lat: loc.coordinate.latitude,
-                        lng: loc.coordinate.longitude,
-                        speed: max(0, loc.speed * 3.6),
-                        heading: max(0, loc.course)
-                    )
-                    locationTrack.append(point)
-                }
-
+                appendLocationTrackIfNeeded(location: currentLocation)
                 let presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
                 videoWriter.appendVideoBuffer(renderedBuffer, at: presentationTime)
             } else {
-                // 선녹화 버퍼에 저장
-                preRecordBuffer.appendVideo(sampleBuffer: sampleBuffer, renderedBuffer: renderedBuffer)
+                let time = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                preRecordBuffer.appendVideo(time: time, renderedBuffer: renderedBuffer)
             }
         } else if output is AVCaptureAudioDataOutput {
             if isRecording {
                 videoWriter.appendAudioBuffer(sampleBuffer)
-            } else {
+            } else if preRecordBuffer.isEnabled {
                 preRecordBuffer.appendAudio(sampleBuffer: sampleBuffer)
             }
         }
+    }
+
+    private func appendLocationTrackIfNeeded(location: CLLocation?) {
+        guard let loc = location else { return }
+        let now = Date()
+        if let last = lastLocationTrackTime, now.timeIntervalSince(last) < 1.0 {
+            return
+        }
+        lastLocationTrackTime = now
+
+        let point = RecordingMetadata.LocationPoint(
+            ts: Self.isoFormatter.string(from: now),
+            lat: loc.coordinate.latitude,
+            lng: loc.coordinate.longitude,
+            speed: max(0, loc.speed * 3.6),
+            heading: max(0, loc.course)
+        )
+        locationTrack.append(point)
     }
 }

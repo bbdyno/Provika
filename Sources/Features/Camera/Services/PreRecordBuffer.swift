@@ -9,7 +9,12 @@ import AVFoundation
 import os
 
 final class PreRecordBuffer {
-    private var videoBuffers: [(CMSampleBuffer, CVPixelBuffer)] = []
+    struct VideoFrame {
+        let time: CMTime
+        let pixelBuffer: CVPixelBuffer
+    }
+
+    private var videoBuffers: [VideoFrame] = []
     private var audioBuffers: [CMSampleBuffer] = []
     private var bufferDuration: TimeInterval
     private let logger = Logger(subsystem: "com.bbdyno.app.provika", category: "PreRecord")
@@ -28,9 +33,9 @@ final class PreRecordBuffer {
         }
     }
 
-    func appendVideo(sampleBuffer: CMSampleBuffer, renderedBuffer: CVPixelBuffer) {
+    func appendVideo(time: CMTime, renderedBuffer: CVPixelBuffer) {
         guard isEnabled else { return }
-        videoBuffers.append((sampleBuffer, renderedBuffer))
+        videoBuffers.append(VideoFrame(time: time, pixelBuffer: renderedBuffer))
         trimToWindow()
     }
 
@@ -40,7 +45,7 @@ final class PreRecordBuffer {
         trimAudioToWindow()
     }
 
-    func flush() -> (video: [(CMSampleBuffer, CVPixelBuffer)], audio: [CMSampleBuffer]) {
+    func flush() -> (video: [VideoFrame], audio: [CMSampleBuffer]) {
         let video = videoBuffers
         let audio = audioBuffers
         videoBuffers.removeAll()
@@ -55,19 +60,12 @@ final class PreRecordBuffer {
     }
 
     private func trimToWindow() {
-        guard let oldest = videoBuffers.first,
-              let newest = videoBuffers.last else { return }
+        guard let newest = videoBuffers.last else { return }
+        let newestSeconds = CMTimeGetSeconds(newest.time)
 
-        let oldestTime = CMSampleBufferGetPresentationTimeStamp(oldest.0)
-        let newestTime = CMSampleBufferGetPresentationTimeStamp(newest.0)
-        let elapsed = CMTimeGetSeconds(newestTime) - CMTimeGetSeconds(oldestTime)
-
-        while elapsed > bufferDuration && videoBuffers.count > 1 {
+        while let oldest = videoBuffers.first,
+              newestSeconds - CMTimeGetSeconds(oldest.time) > bufferDuration {
             videoBuffers.removeFirst()
-            guard let first = videoBuffers.first else { break }
-            let firstTime = CMSampleBufferGetPresentationTimeStamp(first.0)
-            let currentElapsed = CMTimeGetSeconds(newestTime) - CMTimeGetSeconds(firstTime)
-            if currentElapsed <= bufferDuration { break }
         }
     }
 
@@ -76,8 +74,7 @@ final class PreRecordBuffer {
             audioBuffers.removeAll()
             return
         }
-        let videoStartTime = CMSampleBufferGetPresentationTimeStamp(videoStart.0)
-
+        let videoStartTime = videoStart.time
         audioBuffers.removeAll { buffer in
             let time = CMSampleBufferGetPresentationTimeStamp(buffer)
             return CMTimeCompare(time, videoStartTime) < 0
