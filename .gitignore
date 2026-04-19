@@ -2,8 +2,6 @@
 build/
 DerivedData/
 *.xcuserdata/
-*.xcworkspace
-*.xcodeproj
 
 # Tuist
 **/Derived/**
