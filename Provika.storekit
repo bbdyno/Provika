@@ -1,0 +1,126 @@
+{
+  "identifier" : "A1B2C3D4-0000-0000-0000-000000000001",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "SK-TIP-SMALL-0001",
+      "localizations" : [
+        {
+          "description" : "A small thank-you for independent development.",
+          "displayName" : "Support Developer - Coffee",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "커피 한 잔은 큰 힘이 됩니다.",
+          "displayName" : "개발자 지원 - 커피",
+          "locale" : "ko_KR"
+        }
+      ],
+      "productID" : "com.provika.tip.item.small",
+      "referenceName" : "Support Developer - Coffee",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "SK-TIP-MEDIUM-0001",
+      "localizations" : [
+        {
+          "description" : "Support funds bug fix and faster response to feedback.",
+          "displayName" : "Support Developer - Meal",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "보내주신 후원은 버그 수정, 새 기능 개발, 사용자 피드백에 대한 빠른 대응에 그대로 쓰입니다.",
+          "displayName" : "개발자 후원 - 식사",
+          "locale" : "ko_KR"
+        }
+      ],
+      "productID" : "com.provika.tip.item.medium",
+      "referenceName" : "Support Developer - Meal",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "14.99",
+      "familyShareable" : false,
+      "internalID" : "SK-TIP-LARGE-0001",
+      "localizations" : [
+        {
+          "description" : "The most generous contribution to the living expenses.",
+          "displayName" : "Support - Living Expenses",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "든든한 후원입니다. 개발자의 생활비에 보태져, Provika가 장기 프로젝트로 이어질 수 있습니다.",
+          "displayName" : "개발자 후원 - 생활비",
+          "locale" : "ko_KR"
+        }
+      ],
+      "productID" : "com.provika.tip.item.large",
+      "referenceName" : "Support - Living Expenses",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "",
+    "_developerTeamID" : "",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 0,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
