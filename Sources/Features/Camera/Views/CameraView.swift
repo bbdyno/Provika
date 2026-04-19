@@ -101,11 +101,11 @@ struct CameraView: View {
                         )
                     }
                     .onEnded { _ in
-                        pinchStartZoom = viewModel.captureService.currentZoomFactor
+                        pinchStartZoom = viewModel.captureService.currentDisplayZoom
                     }
             )
             .onAppear {
-                pinchStartZoom = viewModel.captureService.currentZoomFactor
+                pinchStartZoom = viewModel.captureService.currentDisplayZoom
             }
 
             // 녹화 중 빨간 테두리
@@ -129,19 +129,21 @@ struct CameraView: View {
                 Spacer()
             }
         }
-        .overlay(alignment: .bottom) {
-            bottomControls
-        }
+        // 줌 다이얼을 먼저 배치해 아래 층에 두고, 녹화·플래시 버튼이 항상 상단에 오도록 한다.
+        // 그렇지 않으면 다이얼이 펼쳐졌을 때 배경 Rectangle이 녹화 버튼 위를 덮어 터치를 가로챈다.
         .overlay(alignment: .bottom) {
             ZoomDialControl(
-                zoomFactor: viewModel.captureService.currentZoomFactor,
-                minZoom: viewModel.captureService.minZoomFactor,
-                maxZoom: viewModel.captureService.maxZoomFactor,
+                zoomFactor: viewModel.captureService.currentDisplayZoom,
+                minZoom: viewModel.captureService.minDisplayZoom,
+                maxZoom: viewModel.captureService.maxDisplayZoom,
                 onZoomChange: { factor in
-                    viewModel.captureService.setZoom(factor)
+                    viewModel.captureService.setDisplayZoom(factor)
                 }
             )
             .padding(.bottom, zoomDialBottomPadding)
+        }
+        .overlay(alignment: .bottom) {
+            bottomControls
         }
     }
 

@@ -65,7 +65,7 @@ final class CameraViewModel {
 
     func handlePinchZoom(scale: CGFloat, initialZoom: CGFloat) {
         let newFactor = initialZoom * scale
-        captureService.setZoom(newFactor)
+        captureService.setDisplayZoom(newFactor)
     }
 
     func handleTapFocus(at point: CGPoint) {

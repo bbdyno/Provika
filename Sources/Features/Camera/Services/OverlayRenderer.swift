@@ -7,6 +7,7 @@
 
 import CoreImage
 import CoreLocation
+import ImageIO
 import Metal
 import UIKit
 
@@ -44,15 +45,23 @@ final class OverlayRenderer {
         }
     }
 
+    // orientation: 입력은 항상 포트레이트 프레임이므로, 이 값에 따라 CIImage를 회전시키고
+    // 오버레이는 회전 후 좌표계에 맞춰 배치된다. (`.up`=포트레이트 그대로, `.left`/`.right`=가로)
     func render(
         pixelBuffer: CVPixelBuffer,
         location: CLLocation?,
         deviceInfo: DeviceInfo,
-        timestamp: Date = Date()
+        timestamp: Date = Date(),
+        orientation: CGImagePropertyOrientation = .up
     ) -> CVPixelBuffer? {
-        let width = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
-        let height = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
+        let inputWidth = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
+        let inputHeight = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
         let format = CVPixelBufferGetPixelFormatType(pixelBuffer)
+
+        let swapWH = (orientation == .left || orientation == .right
+            || orientation == .leftMirrored || orientation == .rightMirrored)
+        let width = swapWH ? inputHeight : inputWidth
+        let height = swapWH ? inputWidth : inputHeight
 
         let layout = cachedLayout(width: width, height: height)
         let maxWidth = layout.isPortrait
@@ -83,7 +92,8 @@ final class OverlayRenderer {
             maximumWidth: footerMaxWidth
         )
 
-        let baseImage = CIImage(cvPixelBuffer: pixelBuffer)
+        // 회전 적용 — .oriented는 CIImage의 extent를 회전된 크기·(0,0) 원점으로 재정렬한다.
+        let baseImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(orientation)
         var composited = baseImage
 
         if layout.isPortrait {
@@ -284,9 +294,10 @@ private struct OverlayLayout {
     init(width: CGFloat, height: CGFloat) {
         let shortSide = min(width, height)
         self.isPortrait = height >= width
-        self.margin = max(12, shortSide * 0.018)
-        self.fontSize = shortSide * (isPortrait ? 0.0175 : 0.0185)
-        self.footerFontSize = fontSize * 0.9
-        self.lineSpacing = fontSize * 0.52
+        // CLAUDE.md §5.2.1: 영상 높이의 3% (1080p 기준 ~32pt)
+        self.margin = max(16, shortSide * 0.022)
+        self.fontSize = shortSide * (isPortrait ? 0.028 : 0.030)
+        self.footerFontSize = fontSize * 0.82
+        self.lineSpacing = fontSize * 0.5
     }
 }
