@@ -522,6 +522,18 @@ h3 {
   border-top: 0;
 }
 
+.legal-inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.legal-inline-links a {
+  color: var(--text);
+  font-weight: 700;
+}
+
 .legal-card h2 {
   font-size: 1.4rem;
   margin-bottom: 12px;

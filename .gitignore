@@ -9,6 +9,9 @@ DerivedData/
 .tuist-version
 .build/
 
+# Firebase Hosting (cache)
+.firebase/
+
 # macOS
 .DS_Store
 
