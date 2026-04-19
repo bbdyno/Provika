@@ -92,8 +92,9 @@ final class OverlayRenderer {
             maximumWidth: footerMaxWidth
         )
 
-        // 회전 적용 — .oriented는 CIImage의 extent를 회전된 크기·(0,0) 원점으로 재정렬한다.
-        let baseImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(orientation)
+        // 회전 적용 — .up일 땐 no-op이므로 건너뛴다. 그 외엔 .oriented로 extent·좌표계 재정렬.
+        let rawImage = CIImage(cvPixelBuffer: pixelBuffer)
+        let baseImage = orientation == .up ? rawImage : rawImage.oriented(orientation)
         var composited = baseImage
 
         if layout.isPortrait {
@@ -129,7 +130,15 @@ final class OverlayRenderer {
         guard let output = makePixelBuffer(width: Int(width), height: Int(height), format: format) else {
             return nil
         }
-        ciContext.render(composited, to: output)
+        // 명시적 bounds·colorspace 지정 — 기본 render(to:)가 일부 조건에서 composited의
+        // text 레이어를 누락시키는 케이스가 있어 안전하게 전체 extent로 렌더.
+        let bounds = CGRect(x: 0, y: 0, width: width, height: height)
+        ciContext.render(
+            composited,
+            to: output,
+            bounds: bounds,
+            colorSpace: CGColorSpaceCreateDeviceRGB()
+        )
         return output
     }
 
