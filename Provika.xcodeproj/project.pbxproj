@@ -1,0 +1,865 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		087B208C47C470309D99C154 /* HashCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBF781BE94FB4A1D7F2F7EA /* HashCalculator.swift */; };
+		0D34BC646D54372E6704AA6F /* RecordingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B93807919B4843CE09F1F9E /* RecordingIndicatorView.swift */; };
+		1009AD338650F79CFCA492E9 /* VideoThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B42520B7D66C3FD4544C7B /* VideoThumbnailView.swift */; };
+		16C319F53C99F0EB84B5FEB9 /* FileStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EB9FE5FD62F75F2EE6AA3B /* FileStorage.swift */; };
+		1A676B6005F299A4F8C8EFD3 /* ProvikaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C58B706B05F5FF518C2E6F /* ProvikaApp.swift */; };
+		28607123281853D7E625DBDE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5C40C842625EF68D688407 /* SettingsViewModel.swift */; };
+		2E072D19B28F5C5A7AC09BE4 /* SignatureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFF1876C28499A031E3BD01 /* SignatureService.swift */; };
+		31B7B04C38A5CD4254AB8BB5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D80704B4AEE17C2419FC517 /* LocationManager.swift */; };
+		3A4338A22FD8356CAA012A33 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = C326702CBB242E6F4A827D5C /* Recording.swift */; };
+		47F79DA5B65DE2F743F31875 /* CaptureService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B484AD5E80BBE00B22777 /* CaptureService.swift */; };
+		60AC3F6697D104219F0E5EBD /* ZoomRecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87419D9EC22932AE9E909F47 /* ZoomRecordButton.swift */; };
+		6AB4CBB4D746BDF2BDC41C63 /* OverlayRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C1047DACE6600E9E01DFD1 /* OverlayRenderer.swift */; };
+		7496E28AF6EFB41D467925A5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B88E335EA995850BC8D26EC6 /* Localizable.strings */; };
+		78DFABB744F630FE2997C850 /* Date+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499387DAC69EAF4C2A2603F /* Date+Format.swift */; };
+		7D936AABFA0F2791E1C58C5A /* TuistBundle+Provika.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B76B52AB39DBD4B4EB1EC7 /* TuistBundle+Provika.swift */; };
+		8109ECC3678F0B7EE745CF88 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A913EACE59F9B61865EFC193 /* InfoPlist.strings */; };
+		818483828DC8294B1B4747A3 /* PreRecordBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B91AF8CBC11E57A45D8E923 /* PreRecordBuffer.swift */; };
+		87B36001D1642766D3CA2EEF /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CDEFACB42B8997CFD6A4EB6 /* CameraViewModel.swift */; };
+		8B825102BBB3A3CF566307A1 /* GalleryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E864051A595461C5CCCAC8 /* GalleryViewModel.swift */; };
+		903E5CCE0168FF331488E477 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09270A6C5990C4B6312E0EA /* CameraView.swift */; };
+		94C5915BD78EC69FE466D9A5 /* HashCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6F37080236BE1FBB28A47E /* HashCalculatorTests.swift */; };
+		97B4AF15BF6A37C0259E4415 /* FileStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D238CD0328212004231004D2 /* FileStorageTests.swift */; };
+		A44C19A705B1DDD4B657931F /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FB57E869DF28F927C4E42B /* GalleryView.swift */; };
+		B9917E08B7119C637AC37338 /* CameraControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559F2EE960F8F0A8AA97CA7F /* CameraControlsView.swift */; };
+		BF0CD484CF78EA65D7974AF4 /* TuistAssets+Provika.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CED0FD780B4C5946EC0D49D /* TuistAssets+Provika.swift */; };
+		C133B38DEAC36CB2E8E825FD /* ProvikaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7702F000824C506F67D161 /* ProvikaTests.swift */; };
+		C9794CF1A2E1EBB559CC651D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2C654C6F1E36E3DF09D1C93 /* Assets.xcassets */; };
+		CD8CB9F4C80677B009403422 /* VideoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9DF06CA497E0817C4AFEC34 /* VideoDetailView.swift */; };
+		D5835A6AF20ECA9D75B378B8 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8524F9C25FD3E26741606 /* CameraPreviewView.swift */; };
+		D7673CED95F36651AF3621BE /* TuistStrings+Provika.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64E8F3675633F5F5BE62803 /* TuistStrings+Provika.swift */; };
+		DECF6B327040F2355AB4928A /* RecordingMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9706D8FE5B5152299B46352 /* RecordingMetadata.swift */; };
+		EC2AEDE0CA467DCD9D67D8E1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCFB905145CEFE7CAC1288ED /* RootView.swift */; };
+		EF7240FA614F7388C69C623E /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0FBACF6DA1AF54595DF116 /* VideoWriter.swift */; };
+		F52261D8687518EAFDF1C3EF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8D019E8354B5A79209420D /* SettingsView.swift */; };
+		F766783561FD67969BF5C91D /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E4787D69716EC3D7E58AF9 /* AppEnvironment.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		435178AC1DCC64520667328B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E739B1C8976743FED75A7BB7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F2B49D206062C686B294059E;
+			remoteInfo = Provika;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8AC22B6132FF60CF69739DFD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3E3DEBF622E88DB64B05805 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0539539E7B513B335D640CDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0D80704B4AEE17C2419FC517 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		10E864051A595461C5CCCAC8 /* GalleryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewModel.swift; sourceTree = "<group>"; };
+		10EF5A3FE27C0B40AC147BEA /* Provika-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Provika-Info.plist"; sourceTree = "<group>"; };
+		1CED0FD780B4C5946EC0D49D /* TuistAssets+Provika.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+Provika.swift"; sourceTree = "<group>"; };
+		22B76B52AB39DBD4B4EB1EC7 /* TuistBundle+Provika.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+Provika.swift"; sourceTree = "<group>"; };
+		2B93807919B4843CE09F1F9E /* RecordingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingIndicatorView.swift; sourceTree = "<group>"; };
+		3B5B484AD5E80BBE00B22777 /* CaptureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureService.swift; sourceTree = "<group>"; };
+		3C6F37080236BE1FBB28A47E /* HashCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashCalculatorTests.swift; sourceTree = "<group>"; };
+		4BF78FEDD27C32A531D9FB20 /* Provika.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Provika.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C8D019E8354B5A79209420D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		559F2EE960F8F0A8AA97CA7F /* CameraControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlsView.swift; sourceTree = "<group>"; };
+		5BBF781BE94FB4A1D7F2F7EA /* HashCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashCalculator.swift; sourceTree = "<group>"; };
+		62FB57E869DF28F927C4E42B /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		6538EE46B15FBF1EF0EA4937 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		68DA84F1624B210ABA7767EF /* ProvikaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProvikaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7499387DAC69EAF4C2A2603F /* Date+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Format.swift"; sourceTree = "<group>"; };
+		7CDEFACB42B8997CFD6A4EB6 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		87419D9EC22932AE9E909F47 /* ZoomRecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomRecordButton.swift; sourceTree = "<group>"; };
+		87789DF88A28508BFFA71724 /* ProvikaTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ProvikaTests-Info.plist"; sourceTree = "<group>"; };
+		94C1047DACE6600E9E01DFD1 /* OverlayRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayRenderer.swift; sourceTree = "<group>"; };
+		9B5C40C842625EF68D688407 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		9B91AF8CBC11E57A45D8E923 /* PreRecordBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreRecordBuffer.swift; sourceTree = "<group>"; };
+		A3B8524F9C25FD3E26741606 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		B0E4787D69716EC3D7E58AF9 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		B2C58B706B05F5FF518C2E6F /* ProvikaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvikaApp.swift; sourceTree = "<group>"; };
+		B4EB9FE5FD62F75F2EE6AA3B /* FileStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorage.swift; sourceTree = "<group>"; };
+		B64E8F3675633F5F5BE62803 /* TuistStrings+Provika.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistStrings+Provika.swift"; sourceTree = "<group>"; };
+		BCFF1876C28499A031E3BD01 /* SignatureService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureService.swift; sourceTree = "<group>"; };
+		BD7702F000824C506F67D161 /* ProvikaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvikaTests.swift; sourceTree = "<group>"; };
+		C2C654C6F1E36E3DF09D1C93 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C326702CBB242E6F4A827D5C /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
+		CCFB905145CEFE7CAC1288ED /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		CD6C3D3EC031AB508819F1E7 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D238CD0328212004231004D2 /* FileStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageTests.swift; sourceTree = "<group>"; };
+		DB0FBACF6DA1AF54595DF116 /* VideoWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
+		DC2F55AC6E25ADDB283E66DA /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E9706D8FE5B5152299B46352 /* RecordingMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingMetadata.swift; sourceTree = "<group>"; };
+		F09270A6C5990C4B6312E0EA /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		F8B42520B7D66C3FD4544C7B /* VideoThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbnailView.swift; sourceTree = "<group>"; };
+		F9DF06CA497E0817C4AFEC34 /* VideoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3B467FB61C61E2CF44E14577 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4A4DA6CCCBC2ECB3CA7BF6A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04C3C3345F9898B51E81320C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A913EACE59F9B61865EFC193 /* InfoPlist.strings */,
+				B88E335EA995850BC8D26EC6 /* Localizable.strings */,
+				C2C654C6F1E36E3DF09D1C93 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		088203ED10D221CAAAE0AD68 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				1CED0FD780B4C5946EC0D49D /* TuistAssets+Provika.swift */,
+				22B76B52AB39DBD4B4EB1EC7 /* TuistBundle+Provika.swift */,
+				B64E8F3675633F5F5BE62803 /* TuistStrings+Provika.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		21B908564CBDC289D95D0FC0 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				BE5FC7A13728DC5C4E6D33EC /* Camera */,
+				FA3980894093BF5B1CB63F7D /* Gallery */,
+				315E3A6B4DDDB0B6EB3E2BE4 /* Settings */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		2F762792E76CEF4399E307D7 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D238CD0328212004231004D2 /* FileStorageTests.swift */,
+				3C6F37080236BE1FBB28A47E /* HashCalculatorTests.swift */,
+				BD7702F000824C506F67D161 /* ProvikaTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		315E3A6B4DDDB0B6EB3E2BE4 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C739FE45E9F1817BDD538A90 /* ViewModels */,
+				47448A7CAE66EAE760C34067 /* Views */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		37C0F672DC0D7F396647E258 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				83A15117F1C589A0F338EFA0 /* DI */,
+				7D9B0E63AC63522EEA7794BC /* Extensions */,
+				B9C5B660C69A67F1456F49A9 /* Location */,
+				9FBB686E254E260D55A440F1 /* Security */,
+				C761881D1B0AE704E8CA0202 /* Storage */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		47448A7CAE66EAE760C34067 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4C8D019E8354B5A79209420D /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4E8C3DB7E7EB74E6E1BF5D84 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				7CDEFACB42B8997CFD6A4EB6 /* CameraViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		55D93801A04D03974A7F80B2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4BF78FEDD27C32A531D9FB20 /* Provika.app */,
+				68DA84F1624B210ABA7767EF /* ProvikaTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D2341DA9378865CEA44C4EC /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3B5B484AD5E80BBE00B22777 /* CaptureService.swift */,
+				94C1047DACE6600E9E01DFD1 /* OverlayRenderer.swift */,
+				9B91AF8CBC11E57A45D8E923 /* PreRecordBuffer.swift */,
+				DB0FBACF6DA1AF54595DF116 /* VideoWriter.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		649EACDE008C674522C3269C /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				A69CCD3E84FC8A166C5F081D /* Derived */,
+				04C3C3345F9898B51E81320C /* Resources */,
+				77477E48B6A1BA0C4C1561E5 /* Sources */,
+				2F762792E76CEF4399E307D7 /* Tests */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		77477E48B6A1BA0C4C1561E5 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				FF3BD9E7530ED66530EE7EEE /* App */,
+				37C0F672DC0D7F396647E258 /* Core */,
+				21B908564CBDC289D95D0FC0 /* Features */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7D9B0E63AC63522EEA7794BC /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7499387DAC69EAF4C2A2603F /* Date+Format.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		7EE0D4CC0DC972471CD15F0C /* InfoPlists */ = {
+			isa = PBXGroup;
+			children = (
+				10EF5A3FE27C0B40AC147BEA /* Provika-Info.plist */,
+				87789DF88A28508BFFA71724 /* ProvikaTests-Info.plist */,
+			);
+			path = InfoPlists;
+			sourceTree = "<group>";
+		};
+		83A15117F1C589A0F338EFA0 /* DI */ = {
+			isa = PBXGroup;
+			children = (
+				B0E4787D69716EC3D7E58AF9 /* AppEnvironment.swift */,
+			);
+			path = DI;
+			sourceTree = "<group>";
+		};
+		9FBB686E254E260D55A440F1 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				5BBF781BE94FB4A1D7F2F7EA /* HashCalculator.swift */,
+				BCFF1876C28499A031E3BD01 /* SignatureService.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		A2BB4C6B6D4AC72E26FC132C = {
+			isa = PBXGroup;
+			children = (
+				55D93801A04D03974A7F80B2 /* Products */,
+				649EACDE008C674522C3269C /* Project */,
+			);
+			sourceTree = "<group>";
+		};
+		A69CCD3E84FC8A166C5F081D /* Derived */ = {
+			isa = PBXGroup;
+			children = (
+				7EE0D4CC0DC972471CD15F0C /* InfoPlists */,
+				088203ED10D221CAAAE0AD68 /* Sources */,
+			);
+			path = Derived;
+			sourceTree = "<group>";
+		};
+		B9C5B660C69A67F1456F49A9 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				0D80704B4AEE17C2419FC517 /* LocationManager.swift */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
+		BE5FC7A13728DC5C4E6D33EC /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				5D2341DA9378865CEA44C4EC /* Services */,
+				4E8C3DB7E7EB74E6E1BF5D84 /* ViewModels */,
+				F9FC32B6A65159D770239680 /* Views */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		C739FE45E9F1817BDD538A90 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9B5C40C842625EF68D688407 /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		C761881D1B0AE704E8CA0202 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				CFF461A13C83258CF269788F /* Models */,
+				B4EB9FE5FD62F75F2EE6AA3B /* FileStorage.swift */,
+				E9706D8FE5B5152299B46352 /* RecordingMetadata.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		CAE80BB8617BB47870D9FC41 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				10E864051A595461C5CCCAC8 /* GalleryViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		CFF461A13C83258CF269788F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C326702CBB242E6F4A827D5C /* Recording.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EA917D36391B68859723642F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				62FB57E869DF28F927C4E42B /* GalleryView.swift */,
+				F9DF06CA497E0817C4AFEC34 /* VideoDetailView.swift */,
+				F8B42520B7D66C3FD4544C7B /* VideoThumbnailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F9FC32B6A65159D770239680 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				559F2EE960F8F0A8AA97CA7F /* CameraControlsView.swift */,
+				A3B8524F9C25FD3E26741606 /* CameraPreviewView.swift */,
+				F09270A6C5990C4B6312E0EA /* CameraView.swift */,
+				2B93807919B4843CE09F1F9E /* RecordingIndicatorView.swift */,
+				87419D9EC22932AE9E909F47 /* ZoomRecordButton.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FA3980894093BF5B1CB63F7D /* Gallery */ = {
+			isa = PBXGroup;
+			children = (
+				CAE80BB8617BB47870D9FC41 /* ViewModels */,
+				EA917D36391B68859723642F /* Views */,
+			);
+			path = Gallery;
+			sourceTree = "<group>";
+		};
+		FF3BD9E7530ED66530EE7EEE /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B2C58B706B05F5FF518C2E6F /* ProvikaApp.swift */,
+				CCFB905145CEFE7CAC1288ED /* RootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		95621DCB1EAD1B0DC33C6B92 /* ProvikaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA250A246362F4C08BE88480 /* Build configuration list for PBXNativeTarget "ProvikaTests" */;
+			buildPhases = (
+				A83B9D15DD9FC96B80708AE6 /* Sources */,
+				A8BB7A15550A2BD499FE9DE7 /* Resources */,
+				C4A4DA6CCCBC2ECB3CA7BF6A /* Frameworks */,
+				D3E3DEBF622E88DB64B05805 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C310DBAE6DC783037188C1DA /* PBXTargetDependency */,
+			);
+			name = ProvikaTests;
+			packageProductDependencies = (
+			);
+			productName = ProvikaTests;
+			productReference = 68DA84F1624B210ABA7767EF /* ProvikaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F2B49D206062C686B294059E /* Provika */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC2F127E3962C38554F8C4FE /* Build configuration list for PBXNativeTarget "Provika" */;
+			buildPhases = (
+				93C58835D7ED1A33953AB909 /* Sources */,
+				360B0D354619A1434AE9DE16 /* Resources */,
+				3B467FB61C61E2CF44E14577 /* Frameworks */,
+				8AC22B6132FF60CF69739DFD /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Provika;
+			packageProductDependencies = (
+			);
+			productName = Provika;
+			productReference = 4BF78FEDD27C32A531D9FB20 /* Provika.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E739B1C8976743FED75A7BB7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				ORGANIZATIONNAME = Provika;
+				TargetAttributes = {
+					95621DCB1EAD1B0DC33C6B92 = {
+						TestTargetID = F2B49D206062C686B294059E;
+					};
+				};
+			};
+			buildConfigurationList = 7C083927D66B128CAE2BCDE7 /* Build configuration list for PBXProject "Provika" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				ko,
+			);
+			mainGroup = A2BB4C6B6D4AC72E26FC132C;
+			productRefGroup = 55D93801A04D03974A7F80B2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F2B49D206062C686B294059E /* Provika */,
+				95621DCB1EAD1B0DC33C6B92 /* ProvikaTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		360B0D354619A1434AE9DE16 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9794CF1A2E1EBB559CC651D /* Assets.xcassets in Resources */,
+				8109ECC3678F0B7EE745CF88 /* InfoPlist.strings in Resources */,
+				7496E28AF6EFB41D467925A5 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A8BB7A15550A2BD499FE9DE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		93C58835D7ED1A33953AB909 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF0CD484CF78EA65D7974AF4 /* TuistAssets+Provika.swift in Sources */,
+				7D936AABFA0F2791E1C58C5A /* TuistBundle+Provika.swift in Sources */,
+				D7673CED95F36651AF3621BE /* TuistStrings+Provika.swift in Sources */,
+				1A676B6005F299A4F8C8EFD3 /* ProvikaApp.swift in Sources */,
+				EC2AEDE0CA467DCD9D67D8E1 /* RootView.swift in Sources */,
+				F766783561FD67969BF5C91D /* AppEnvironment.swift in Sources */,
+				78DFABB744F630FE2997C850 /* Date+Format.swift in Sources */,
+				31B7B04C38A5CD4254AB8BB5 /* LocationManager.swift in Sources */,
+				087B208C47C470309D99C154 /* HashCalculator.swift in Sources */,
+				2E072D19B28F5C5A7AC09BE4 /* SignatureService.swift in Sources */,
+				16C319F53C99F0EB84B5FEB9 /* FileStorage.swift in Sources */,
+				3A4338A22FD8356CAA012A33 /* Recording.swift in Sources */,
+				DECF6B327040F2355AB4928A /* RecordingMetadata.swift in Sources */,
+				47F79DA5B65DE2F743F31875 /* CaptureService.swift in Sources */,
+				6AB4CBB4D746BDF2BDC41C63 /* OverlayRenderer.swift in Sources */,
+				818483828DC8294B1B4747A3 /* PreRecordBuffer.swift in Sources */,
+				EF7240FA614F7388C69C623E /* VideoWriter.swift in Sources */,
+				87B36001D1642766D3CA2EEF /* CameraViewModel.swift in Sources */,
+				B9917E08B7119C637AC37338 /* CameraControlsView.swift in Sources */,
+				D5835A6AF20ECA9D75B378B8 /* CameraPreviewView.swift in Sources */,
+				903E5CCE0168FF331488E477 /* CameraView.swift in Sources */,
+				0D34BC646D54372E6704AA6F /* RecordingIndicatorView.swift in Sources */,
+				60AC3F6697D104219F0E5EBD /* ZoomRecordButton.swift in Sources */,
+				8B825102BBB3A3CF566307A1 /* GalleryViewModel.swift in Sources */,
+				A44C19A705B1DDD4B657931F /* GalleryView.swift in Sources */,
+				CD8CB9F4C80677B009403422 /* VideoDetailView.swift in Sources */,
+				1009AD338650F79CFCA492E9 /* VideoThumbnailView.swift in Sources */,
+				28607123281853D7E625DBDE /* SettingsViewModel.swift in Sources */,
+				F52261D8687518EAFDF1C3EF /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A83B9D15DD9FC96B80708AE6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97B4AF15BF6A37C0259E4415 /* FileStorageTests.swift in Sources */,
+				94C5915BD78EC69FE466D9A5 /* HashCalculatorTests.swift in Sources */,
+				C133B38DEAC36CB2E8E825FD /* ProvikaTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C310DBAE6DC783037188C1DA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Provika;
+			target = F2B49D206062C686B294059E /* Provika */;
+			targetProxy = 435178AC1DCC64520667328B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A913EACE59F9B61865EFC193 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0539539E7B513B335D640CDF /* en */,
+				CD6C3D3EC031AB508819F1E7 /* ko */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B88E335EA995850BC8D26EC6 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6538EE46B15FBF1EF0EA4937 /* en */,
+				DC2F55AC6E25ADDB283E66DA /* ko */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		245897384801F71018382ABA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "Derived/InfoPlists/Provika-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bbdyno.app.provika;
+				PRODUCT_NAME = Provika;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
+					"$(inherited)",
+					DEBUG,
+				);
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		30A312772EC1EABB7EE29C72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = M79H9K226Y;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.9;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8989E979D12E20346D15AC4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = "Derived/InfoPlists/ProvikaTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bbdyno.app.provika.tests;
+				PRODUCT_NAME = ProvikaTests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Provika.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Provika";
+				TEST_TARGET_NAME = Provika;
+			};
+			name = Release;
+		};
+		904212B987F30A00AFFD192B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "Derived/InfoPlists/Provika-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bbdyno.app.provika;
+				PRODUCT_NAME = Provika;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		913D11AAB39F969E6BF3CBB4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = "Derived/InfoPlists/ProvikaTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bbdyno.app.provika.tests;
+				PRODUCT_NAME = ProvikaTests;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
+					"$(inherited)",
+					DEBUG,
+				);
+				SWIFT_COMPILATION_MODE = singlefile;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Provika.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Provika";
+				TEST_TARGET_NAME = Provika;
+			};
+			name = Debug;
+		};
+		CB128C59AC51769642492114 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = M79H9K226Y;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7C083927D66B128CAE2BCDE7 /* Build configuration list for PBXProject "Provika" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB128C59AC51769642492114 /* Debug */,
+				30A312772EC1EABB7EE29C72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA250A246362F4C08BE88480 /* Build configuration list for PBXNativeTarget "ProvikaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				913D11AAB39F969E6BF3CBB4 /* Debug */,
+				8989E979D12E20346D15AC4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DC2F127E3962C38554F8C4FE /* Build configuration list for PBXNativeTarget "Provika" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				245897384801F71018382ABA /* Debug */,
+				904212B987F30A00AFFD192B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E739B1C8976743FED75A7BB7 /* Project object */;
+}
