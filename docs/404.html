@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provika</title>
+  <meta
+    name="description"
+    content="Provika service page"
+  >
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="404">
+  <div class="site-shell site-shell-legal">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="Provika home">
+        <span class="brand-mark">
+          <img src="./assets/provika-icon.png" alt="Provika icon">
+        </span>
+        <span class="brand-text">PROVIKA</span>
+      </a>
+      <div class="topbar-actions">
+        <div class="language-toggle" aria-label="Language selector">
+          <button type="button" class="lang-button is-active" data-lang-button="ko">KR</button>
+          <button type="button" class="lang-button" data-lang-button="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="legal-page">
+      <article class="legal-card legal-card-center">
+        <p class="eyebrow" data-i18n="404.eyebrow">NOT FOUND</p>
+        <h1 data-i18n="404.title">요청한 페이지를 찾을 수 없습니다</h1>
+        <p class="section-copy" data-i18n="404.body">주소를 다시 확인하거나 Provika 서비스 홈으로 이동해 주세요.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="./index.html" data-i18n="404.cta">홈으로 이동</a>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <script src="./app.js?v=2026041901"></script>
+</body>
+</html>

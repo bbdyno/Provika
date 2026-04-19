@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provika Privacy Policy</title>
+  <meta
+    name="description"
+    content="Provika 개인정보 처리방침"
+  >
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="privacy">
+  <div class="site-shell site-shell-legal">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="Provika home">
+        <span class="brand-mark">
+          <img src="./assets/provika-icon.png" alt="Provika icon">
+        </span>
+        <span class="brand-text">PROVIKA</span>
+      </a>
+      <div class="topbar-actions">
+        <nav class="topnav">
+          <a href="./index.html" data-i18n="legal.nav.home">홈</a>
+          <a href="./privacy.html" data-i18n="nav.privacy">개인정보 처리방침</a>
+          <a href="./terms.html" data-i18n="nav.terms">이용 약관</a>
+        </nav>
+        <div class="language-toggle" aria-label="Language selector">
+          <button type="button" class="lang-button is-active" data-lang-button="ko">KR</button>
+          <button type="button" class="lang-button" data-lang-button="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="legal-page">
+      <div class="section-heading">
+        <p class="eyebrow" data-i18n="privacy.eyebrow">PRIVACY POLICY</p>
+        <h1 data-i18n="privacy.title">개인정보 처리방침</h1>
+        <p class="section-copy" data-i18n="privacy.updated">최종 업데이트: 2026년 4월 19일</p>
+      </div>
+
+      <article class="legal-card">
+        <section>
+          <h2 data-i18n="privacy.section1.title">1. 수집하는 정보</h2>
+          <p data-i18n="privacy.section1.body">
+            Provika는 녹화 영상, 영상에 대응하는 sidecar JSON 메타데이터, 앱 설정, 위치 이력, 해시와 서명 검증에 필요한 정보를
+            기기 안에 저장할 수 있습니다. 카메라, 마이크, 위치, 사진 라이브러리 접근은 기능 제공을 위해서만 사용됩니다.
+          </p>
+        </section>
+        <section>
+          <h2 data-i18n="privacy.section2.title">2. 정보 사용 목적</h2>
+          <p data-i18n="privacy.section2.body">
+            수집되거나 생성된 정보는 교통 위반 증거 촬영, 프레임 내 타임스탬프 및 GPS 오버레이, 로컬 무결성 검증, 갤러리 조회,
+            사용자 설정 유지 기능을 제공하기 위해서만 사용됩니다.
+          </p>
+        </section>
+        <section>
+          <h2 data-i18n="privacy.section3.title">3. 저장 및 외부 전송</h2>
+          <p data-i18n="privacy.section3.body">
+            현재 구현에는 백엔드 업로드 기능이 없습니다. 영상과 메타데이터는 기본적으로 사용자의 기기에 로컬 저장되며,
+            사용자가 공유 기능을 직접 실행하는 경우에만 데이터가 기기 밖으로 전송될 수 있습니다.
+          </p>
+        </section>
+        <section>
+          <h2 data-i18n="privacy.section4.title">4. 제3자 제공</h2>
+          <p data-i18n="privacy.section4.body">
+            Provika 운영자는 사용자의 개인정보나 녹화 데이터를 판매하지 않으며, 법적 의무가 있거나 사용자가 직접 공유를 선택한 경우를 제외하고
+            제3자에게 제공하지 않습니다.
+          </p>
+        </section>
+        <section>
+          <h2 data-i18n="privacy.section5.title">5. 보관과 삭제</h2>
+          <p data-i18n="privacy.section5.body">
+            사용자는 앱 내 삭제 기능, 앱 제거, 기기 설정을 통해 저장된 영상과 메타데이터를 삭제할 수 있습니다. 앱 권한은 iOS 설정에서 언제든지 변경하거나 철회할 수 있습니다.
+          </p>
+        </section>
+        <section>
+          <h2 data-i18n="privacy.section6.title">6. 보안</h2>
+          <p data-i18n="privacy.section6.body">
+            무결성 검증을 위해 파일 해시와 전자서명이 생성될 수 있으며, 실기기에서는 가능할 경우 Secure Enclave 기반 키를 사용합니다.
+            다만 어떤 저장 방식도 절대적인 보안을 보장하지는 않습니다.
+          </p>
+        </section>
+        <section>
+          <h2 data-i18n="privacy.section7.title">7. 문의</h2>
+          <p data-i18n="privacy.section7.body">
+            본 정책에 대한 문의는 GitHub 저장소 또는 이슈 페이지를 통해 접수할 수 있습니다. 공식 연락 채널이 추가되면 이 페이지에 반영됩니다.
+          </p>
+        </section>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> Provika</p>
+      <div class="footer-links">
+        <a href="./index.html" data-i18n="legal.footer.home">홈으로</a>
+        <a href="./terms.html" data-i18n="footer.terms">이용 약관</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="./app.js?v=2026041901"></script>
+</body>
+</html>

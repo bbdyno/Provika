@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provika</title>
+  <meta
+    name="description"
+    content="Provika는 교통 위반 증거 영상을 촬영하고, 프레임 내 타임스탬프와 GPS, 해시 및 서명 메타데이터를 함께 남기는 iPhone용 증거 캡처 앱입니다."
+  >
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="home">
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="Provika home">
+        <span class="brand-mark">
+          <img src="./assets/provika-icon.png" alt="Provika icon">
+        </span>
+        <span class="brand-text">PROVIKA</span>
+      </a>
+      <div class="topbar-actions">
+        <nav class="topnav">
+          <a href="#workflow" data-i18n="nav.workflow">증거 흐름</a>
+          <a href="#surfaces" data-i18n="nav.surfaces">핵심 화면</a>
+          <a href="#trust" data-i18n="nav.trust">보관과 신뢰</a>
+          <a href="#support" data-i18n="nav.support">지원</a>
+          <a href="./privacy.html" data-i18n="nav.privacy">개인정보 처리방침</a>
+          <a href="./terms.html" data-i18n="nav.terms">이용 약관</a>
+        </nav>
+        <div class="language-toggle" aria-label="Language selector">
+          <button type="button" class="lang-button is-active" data-lang-button="ko">KR</button>
+          <button type="button" class="lang-button" data-lang-button="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="hero.eyebrow">ON-DEVICE TRAFFIC EVIDENCE CAPTURE FOR IPHONE</p>
+          <h1 data-i18n="hero.title">현장에서 바로 남기고, 프레임에 증거를 새기는 교통 위반 기록 앱</h1>
+          <p class="hero-text" data-i18n="hero.body">
+            Provika는 영상에 타임스탬프와 GPS를 직접 기록하고, sidecar JSON, SHA-256 해시, ECDSA 서명, 갤러리 검토 흐름까지
+            하나로 묶은 iPhone용 증거 캡처 서비스입니다.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#workflow" data-i18n="hero.primary">증거 흐름 보기</a>
+            <a class="button button-secondary" href="./privacy.html" data-i18n="hero.secondary">개인정보 처리방침</a>
+          </div>
+          <dl class="hero-stats">
+            <div>
+              <dt data-i18n="hero.stat1.label">기록 방식</dt>
+              <dd data-i18n="hero.stat1.value">프레임 내 시간·위치 burn-in</dd>
+            </div>
+            <div>
+              <dt data-i18n="hero.stat2.label">무결성</dt>
+              <dd data-i18n="hero.stat2.value">SHA-256 + ECDSA 서명</dd>
+            </div>
+            <div>
+              <dt data-i18n="hero.stat3.label">저장 모델</dt>
+              <dd data-i18n="hero.stat3.value">기기 로컬 우선 저장</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-panel hero-device">
+            <div class="device-header">
+              <span class="signal-dot"></span>
+              <span class="device-title">PROVIKA CAPTURE</span>
+              <span class="device-state" data-i18n="hero.visual.state">RECORD READY</span>
+            </div>
+            <div class="device-preview">
+              <div class="road-grid" aria-hidden="true"></div>
+              <div class="overlay-stack">
+                <span>2026-04-19 19:12:42.318</span>
+                <span>GPS: 37.566532, 126.978021</span>
+                <span>Provika v1.0.0 · iPhone</span>
+              </div>
+              <div class="preview-badge" data-i18n="hero.visual.badge">Evidence Burn-In</div>
+            </div>
+          </div>
+
+          <div class="hero-sidecar">
+            <article class="hero-panel hero-note hero-note-strong">
+              <p class="hero-note-kicker" data-i18n="hero.card1.kicker">LOCAL SIDE CAR</p>
+              <h2 data-i18n="hero.card1.title">영상과 메타데이터를 같이 남겨서 나중에 다시 검증</h2>
+              <p data-i18n="hero.card1.body">
+                촬영 후 `.mov`와 함께 위치 이력, 파일 해시, 공개키 정보가 담긴 JSON을 저장해 검토와 공유 시점을 분리합니다.
+              </p>
+            </article>
+
+            <article class="hero-panel hero-note">
+              <p class="hero-note-kicker" data-i18n="hero.card2.kicker">INTEGRITY STATUS</p>
+              <ul class="integrity-list">
+                <li><span data-i18n="hero.card2.item1">영상 파일 해시 생성</span><strong>SHA-256</strong></li>
+                <li><span data-i18n="hero.card2.item2">서명 키로 무결성 서명</span><strong>ECDSA P-256</strong></li>
+                <li><span data-i18n="hero.card2.item3">갤러리에서 다시 검증</span><strong data-i18n="hero.card2.status">READY</strong></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow-section" id="workflow">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="workflow.eyebrow">EVIDENCE WORKFLOW</p>
+          <h2 data-i18n="workflow.title">기록, 각인, 서명, 검토까지 이어지는 증거 흐름</h2>
+          <p class="section-copy" data-i18n="workflow.body">
+            Provika는 단순 카메라가 아니라 촬영 순간의 시간과 위치를 프레임에 새기고, 별도 메타데이터와 무결성 정보를 함께 보존하는 흐름을 목표로 합니다.
+          </p>
+        </div>
+
+        <div class="process-grid">
+          <article class="process-card">
+            <span class="process-index">01</span>
+            <h3 data-i18n="workflow.step1.title">즉시 촬영</h3>
+            <p data-i18n="workflow.step1.body">실시간 카메라 프리뷰와 선녹화 버퍼, 포커스, 줌, 플래시 제어로 현장 기록을 바로 시작합니다.</p>
+          </article>
+          <article class="process-card">
+            <span class="process-index">02</span>
+            <h3 data-i18n="workflow.step2.title">프레임 오버레이 각인</h3>
+            <p data-i18n="workflow.step2.body">타임스탬프, GPS 좌표, 앱/기기 정보가 녹화 프레임에 직접 합성되어 별도 플레이어 없이도 확인 가능합니다.</p>
+          </article>
+          <article class="process-card">
+            <span class="process-index">03</span>
+            <h3 data-i18n="workflow.step3.title">무결성 메타데이터 저장</h3>
+            <p data-i18n="workflow.step3.body">녹화 종료 후 해시, 전자서명, 공개키, 위치 트랙을 sidecar JSON으로 저장해 파일 단위 검증이 가능하도록 만듭니다.</p>
+          </article>
+          <article class="process-card">
+            <span class="process-index">04</span>
+            <h3 data-i18n="workflow.step4.title">갤러리에서 검토와 공유</h3>
+            <p data-i18n="workflow.step4.body">날짜별 필터링, 재생, 공유, 신고 완료 표시, 삭제와 함께 서명 검증 상태를 다시 확인할 수 있습니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="surfaces-section" id="surfaces">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="surfaces.eyebrow">KEY SURFACES</p>
+          <h2 data-i18n="surfaces.title">교통 위반 기록 앱에 필요한 핵심 화면을 하나의 서비스 경험으로</h2>
+        </div>
+
+        <div class="surface-grid">
+          <article class="surface-card surface-card-highlight">
+            <span class="surface-kicker" data-i18n="surfaces.card1.kicker">Capture</span>
+            <h3 data-i18n="surfaces.card1.title">현장 촬영에 집중한 카메라 탭</h3>
+            <p data-i18n="surfaces.card1.body">세로 중심 UI, 아이폰 스타일 줌 다이얼, 빠른 녹화 흐름으로 순간 대응이 가능합니다.</p>
+          </article>
+          <article class="surface-card">
+            <span class="surface-kicker" data-i18n="surfaces.card2.kicker">Widget Trigger</span>
+            <h3 data-i18n="surfaces.card2.title">잠금화면과 제어 센터에서 빠르게 진입</h3>
+            <p data-i18n="surfaces.card2.body">Control Widget을 통해 앱을 열고 즉시 녹화를 시작하는 빠른 진입점을 제공합니다.</p>
+          </article>
+          <article class="surface-card">
+            <span class="surface-kicker" data-i18n="surfaces.card3.kicker">Review</span>
+            <h3 data-i18n="surfaces.card3.title">갤러리와 상세 검토 흐름</h3>
+            <p data-i18n="surfaces.card3.body">저장된 녹화물을 날짜별로 정리하고, 재생과 공유, 신고 완료 표시, 서명 검증까지 한 화면에서 확인합니다.</p>
+          </article>
+          <article class="surface-card">
+            <span class="surface-kicker" data-i18n="surfaces.card4.kicker">Settings</span>
+            <h3 data-i18n="surfaces.card4.title">기록 정책과 보안 키 관리</h3>
+            <p data-i18n="surfaces.card4.body">선녹화 시간, 오버레이, 저장 정책, 공개키 확인과 서명 키 재생성 같은 관리 기능을 제공합니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="trust-section" id="trust">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="trust.eyebrow">LOCAL-FIRST TRUST MODEL</p>
+          <h2 data-i18n="trust.title">기기 안에 남기고, 사용자가 직접 공유할 때만 밖으로 나갑니다</h2>
+        </div>
+
+        <div class="trust-layout">
+          <article class="trust-card trust-card-large">
+            <p class="trust-kicker" data-i18n="trust.card1.kicker">ON DEVICE</p>
+            <h3 data-i18n="trust.card1.title">현재 구현에는 서버 업로드 흐름이 없습니다</h3>
+            <p data-i18n="trust.card1.body">
+              영상, 메타데이터, 해시, 서명 정보는 기기 로컬에 저장됩니다. 데이터가 기기 밖으로 나가는 시점은 사용자가 직접 공유를 실행할 때입니다.
+            </p>
+            <ul class="trust-list">
+              <li data-i18n="trust.card1.item1">녹화 파일과 sidecar JSON 로컬 저장</li>
+              <li data-i18n="trust.card1.item2">실기기에서는 가능할 경우 Secure Enclave 기반 키 사용</li>
+              <li data-i18n="trust.card1.item3">갤러리에서 저장된 서명 상태 재검증</li>
+            </ul>
+          </article>
+
+          <article class="trust-card">
+            <p class="trust-kicker" data-i18n="trust.card2.kicker">WHEN DATA LEAVES</p>
+            <h3 data-i18n="trust.card2.title">사용자가 내보낼 때만 전송</h3>
+            <p data-i18n="trust.card2.body">공유 시트, 파일 내보내기 등 사용자가 선택한 동작을 통해서만 외부 전송이 일어납니다.</p>
+          </article>
+
+          <article class="trust-card">
+            <p class="trust-kicker" data-i18n="trust.card3.kicker">CURRENT STATUS</p>
+            <h3 data-i18n="trust.card3.title">현재는 동작하는 iOS 프로토타입</h3>
+            <p data-i18n="trust.card3.body">촬영, 오버레이 합성, 저장, 해시/서명, 갤러리 검토까지 로컬 엔드 투 엔드 흐름이 구현돼 있습니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="support-section" id="support">
+        <div class="support-card">
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="support.eyebrow">SUPPORT & LEGAL</p>
+            <h2 data-i18n="support.title">프로젝트 정보와 정책 문서</h2>
+            <p class="section-copy" data-i18n="support.body">
+              기술 진행 상황은 GitHub 저장소에서 확인할 수 있고, 정책 문서는 이 페이지에서 한국어와 영어로 제공합니다.
+            </p>
+          </div>
+
+          <div class="contact-grid">
+            <a class="contact-card" href="https://github.com/bbdyno/Provika" target="_blank" rel="noreferrer">
+              <span class="contact-label" data-i18n="support.card1.label">GitHub 저장소</span>
+              <strong>github.com/bbdyno/Provika</strong>
+              <span class="contact-meta" data-i18n="support.card1.meta">프로토타입 코드와 프로젝트 구조를 확인할 수 있습니다.</span>
+            </a>
+            <a class="contact-card" href="https://github.com/bbdyno/Provika/issues" target="_blank" rel="noreferrer">
+              <span class="contact-label" data-i18n="support.card2.label">이슈 및 문의</span>
+              <strong>github.com/bbdyno/Provika/issues</strong>
+              <span class="contact-meta" data-i18n="support.card2.meta">버그 리포트나 문의를 남길 수 있는 공개 채널입니다.</span>
+            </a>
+            <a class="contact-card contact-card-accent" href="./privacy.html">
+              <span class="contact-label" data-i18n="support.card3.label">정책 문서</span>
+              <strong data-i18n="support.card3.title">개인정보 처리방침과 이용 약관</strong>
+              <span class="contact-meta" data-i18n="support.card3.meta">카메라, 위치, 로컬 저장, 공유 정책 기준을 문서로 제공합니다.</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> Provika</p>
+      <div class="footer-links">
+        <a href="./privacy.html" data-i18n="footer.privacy">개인정보 처리방침</a>
+        <a href="./terms.html" data-i18n="footer.terms">이용 약관</a>
+        <a href="https://github.com/bbdyno/Provika" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="./app.js?v=2026041901"></script>
+</body>
+</html>
