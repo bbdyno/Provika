@@ -5,6 +5,7 @@
 //  Created by bbdyno on 4/16/26.
 //
 
+import FirebaseCore
 import SwiftData
 import SwiftUI
 
@@ -12,6 +13,11 @@ import SwiftUI
 struct ProvikaApp: App {
     @State private var appEnvironment = AppEnvironment()
     @State private var pendingLaunchAction = PendingLaunchAction.shared
+
+    init() {
+        // GoogleService-Info.plist 기반 자동 구성
+        FirebaseApp.configure()
+    }
 
     var body: some Scene {
         WindowGroup {

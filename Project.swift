@@ -56,10 +56,12 @@ let project = Project(
                 "Sources/Shared/**"
             ],
             resources: [
-                .glob(pattern: "Resources/**", excluding: ["Resources/Widgets/**"])
+                .glob(pattern: "Resources/**", excluding: ["Resources/Widgets/**"]),
+                "GoogleService-Info.plist"
             ],
             dependencies: [
-                .target(name: "ProvikaWidgets")
+                .target(name: "ProvikaWidgets"),
+                .external(name: "FirebaseAnalytics")
             ]
         ),
         .target(
