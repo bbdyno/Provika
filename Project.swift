@@ -14,7 +14,7 @@ let project = Project(
         base: [
             "DEVELOPMENT_TEAM": "M79H9K226Y",
             "MARKETING_VERSION": "1.0.0",
-            "CURRENT_PROJECT_VERSION": "1",
+            "CURRENT_PROJECT_VERSION": "2026.04.19.1",
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "SWIFT_VERSION": "5.9",
             "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
