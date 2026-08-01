@@ -1,0 +1,40 @@
+{
+  "id": "synthetic-legacy-recording-001",
+  "version": "1.0",
+  "app": {
+    "name": "Provika",
+    "version": "1.0.0",
+    "build": "100"
+  },
+  "device": {
+    "model": "Synthetic iPhone",
+    "systemVersion": "iOS 18.0",
+    "identifierForVendor": "00000000-0000-4000-8000-000000000001"
+  },
+  "recording": {
+    "startedAt": "2026-01-02T03:04:05.678Z",
+    "endedAt": "2026-01-02T03:04:17.928Z",
+    "duration": 12.25,
+    "resolution": "1080x1920",
+    "frameRate": 30,
+    "codec": "hevc"
+  },
+  "locationTrack": [
+    {
+      "ts": "2026-01-02T03:04:06.000Z",
+      "lat": 37.5665,
+      "lng": 126.978,
+      "speed": 12.3,
+      "heading": 90.0
+    }
+  ],
+  "integrity": {
+    "algorithm": "SHA-256",
+    "hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "signatureAlgorithm": "ECDSA-P256-SHA256",
+    "signature": "AQIDBA==",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\\nAQIDBA==\\n-----END PUBLIC KEY-----"
+  },
+  "userNote": "Synthetic legacy fixture",
+  "reportedAt": "2026-01-03T00:00:00.000Z"
+}
