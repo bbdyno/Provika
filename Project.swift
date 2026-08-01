@@ -1,7 +1,18 @@
+import Foundation
 import ProjectDescription
 
 // iOS 18+: Control Widget이 지원하는 최소 버전 (잠금화면·제어 센터·액션 버튼 원터치 녹화)
 let deploymentTargets: DeploymentTargets = .iOS("18.0")
+
+var appResources: ResourceFileElements = [
+    .glob(pattern: "Resources/**", excluding: ["Resources/Widgets/**"])
+]
+
+// GoogleService-Info.plist는 로컬 Firebase 설정이며 저장소에 포함하지 않는다.
+// 파일이 있는 개발 환경에서만 앱 번들 리소스로 추가한다.
+if FileManager.default.fileExists(atPath: "GoogleService-Info.plist") {
+    appResources.resources.append(.glob(pattern: "GoogleService-Info.plist"))
+}
 
 let project = Project(
     name: "Provika",
@@ -56,10 +67,7 @@ let project = Project(
                 "Sources/Features/**",
                 "Sources/Shared/**"
             ],
-            resources: [
-                .glob(pattern: "Resources/**", excluding: ["Resources/Widgets/**"]),
-                "GoogleService-Info.plist"
-            ],
+            resources: appResources,
             dependencies: [
                 .target(name: "ProvikaWidgets"),
                 .external(name: "FirebaseAnalytics")

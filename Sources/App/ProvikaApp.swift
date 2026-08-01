@@ -15,8 +15,11 @@ struct ProvikaApp: App {
     @State private var pendingLaunchAction = PendingLaunchAction.shared
 
     init() {
-        // GoogleService-Info.plist 기반 자동 구성
-        FirebaseApp.configure()
+        // 공개 저장소의 깨끗한 체크아웃에서도 앱과 테스트를 실행할 수 있어야 한다.
+        // Firebase 설정 파일이 있는 배포/개발 환경에서만 Analytics를 구성한다.
+        if Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil {
+            FirebaseApp.configure()
+        }
     }
 
     var body: some Scene {

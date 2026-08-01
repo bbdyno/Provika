@@ -53,7 +53,7 @@ On real devices, the signing key is created in Secure Enclave when available. On
 | Item | Value |
 | --- | --- |
 | Language | Swift 5.9+ |
-| Minimum OS | iOS 17.0 |
+| Minimum OS | iOS 18.0 |
 | UI | SwiftUI + `UIViewRepresentable` |
 | Camera / Media | AVFoundation (`AVCaptureSession`, `AVAssetWriter`) |
 | Overlay rendering | Core Image + UIKit text rendering |
@@ -96,20 +96,21 @@ Tests/                    Unit tests for hashing, storage, and app basics
 
 ### Prerequisites
 
-- Xcode with the iOS 17 SDK or newer
+- Xcode with the iOS 18 SDK or newer
 - Tuist 4.x
 
 ### Generate the project
 
 ```bash
-tuist generate
+tuist install
+tuist generate --no-open
 ```
 
 ### Build
 
 ```bash
 xcodebuild \
-  -project Provika.xcodeproj \
+  -workspace Provika.xcworkspace \
   -scheme Provika \
   -destination 'generic/platform=iOS Simulator' \
   CODE_SIGNING_ALLOWED=NO \
@@ -120,7 +121,7 @@ xcodebuild \
 
 ```bash
 xcodebuild \
-  -project Provika.xcodeproj \
+  -workspace Provika.xcworkspace \
   -scheme Provika \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
   CODE_SIGNING_ALLOWED=NO \
@@ -129,7 +130,7 @@ xcodebuild \
 
 If the named simulator is not available on your machine, replace `iPhone 17 Pro` with any installed iPhone simulator.
 
-> 한국어: `tuist generate`로 프로젝트를 만든 뒤 `xcodebuild`로 빌드/테스트하면 됩니다. 테스트용 시뮬레이터 이름은 로컬 환경에 맞게 바꾸면 됩니다.
+> 한국어: `tuist install`로 외부 의존성을 받은 다음 `tuist generate --no-open`으로 프로젝트를 만들고, 생성된 워크스페이스를 `xcodebuild`로 빌드/테스트하면 됩니다. 테스트용 시뮬레이터 이름은 로컬 환경에 맞게 바꾸면 됩니다.
 
 ## Known Gaps
 

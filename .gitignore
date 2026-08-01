@@ -8,6 +8,8 @@ DerivedData/
 **/Derived/**
 .tuist-version
 .build/
+*.xcodeproj/
+*.xcworkspace/
 
 # Firebase Hosting (cache)
 .firebase/
