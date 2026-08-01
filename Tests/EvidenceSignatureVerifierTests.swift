@@ -4,17 +4,17 @@ import XCTest
 @testable import Provika
 
 final class EvidenceSignatureVerifierTests: XCTestCase {
-    private let hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    private let legacyHash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 
     func testVerifiesLegacySignatureWithEphemeralPublicKey() throws {
         let privateKey = try makeEphemeralPrivateKey()
         let publicKeyPEM = try legacyPEM(for: privateKey)
-        let signature = try sign(hash: hash, with: privateKey)
+        let signature = try sign(hash: legacyHash, with: privateKey)
 
         XCTAssertTrue(
             try EvidenceSignatureVerifier().verify(
                 signature: signature,
-                hash: hash,
+                hash: legacyHash,
                 publicKeyPEM: publicKeyPEM
             )
         )
@@ -22,12 +22,12 @@ final class EvidenceSignatureVerifierTests: XCTestCase {
 
     func testRejectsModifiedLegacyPayload() throws {
         let privateKey = try makeEphemeralPrivateKey()
-        let signature = try sign(hash: hash, with: privateKey)
+        let signature = try sign(hash: legacyHash, with: privateKey)
 
         XCTAssertFalse(
             try EvidenceSignatureVerifier().verify(
                 signature: signature,
-                hash: hash + "0",
+                hash: legacyHash + "0",
                 publicKeyPEM: try legacyPEM(for: privateKey)
             )
         )
@@ -36,12 +36,12 @@ final class EvidenceSignatureVerifierTests: XCTestCase {
     func testRejectsSignatureFromDifferentKey() throws {
         let signingKey = try makeEphemeralPrivateKey()
         let differentKey = try makeEphemeralPrivateKey()
-        let signature = try sign(hash: hash, with: signingKey)
+        let signature = try sign(hash: legacyHash, with: signingKey)
 
         XCTAssertFalse(
             try EvidenceSignatureVerifier().verify(
                 signature: signature,
-                hash: hash,
+                hash: legacyHash,
                 publicKeyPEM: try legacyPEM(for: differentKey)
             )
         )
@@ -59,8 +59,8 @@ final class EvidenceSignatureVerifierTests: XCTestCase {
 
         XCTAssertTrue(
             try EvidenceSignatureVerifier().verify(
-                signature: try sign(hash: hash, with: privateKey),
-                hash: hash,
+                signature: try sign(hash: legacyHash, with: privateKey),
+                hash: legacyHash,
                 publicKeyPEM: pem
             )
         )
@@ -70,26 +70,26 @@ final class EvidenceSignatureVerifierTests: XCTestCase {
         let verifier = EvidenceSignatureVerifier()
 
         XCTAssertThrowsError(
-            try verifier.verify(signature: Data(), hash: hash, publicKeyPEM: "")
+            try verifier.verify(signature: Data(), hash: legacyHash, publicKeyPEM: "")
         ) { XCTAssertEqual($0 as? EvidenceSignatureVerifier.Error, .emptyPublicKey) }
         XCTAssertThrowsError(
             try verifier.verify(
                 signature: Data(),
-                hash: hash,
+                hash: legacyHash,
                 publicKeyPEM: "-----BEGIN EC PUBLIC KEY-----\nAAAA\n-----END EC PUBLIC KEY-----"
             )
         ) { XCTAssertEqual($0 as? EvidenceSignatureVerifier.Error, .malformedPublicKeyEnvelope) }
         XCTAssertThrowsError(
             try verifier.verify(
                 signature: Data(),
-                hash: hash,
+                hash: legacyHash,
                 publicKeyPEM: "-----BEGIN PUBLIC KEY-----\nnot base64!\n-----END PUBLIC KEY-----"
             )
         ) { XCTAssertEqual($0 as? EvidenceSignatureVerifier.Error, .malformedPublicKeyBase64) }
         XCTAssertThrowsError(
             try verifier.verify(
                 signature: Data(),
-                hash: hash,
+                hash: legacyHash,
                 publicKeyPEM: "-----BEGIN PUBLIC KEY-----\nAAAA\n-----END PUBLIC KEY-----"
             )
         ) { XCTAssertEqual($0 as? EvidenceSignatureVerifier.Error, .publicKeyImportFailed) }

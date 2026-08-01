@@ -1,4 +1,5 @@
 import Foundation
+import Security
 import XCTest
 @testable import Provika
 
@@ -10,14 +11,12 @@ final class EvidenceCoreCharacterizationTests: XCTestCase {
         try super.setUpWithError()
         temporaryFileURL = fileManager.temporaryDirectory
             .appendingPathComponent("EvidenceCoreCharacterizationTests-\(UUID().uuidString)")
-        try? SignatureService().deleteKey()
     }
 
     override func tearDownWithError() throws {
         if let temporaryFileURL {
             try? fileManager.removeItem(at: temporaryFileURL)
         }
-        try? SignatureService().deleteKey()
         try super.tearDownWithError()
     }
 
@@ -111,19 +110,39 @@ final class EvidenceCoreCharacterizationTests: XCTestCase {
     func testSecurityFrameworkECDSASignsAndVerifiesLegacyPayload() throws {
         let hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
         let payload = Data(hash.utf8)
-        let service = SignatureService()
+        let privateKey = try makeEphemeralPrivateKey()
+        guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
+            throw NSError(domain: "EvidenceCoreCharacterizationTests", code: 1)
+        }
+        guard let signature = SecKeyCreateSignature(
+            privateKey,
+            .ecdsaSignatureMessageX962SHA256,
+            payload as CFData,
+            nil
+        ) else {
+            throw NSError(domain: "EvidenceCoreCharacterizationTests", code: 2)
+        }
 
-        let signature = try service.sign(data: payload)
-
-        XCTAssertFalse(signature.isEmpty)
-        XCTAssertTrue(try service.verify(signature: signature, data: payload))
+        XCTAssertFalse((signature as Data).isEmpty)
+        XCTAssertTrue(
+            SecKeyVerifySignature(
+                publicKey,
+                .ecdsaSignatureMessageX962SHA256,
+                payload as CFData,
+                signature,
+                nil
+            )
+        )
     }
 
-    func testPublicKeyExportAndPEMRemainStableForStoredKey() throws {
-        let service = SignatureService()
-        let firstExport = try service.publicKeyData()
-        let secondExport = try service.publicKeyData()
-        let pem = try service.publicKeyPEM()
+    func testPublicKeyExportAndPEMRemainStableForEphemeralKey() throws {
+        let privateKey = try makeEphemeralPrivateKey()
+        let firstExport = try publicKeyData(for: privateKey)
+        let secondExport = try publicKeyData(for: privateKey)
+        let base64 = firstExport.base64EncodedString(
+            options: [.lineLength64Characters, .endLineWithLineFeed]
+        )
+        let pem = "-----BEGIN PUBLIC KEY-----\n\(base64)\n-----END PUBLIC KEY-----"
 
         XCTAssertEqual(firstExport, secondExport)
         XCTAssertTrue(pem.hasPrefix("-----BEGIN PUBLIC KEY-----\n"))
@@ -132,10 +151,36 @@ final class EvidenceCoreCharacterizationTests: XCTestCase {
         let body = pem
             .replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----\n", with: "")
             .replacingOccurrences(of: "\n-----END PUBLIC KEY-----", with: "")
-        XCTAssertEqual(Data(base64Encoded: body), firstExport)
+        XCTAssertEqual(
+            Data(base64Encoded: body, options: .ignoreUnknownCharacters),
+            firstExport
+        )
 
-        // This documents the service's stable raw SecKey export wrapped in PEM labels;
-        // it intentionally makes no claim that the bytes are an SPKI encoding.
+        // These raw X9.63 bytes are not claimed to be SPKI.
+    }
+
+    private func makeEphemeralPrivateKey() throws -> SecKey {
+        let attributes: [String: Any] = [
+            kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
+            kSecAttrKeySizeInBits as String: 256,
+            kSecPrivateKeyAttrs as String: [
+                kSecAttrIsPermanent as String: false
+            ]
+        ]
+        guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, nil) else {
+            throw NSError(domain: "EvidenceCoreCharacterizationTests", code: 3)
+        }
+        return privateKey
+    }
+
+    private func publicKeyData(for privateKey: SecKey) throws -> Data {
+        guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
+            throw NSError(domain: "EvidenceCoreCharacterizationTests", code: 4)
+        }
+        guard let data = SecKeyCopyExternalRepresentation(publicKey, nil) else {
+            throw NSError(domain: "EvidenceCoreCharacterizationTests", code: 5)
+        }
+        return data as Data
     }
 
     private func fixtureURL() -> URL {
