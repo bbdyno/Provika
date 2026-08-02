@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0",
+  "packageID": "A0B1C2D3-E4F5-4678-9ABC-DEF012345678",
+  "media": {
+    "fileName": "synthetic-photo.jpg",
+    "mediaType": "image/jpeg",
+    "pixelWidth": 4032,
+    "pixelHeight": 3024,
+    "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+  },
+  "capture": {
+    "deviceTime": "2026-01-02T03:04:05.678Z",
+    "timeSource": "device-clock"
+  },
+  "app": {
+    "name": "Provika",
+    "version": "2.0.0",
+    "build": "200"
+  },
+  "device": {
+    "model": "Synthetic iPhone",
+    "systemVersion": "iOS 18.0"
+  },
+  "location": {
+    "lat": 37.5665,
+    "lng": 126.978,
+    "horizontalAccuracyMeters": 4.5,
+    "altitudeMeters": 38.2,
+    "verticalAccuracyMeters": 6.7,
+    "headingDegrees": 91.25,
+    "speedMetersPerSecond": 12.3,
+    "source": "core-location-device"
+  },
+  "context": {
+    "projectID": "synthetic-project-001",
+    "projectName": "Synthetic Project",
+    "note": "Synthetic photo evidence",
+    "organizationName": "Synthetic Organization"
+  }
+}
