@@ -98,13 +98,13 @@ let project = Project(
         .target(
             name: "ProvikaLockedCapture",
             destinations: .iOS,
-            product: .appExtension,
+            product: .extensionKitExtension,
             bundleId: "com.bbdyno.app.provika.locked-capture",
             deploymentTargets: deploymentTargets,
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": "Provika Camera",
-                "NSExtension": [
-                    "NSExtensionPointIdentifier": "com.apple.securecapture"
+                "EXAppExtensionAttributes": [
+                    "EXExtensionPointIdentifier": "com.apple.securecapture"
                 ],
                 "NSCameraUsageDescription": "Provika uses the camera to create a pending capture for import after unlock.",
                 "NSPhotoLibraryUsageDescription": "The simulator fallback can select a photo to exercise the pending import flow."
