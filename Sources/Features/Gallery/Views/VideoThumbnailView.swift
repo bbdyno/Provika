@@ -42,6 +42,11 @@ struct VideoThumbnailView: View {
                 .padding(6)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(ProvikaStrings.Localizable.Gallery.Recording.Accessibility.label)
+        .accessibilityHint(ProvikaStrings.Localizable.Gallery.Recording.Accessibility.hint)
+        .accessibilityValue(viewModel.formattedDuration(recording.duration))
+        .accessibilityIdentifier("recordingThumbnail.\(recording.id)")
         .task {
             if recording.thumbnailData == nil {
                 thumbnailData = await viewModel.generateThumbnail(for: recording)

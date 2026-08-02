@@ -18,14 +18,14 @@ let project = Project(
     name: "Provika",
     organizationName: "Provika",
     options: .options(
-        defaultKnownRegions: ["en", "ko"],
+        defaultKnownRegions: ["en", "ko", "zh-Hans", "zh-Hant", "ja"],
         developmentRegion: "en"
     ),
     settings: .settings(
         base: [
             "DEVELOPMENT_TEAM": "M79H9K226Y",
-            "MARKETING_VERSION": "1.0.0",
-            "CURRENT_PROJECT_VERSION": "2026.04.19.2",
+            "MARKETING_VERSION": "2.0",
+            "CURRENT_PROJECT_VERSION": "2026.8.2.1",
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "SWIFT_VERSION": "5.9",
             "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
@@ -55,7 +55,7 @@ let project = Project(
                     "UIInterfaceOrientationPortrait"
                 ],
                 "UIBackgroundModes": ["audio"],
-                // 기본값(영문). 런타임 시 Resources/{en,ko}.lproj/InfoPlist.strings로 로컬라이즈됨.
+                // English fallback. InfoPlist.xcstrings supplies all five supported locales at runtime.
                 "NSCameraUsageDescription": "Provika uses the camera to record traffic violation evidence videos.",
                 "NSMicrophoneUsageDescription": "Provika records audio for evidence integrity.",
                 "NSLocationWhenInUseUsageDescription": "Provika records GPS coordinates for evidence credibility.",
@@ -70,6 +70,7 @@ let project = Project(
             resources: appResources,
             dependencies: [
                 .target(name: "ProvikaWidgets"),
+                .target(name: "ProvikaLockedCapture"),
                 .external(name: "FirebaseAnalytics")
             ]
         ),
@@ -92,6 +93,28 @@ let project = Project(
             resources: [
                 "Resources/Widgets/**"
             ],
+            dependencies: []
+        ),
+        .target(
+            name: "ProvikaLockedCapture",
+            destinations: .iOS,
+            product: .appExtension,
+            bundleId: "com.bbdyno.app.provika.locked-capture",
+            deploymentTargets: deploymentTargets,
+            infoPlist: .extendingDefault(with: [
+                "CFBundleDisplayName": "Provika Camera",
+                "NSExtension": [
+                    "NSExtensionPointIdentifier": "com.apple.securecapture"
+                ],
+                "NSCameraUsageDescription": "Provika uses the camera to create a pending capture for import after unlock.",
+                "NSPhotoLibraryUsageDescription": "The simulator fallback can select a photo to exercise the pending import flow."
+            ]),
+            sources: [
+                "Sources/LockedCaptureExtension/**",
+                "Sources/Shared/Intents/ProvikaCameraCaptureIntent.swift",
+                "Sources/Core/LockedCapture/LockedCapturePolicies.swift"
+            ],
+            resources: [],
             dependencies: []
         ),
         .target(

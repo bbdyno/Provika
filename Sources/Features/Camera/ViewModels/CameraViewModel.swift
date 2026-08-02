@@ -11,6 +11,7 @@ import UIKit
 import os
 
 @Observable
+@MainActor
 final class CameraViewModel {
 
     var isFlashOn = false
@@ -25,8 +26,10 @@ final class CameraViewModel {
     private let logger = Logger(subsystem: "com.bbdyno.app.provika", category: "CameraVM")
     private var locationManager: LocationManager?
     private var modelContext: ModelContext?
+    private(set) var photoEvidenceCoordinator: PhotoEvidenceVerticalSliceCoordinator?
+    private(set) var activeAppPhysicalCaptureControl: ActiveAppPhysicalCaptureControl?
 
-    func configure(locationManager: LocationManager, modelContext: ModelContext) {
+    func configure(locationManager: LocationManager, modelContext: ModelContext, photoEvidencePackageRoot: URL) {
         self.locationManager = locationManager
         self.modelContext = modelContext
         captureService.locationManager = locationManager
@@ -34,6 +37,19 @@ final class CameraViewModel {
         captureService.onRecordingFinished = { [weak self] videoURL, sidecarURL, duration, hash in
             self?.saveRecording(videoURL: videoURL, sidecarURL: sidecarURL, duration: duration, hash: hash)
         }
+        photoEvidenceCoordinator = PhotoEvidenceVerticalSliceCoordinator(
+            captureService: captureService,
+            modelContext: modelContext,
+            packageRoot: photoEvidencePackageRoot
+        )
+        let physicalControl = ActiveAppPhysicalCaptureControl(
+            isBusy: { [weak self] in self?.photoEvidenceCoordinator?.state == .capturing },
+            capturePhoto: { [weak self] in self?.capturePhotoDirect() },
+            startVideo: { [weak self] in self?.startRecording() },
+            stopVideo: { [weak self] in self?.stopRecording() }
+        )
+        activeAppPhysicalCaptureControl = physicalControl
+        ActiveAppPhysicalCaptureControl.register(physicalControl, for: captureService.session)
     }
 
     func checkCameraPermission() {
@@ -56,11 +72,11 @@ final class CameraViewModel {
     }
 
     func toggleRecording() {
-        if isRecording {
-            stopRecording()
-        } else {
-            startRecording()
-        }
+        activeAppPhysicalCaptureControl?.performOnScreenVideoToggle()
+    }
+
+    func capturePhotoEvidence() {
+        activeAppPhysicalCaptureControl?.performOnScreenPhoto()
     }
 
     func handlePinchZoom(scale: CGFloat, initialZoom: CGFloat) {
@@ -77,6 +93,13 @@ final class CameraViewModel {
     }
 
     func onAppear() {
+        // App Store screenshot automation renders the real SwiftUI surface while
+        // skipping the simulator-only camera startup timeout. Production launches
+        // never include this argument and continue through the normal permission path.
+        if ProcessInfo.processInfo.arguments.contains("-ProvikaScreenshotMode") {
+            cameraPermissionGranted = true
+            return
+        }
         checkCameraPermission()
     }
 
@@ -91,6 +114,10 @@ final class CameraViewModel {
         let generator = UIImpactFeedbackGenerator(style: .heavy)
         generator.impactOccurred()
         captureService.startRecording()
+    }
+
+    private func capturePhotoDirect() {
+        photoEvidenceCoordinator?.capturePhotoEvidence()
     }
 
     private func stopRecording() {

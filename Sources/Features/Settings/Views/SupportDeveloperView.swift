@@ -50,6 +50,10 @@ struct SupportDeveloperView: View {
         }
         .navigationTitle(ProvikaStrings.Localizable.Support.title)
         .navigationBarTitleDisplayMode(.inline)
+        .accessibilityIdentifier("supportPurchaseList")
+        .accessibilityValue(store.isBusy
+            ? ProvikaStrings.Localizable.Support.Purchase.Accessibility.purchasing
+            : ProvikaStrings.Localizable.Support.title)
         .task {
             await store.loadProducts()
         }
@@ -68,11 +72,12 @@ struct SupportDeveloperView: View {
         let tier = TipStore.Tier(rawValue: product.id)
         let symbol = tier?.symbol ?? "❤️"
         let isPurchasing = store.purchasingProductID == product.id
-        let isDisabled = store.purchasingProductID != nil
+        let isDisabled = store.isBusy
+        let accessibilityValue = purchaseAccessibilityValue(for: product)
 
         HStack(alignment: .center, spacing: 14) {
             Text(symbol)
-                .font(.system(size: 32))
+                .font(.title)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(product.displayName)
@@ -101,7 +106,24 @@ struct SupportDeveloperView: View {
             .buttonStyle(.borderedProminent)
             .tint(.red)
             .disabled(isDisabled)
+            .accessibilityLabel(product.displayName)
+            .accessibilityHint(ProvikaStrings.Localizable.Support.Purchase.Accessibility.hint)
+            .accessibilityValue(accessibilityValue)
+            .accessibilityIdentifier("tipPurchase.\(product.id)")
         }
         .padding(.vertical, 4)
+    }
+
+    private func purchaseAccessibilityValue(for product: Product) -> String {
+        if store.purchaseState.state == .pending {
+            return ProvikaStrings.Localizable.Support.Purchase.Accessibility.pending
+        }
+        if store.isBusy {
+            // Every purchase row is disabled while StoreKit is processing one
+            // transaction, so VoiceOver must not present an actionable price
+            // for a row that cannot currently be purchased.
+            return ProvikaStrings.Localizable.Support.Purchase.Accessibility.purchasing
+        }
+        return product.displayPrice
     }
 }

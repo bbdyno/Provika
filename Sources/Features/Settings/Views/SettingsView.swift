@@ -87,13 +87,13 @@ struct SettingsView: View {
             .sheet(isPresented: $showPublicKey) {
                 publicKeySheet
             }
-            .alert("서명 키 재생성", isPresented: $viewModel.showRegenerateKeyAlert) {
+            .alert(ProvikaStrings.Localizable.Settings.SigningKey.Confirm.title, isPresented: $viewModel.showRegenerateKeyAlert) {
                 Button(ProvikaStrings.Localizable.Common.cancel, role: .cancel) {}
-                Button("재생성", role: .destructive) {
+                Button(ProvikaStrings.Localizable.Settings.SigningKey.Confirm.action, role: .destructive) {
                     viewModel.regenerateKey()
                 }
             } message: {
-                Text("기존 키로 서명된 영상의 검증이 불가능해집니다. 계속하시겠습니까?")
+                Text(ProvikaStrings.Localizable.Settings.SigningKey.Confirm.message)
             }
         }
     }
@@ -120,6 +120,9 @@ struct SettingsView: View {
                     } label: {
                         Image(systemName: "doc.on.doc")
                     }
+                    .accessibilityLabel(ProvikaStrings.Localizable.Settings.PublicKey.copy)
+                    .accessibilityHint(ProvikaStrings.Localizable.Settings.PublicKey.copy)
+                    .accessibilityIdentifier("copyPublicKeyButton")
                 }
             }
         }

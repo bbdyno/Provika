@@ -1,0 +1,56 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "report.derivativeGuidance" : {
+      "comment" : "Reading-copy guidance; zh-Hans is provisional and requires qualified review.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Independently verify the original package." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "元の証拠パッケージを独立して検証してください。" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "원본 패키지를 독립 검증하십시오." } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "請獨立驗證原始證據套件。" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "needs_review", "value" : "请独立验证原始证据包。" } }
+      }
+    },
+    "report.displayCopy" : {
+      "comment" : "Reading-copy status; zh-Hans is provisional and requires qualified review.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Human-readable display copy" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "人が読める表示用コピー" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "사람이 읽기 위한 표시 사본" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "便於閱讀的顯示副本" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "needs_review", "value" : "便于阅读的显示副本" } }
+      }
+    },
+    "report.originalEvidencePackage" : {
+      "comment" : "Authoritative artifact notice; zh-Hans is provisional and requires qualified review.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Original evidence package" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "元の証拠パッケージ" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "원본 증거 패키지" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "原始證據套件" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "needs_review", "value" : "原始证据包" } }
+      }
+    },
+    "report.title" : {
+      "comment" : "Unsigned report title; zh-Hans is provisional and requires qualified review.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Photo Evidence Reading Report" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "写真証拠閲覧レポート" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "사진 증거 읽기용 보고서" } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "照片證據閱讀報告" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "needs_review", "value" : "照片证据阅读报告" } }
+      }
+    },
+    "report.unsigned" : {
+      "comment" : "Signature status; zh-Hans is provisional and requires qualified review.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This PDF report is unsigned." } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "このPDFレポートは署名されていません。" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "이 PDF 보고서는 서명되지 않았습니다." } },
+        "zh-Hant" : { "stringUnit" : { "state" : "translated", "value" : "此 PDF 報告未經簽署。" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "needs_review", "value" : "此 PDF 报告未经签名。" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

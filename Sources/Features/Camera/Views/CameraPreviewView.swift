@@ -6,6 +6,7 @@
 //
 
 import AVFoundation
+import AVKit
 import SwiftUI
 
 struct CameraPreviewView: UIViewRepresentable {
@@ -25,6 +26,12 @@ struct CameraPreviewView: UIViewRepresentable {
         )
         view.addGestureRecognizer(tapGesture)
 
+        if let physicalControl = ActiveAppPhysicalCaptureControl.registered(for: session) {
+            let interaction = physicalControl.makeInteraction()
+            view.addInteraction(interaction)
+            context.coordinator.captureEventInteraction = interaction
+        }
+
         return view
     }
 
@@ -39,6 +46,7 @@ struct CameraPreviewView: UIViewRepresentable {
 
     final class Coordinator: NSObject {
         var onTapLocation: ((CGPoint) -> Void)?
+        var captureEventInteraction: AVCaptureEventInteraction?
 
         init(onTapLocation: ((CGPoint) -> Void)?) {
             self.onTapLocation = onTapLocation

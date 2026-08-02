@@ -7,8 +7,17 @@
 
 import AVFoundation
 import CoreLocation
+import ImageIO
 import UIKit
 import os
+
+enum PhotoCaptureErrorV2: Error, Equatable {
+    case unavailable
+    case busy
+    case noFileData
+    case malformedFileData
+    case captureFailed
+}
 
 @Observable
 final class CaptureService: NSObject {
@@ -31,6 +40,7 @@ final class CaptureService: NSObject {
 
     // 콜백 시그니처: (영상 URL, 사이드카 URL, duration, SHA-256 해시)
     var onRecordingFinished: ((URL, URL, TimeInterval, String) -> Void)?
+    var onPhotoCaptured: ((Result<PhotoEvidenceCaptureResultV2, PhotoCaptureErrorV2>) -> Void)?
 
     // 위치 데이터는 LocationManager에서 직접 읽는다 (VM 폴링 제거)
     weak var locationManager: LocationManager?
@@ -38,6 +48,11 @@ final class CaptureService: NSObject {
     private var videoDeviceInput: AVCaptureDeviceInput?
     private var videoDataOutput: AVCaptureVideoDataOutput?
     private var audioDataOutput: AVCaptureAudioDataOutput?
+    private var photoOutput: AVCapturePhotoOutput?
+    private let photoStateLock = NSLock()
+    private var photoCaptureInFlight = false
+    private var pendingPhotoCapture: ((Result<PhotoEvidenceCaptureResultV2, PhotoCaptureErrorV2>) -> Void)?
+    private var pendingPhotoCaptureTime: Date?
 
     private let sessionQueue = DispatchQueue(label: "com.bbdyno.app.provika.capture")
     private let writerQueue = DispatchQueue(label: "com.bbdyno.app.provika.writer")
@@ -199,6 +214,49 @@ final class CaptureService: NSObject {
                 self.onRecordingFinished?(videoURL, sidecarURL, finalDuration, hash)
                 self.recordingStartTime = nil
                 self.elapsedTime = 0
+            }
+        }
+    }
+
+    /// Captures original JPEG bytes from the same AVCaptureSession used for video without altering video outputs.
+    func capturePhoto(completion: ((Result<PhotoEvidenceCaptureResultV2, PhotoCaptureErrorV2>) -> Void)? = nil) {
+        photoStateLock.lock()
+        let accepted = !photoCaptureInFlight
+        if accepted { photoCaptureInFlight = true }
+        photoStateLock.unlock()
+        guard accepted else {
+            completion?(.failure(.busy))
+            return
+        }
+
+        let callback = completion ?? onPhotoCaptured
+        let captureTime = Date()
+        sessionQueue.async { [weak self] in
+            guard let self, let photoOutput = self.photoOutput, self.session.isRunning else {
+                self?.finishPhotoCapture(.failure(.unavailable), callback: callback)
+                return
+            }
+            self.pendingPhotoCapture = callback
+            self.pendingPhotoCaptureTime = captureTime
+            let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+            photoOutput.capturePhoto(with: settings, delegate: self)
+        }
+    }
+
+    /// Captures a shutter-time location snapshot, then publishes only a verifier-approved evidence package.
+    func capturePhotoEvidence(
+        using pipeline: PhotoEvidenceCapturePipelineV2,
+        completion: @escaping (PhotoEvidenceCapturePipelineResultV2) -> Void
+    ) {
+        let locationSnapshot = locationManager?.currentLocation
+        capturePhoto { result in
+            switch result {
+            case let .success(photo):
+                pipeline.capture(photo, location: locationSnapshot, completion: completion)
+            case .failure(.busy):
+                completion(.failure(.busy))
+            case .failure:
+                completion(.failure(.captureFailed))
             }
         }
     }
@@ -367,6 +425,16 @@ final class CaptureService: NSObject {
         if session.canAddOutput(aOutput) {
             session.addOutput(aOutput)
             audioDataOutput = aOutput
+        }
+
+        // Still-image output shares the session and leaves the video sample path unchanged.
+        let pOutput = AVCapturePhotoOutput()
+        if session.canAddOutput(pOutput) {
+            session.addOutput(pOutput)
+            photoOutput = pOutput
+        } else {
+            photoOutput = nil
+            logger.error("사진 출력 추가 실패")
         }
 
         // 줌 범위 설정
@@ -542,6 +610,53 @@ final class CaptureService: NSObject {
         } catch {
             logger.error("사이드카 JSON 저장 실패: \(error.localizedDescription)")
         }
+    }
+}
+
+// MARK: - AVCapturePhotoCaptureDelegate
+
+extension CaptureService: AVCapturePhotoCaptureDelegate {
+    func photoOutput(
+        _ output: AVCapturePhotoOutput,
+        didFinishProcessingPhoto photo: AVCapturePhoto,
+        error: Error?
+    ) {
+        let callback = pendingPhotoCapture
+        let capturedAt = pendingPhotoCaptureTime ?? Date()
+        pendingPhotoCapture = nil
+        pendingPhotoCaptureTime = nil
+
+        guard error == nil else {
+            finishPhotoCapture(.failure(.captureFailed), callback: callback)
+            return
+        }
+        guard let fileData = photo.fileDataRepresentation() else {
+            finishPhotoCapture(.failure(.noFileData), callback: callback)
+            return
+        }
+        guard let source = CGImageSourceCreateWithData(fileData as CFData, nil),
+              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+              let width = (properties[kCGImagePropertyPixelWidth] as? NSNumber)?.intValue,
+              let height = (properties[kCGImagePropertyPixelHeight] as? NSNumber)?.intValue,
+              width > 0, height > 0 else {
+            finishPhotoCapture(.failure(.malformedFileData), callback: callback)
+            return
+        }
+
+        finishPhotoCapture(
+            .success(.init(fileData: fileData, pixelWidth: width, pixelHeight: height, mediaType: "image/jpeg", capturedAt: capturedAt)),
+            callback: callback
+        )
+    }
+
+    private func finishPhotoCapture(
+        _ result: Result<PhotoEvidenceCaptureResultV2, PhotoCaptureErrorV2>,
+        callback: ((Result<PhotoEvidenceCaptureResultV2, PhotoCaptureErrorV2>) -> Void)?
+    ) {
+        photoStateLock.lock()
+        photoCaptureInFlight = false
+        photoStateLock.unlock()
+        DispatchQueue.main.async { callback?(result) }
     }
 }
 

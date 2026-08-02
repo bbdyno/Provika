@@ -18,7 +18,7 @@ struct RecordingIndicatorView: View {
                 .frame(width: 12, height: 12)
                 .opacity(isBlinking ? 0.3 : 1.0)
 
-            Text("REC")
+            Text(ProvikaStrings.Localizable.Camera.Recording.indicator)
                 .font(.system(.caption, design: .monospaced))
                 .fontWeight(.bold)
                 .foregroundStyle(.red)
@@ -31,6 +31,10 @@ struct RecordingIndicatorView: View {
         .padding(.vertical, 6)
         .background(.black.opacity(0.6))
         .clipShape(Capsule())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(ProvikaStrings.Localizable.Camera.Recording.indicator)
+        .accessibilityValue(formattedTime)
+        .accessibilityIdentifier("recordingStatusIndicator")
         .onAppear {
             withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
                 isBlinking = true

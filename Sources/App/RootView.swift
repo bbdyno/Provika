@@ -13,7 +13,22 @@ enum AppTab: Int {
 
 struct RootView: View {
     @Environment(PendingLaunchAction.self) private var pendingLaunchAction
-    @State private var selectedTab = AppTab.camera
+    @State private var selectedTab: AppTab
+
+    init() {
+        #if DEBUG
+        switch ScreenshotFixtures.requestedScreen {
+        case .gallery, .detail:
+            _selectedTab = State(initialValue: .gallery)
+        case .settings:
+            _selectedTab = State(initialValue: .settings)
+        case .camera, .none:
+            _selectedTab = State(initialValue: .camera)
+        }
+        #else
+        _selectedTab = State(initialValue: .camera)
+        #endif
+    }
 
     var body: some View {
         TabView(selection: $selectedTab) {

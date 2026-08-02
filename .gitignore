@@ -26,3 +26,6 @@ DerivedData/
 *.mobileprovision
 ExportOptions.plist
 GoogleService-Info.plist
+
+# Local App Store release artifacts (screenshots, metadata drafts, archives)
+/Release/

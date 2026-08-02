@@ -23,6 +23,29 @@ struct VideoDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // 비디오 플레이어
+                #if DEBUG
+                if ScreenshotFixtures.isEnabled,
+                   let data = recording.thumbnailData,
+                   let image = UIImage(data: data) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(16/9, contentMode: .fill)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                } else if let player {
+                    VideoPlayer(player: player)
+                        .aspectRatio(16/9, contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                } else {
+                    Rectangle()
+                        .fill(Color(.systemGray5))
+                        .aspectRatio(16/9, contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay {
+                            ProgressView()
+                        }
+                }
+                #else
                 if let player {
                     VideoPlayer(player: player)
                         .aspectRatio(16/9, contentMode: .fit)
@@ -36,6 +59,7 @@ struct VideoDetailView: View {
                             ProgressView()
                         }
                 }
+                #endif
 
                 // 메타데이터 카드
                 metadataCard
@@ -125,6 +149,14 @@ struct VideoDetailView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.systemGray6))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(ProvikaStrings.Localizable.Gallery.Detail.hash)
+        .accessibilityValue(
+            signatureValid == true
+                ? ProvikaStrings.Localizable.Gallery.Detail.Signature.valid
+                : ProvikaStrings.Localizable.Gallery.Detail.Signature.invalid
+        )
+        .accessibilityIdentifier("evidenceVerificationCard")
     }
 
     private var actionButtons: some View {
@@ -138,6 +170,9 @@ struct VideoDetailView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
+            .accessibilityLabel(ProvikaStrings.Localizable.Common.share)
+            .accessibilityHint(ProvikaStrings.Localizable.Gallery.Recording.Accessibility.hint)
+            .accessibilityIdentifier("shareEvidenceRecording")
 
             // 신고 완료 표시
             if !recording.isReported {
@@ -154,9 +189,11 @@ struct VideoDetailView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(.blue)
             } else {
-                Label("Reported", systemImage: "checkmark.circle.fill")
+                Label(ProvikaStrings.Localizable.Gallery.Detail.reported, systemImage: "checkmark.circle.fill")
                     .foregroundStyle(.green)
                     .frame(maxWidth: .infinity)
+                    .accessibilityLabel(ProvikaStrings.Localizable.Gallery.Detail.reported)
+                    .accessibilityValue(ProvikaStrings.Localizable.Gallery.Detail.reported)
             }
 
             // 삭제
@@ -171,6 +208,12 @@ struct VideoDetailView: View {
     }
 
     private func loadContent() {
+        #if DEBUG
+        if ScreenshotFixtures.isEnabled {
+            signatureValid = true
+            return
+        }
+        #endif
         let url = recording.fileURL
         if FileManager.default.fileExists(atPath: url.path) {
             player = AVPlayer(url: url)

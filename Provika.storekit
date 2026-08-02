@@ -16,6 +16,21 @@
           "description" : "커피 한 잔은 큰 힘이 됩니다.",
           "displayName" : "개발자 지원 - 커피",
           "locale" : "ko_KR"
+        },
+        {
+          "description" : "一杯咖啡般的小额支持。",
+          "displayName" : "支持开发者 - 咖啡",
+          "locale" : "zh_CN"
+        },
+        {
+          "description" : "以一杯咖啡的心意支持獨立開發。",
+          "displayName" : "支持開發者 - 咖啡",
+          "locale" : "zh_TW"
+        },
+        {
+          "description" : "コーヒー1杯分で個人開発を応援します。",
+          "displayName" : "開発者を応援 - コーヒー",
+          "locale" : "ja_JP"
         }
       ],
       "productID" : "com.provika.tip.item.small",
@@ -36,6 +51,21 @@
           "description" : "보내주신 후원은 버그 수정, 새 기능 개발, 사용자 피드백에 대한 빠른 대응에 그대로 쓰입니다.",
           "displayName" : "개발자 후원 - 식사",
           "locale" : "ko_KR"
+        },
+        {
+          "description" : "支持将用于修复问题和改进应用。",
+          "displayName" : "支持开发者 - 餐食",
+          "locale" : "zh_CN"
+        },
+        {
+          "description" : "支持將用於修正問題與改善 App。",
+          "displayName" : "支持開發者 - 餐點",
+          "locale" : "zh_TW"
+        },
+        {
+          "description" : "不具合修正やAppの改善を支援します。",
+          "displayName" : "開発者を応援 - 食事",
+          "locale" : "ja_JP"
         }
       ],
       "productID" : "com.provika.tip.item.medium",
@@ -56,6 +86,21 @@
           "description" : "든든한 후원입니다. 개발자의 생활비에 보태져, Provika가 장기 프로젝트로 이어질 수 있습니다.",
           "displayName" : "개발자 후원 - 생활비",
           "locale" : "ko_KR"
+        },
+        {
+          "description" : "为 Provika 的持续开发提供较大额度支持。",
+          "displayName" : "支持开发者 - 持续开发",
+          "locale" : "zh_CN"
+        },
+        {
+          "description" : "較大額度支持 Provika 持續開發。",
+          "displayName" : "支持開發者 - 持續開發",
+          "locale" : "zh_TW"
+        },
+        {
+          "description" : "Provikaの継続的な開発を大きく支援します。",
+          "displayName" : "開発者を応援 - 継続開発",
+          "locale" : "ja_JP"
         }
       ],
       "productID" : "com.provika.tip.item.large",

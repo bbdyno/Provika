@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "1.0",
+  "scenarios": [
+    {
+      "id": "microphone-denial",
+      "status": "source-observed",
+      "provenance": "CaptureService permission branch",
+      "observedOutcome": "microphone denial is surfaced by the current permission path; no physical-device result is inferred"
+    },
+    {
+      "id": "app-tab-disappearance",
+      "status": "external-proof-gap",
+      "provenance": "requires exact-build interactive observation",
+      "observedOutcome": "app or tab disappearance while recording remains unproven"
+    },
+    {
+      "id": "background-transition",
+      "status": "external-proof-gap",
+      "provenance": "requires exact-build physical-device observation",
+      "observedOutcome": "background continuation or termination remains unproven"
+    },
+    {
+      "id": "av-interruption",
+      "status": "source-observed",
+      "provenance": "CaptureService and writer source inspection",
+      "observedOutcome": "interruption handling is characterized only where explicit source branches exist"
+    },
+    {
+      "id": "writer-failure",
+      "status": "source-observed",
+      "provenance": "VideoWriter failure branch",
+      "observedOutcome": "writer failure propagates through the legacy completion path"
+    },
+    {
+      "id": "temporary-file",
+      "status": "source-observed",
+      "provenance": "VideoWriter output construction",
+      "observedOutcome": "temporary output behavior is documented without claiming crash recovery"
+    },
+    {
+      "id": "incomplete-file",
+      "status": "external-proof-gap",
+      "provenance": "requires controlled process interruption on a physical device",
+      "observedOutcome": "incomplete file recovery remains unproven"
+    },
+    {
+      "id": "deletion-pair",
+      "status": "source-observed",
+      "provenance": "FileStorage.deleteRecording",
+      "observedOutcome": "deletion attempts both video and JSON sidecar removal"
+    },
+    {
+      "id": "legacy-user-compatibility",
+      "status": "automated-observed",
+      "provenance": "versioned RecordingMetadata decoding and verifier vector",
+      "observedOutcome": "v1 JSON and paired mov are decoded and verified without migration"
+    },
+    {
+      "id": "share-video-only",
+      "status": "source-observed",
+      "provenance": "VideoDetailView ShareLink",
+      "observedOutcome": "legacy sharing exports the video URL and not its JSON sidecar"
+    }
+  ]
+}

@@ -29,7 +29,9 @@ final class TipStore {
     }
 
     private(set) var products: [Product] = []
-    private(set) var isLoading = false
+    private(set) var purchaseState = TipPurchaseStateMachine()
+    var isLoading: Bool { purchaseState.state == .loading }
+    var isBusy: Bool { purchaseState.isBusy }
     private(set) var purchasingProductID: String?
     private(set) var lastError: String?
     var showThankYou = false
@@ -54,9 +56,8 @@ final class TipStore {
 
     func loadProducts() async {
         guard products.isEmpty else { return }
-        isLoading = true
+        guard purchaseState.beginLoading() else { return }
         lastError = nil
-        defer { isLoading = false }
 
         do {
             let ids = Tier.allCases.map(\.rawValue)
@@ -65,13 +66,17 @@ final class TipStore {
                 uniqueKeysWithValues: Tier.allCases.enumerated().map { ($1.rawValue, $0) }
             )
             products = fetched.sorted { (order[$0.id] ?? .max) < (order[$1.id] ?? .max) }
+            purchaseState.finishLoading(hasProducts: !products.isEmpty)
+            if products.isEmpty { lastError = ProvikaStrings.Localizable.Support.Error.generic }
         } catch {
-            lastError = error.localizedDescription
-            logger.error("상품 조회 실패: \(error.localizedDescription)")
+            purchaseState.markFailed()
+            lastError = ProvikaStrings.Localizable.Support.Error.generic
+            logger.error("Tip product loading failed")
         }
     }
 
     func purchase(_ product: Product) async {
+        guard purchaseState.beginPurchase() else { return }
         purchasingProductID = product.id
         lastError = nil
         defer { purchasingProductID = nil }
@@ -81,14 +86,18 @@ final class TipStore {
             switch result {
             case .success(let verification):
                 try await completePurchase(verification)
-            case .userCancelled, .pending:
-                break
+            case .userCancelled:
+                purchaseState.markCancelled()
+            case .pending:
+                purchaseState.markPending()
             @unknown default:
-                break
+                purchaseState.markFailed()
+                lastError = ProvikaStrings.Localizable.Support.Error.generic
             }
         } catch {
-            lastError = error.localizedDescription
-            logger.error("구매 실패: \(error.localizedDescription)")
+            purchaseState.markFailed()
+            lastError = ProvikaStrings.Localizable.Support.Error.generic
+            logger.error("Tip purchase failed")
         }
     }
 
@@ -96,15 +105,25 @@ final class TipStore {
         switch result {
         case .verified(let transaction):
             await transaction.finish()
+            purchaseState.markSucceeded()
             showThankYou = true
-        case .unverified(_, let error):
-            throw error
+        case .unverified:
+            throw TipStoreError.unverifiedTransaction
         }
     }
 
     private func finishIfVerified(_ result: VerificationResult<Transaction>) async {
         if case .verified(let transaction) = result {
             await transaction.finish()
+            // A purchase awaiting approval completes on this stream rather than
+            // in the original `purchase()` call. Do not leave the UI busy once
+            // StoreKit has supplied a verified transaction.
+            if purchaseState.state == .pending {
+                purchaseState.markSucceeded()
+                showThankYou = true
+            }
         }
     }
+
+    private enum TipStoreError: Error { case unverifiedTransaction }
 }

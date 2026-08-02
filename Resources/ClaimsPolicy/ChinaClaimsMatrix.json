@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0",
+  "reviewStatus": "AWAITING_EVIDENCE",
+  "claims": [
+    {
+      "id": "original-media-preserved",
+      "copy": {
+        "ko": "원본 미디어를 패키지에 보존합니다.",
+        "en": "The package preserves the original media.",
+        "zh-Hans": "证据包会保留原始媒体。"
+      }
+    },
+    {
+      "id": "hash-detects-change",
+      "copy": {
+        "ko": "해시는 패키지 생성 후 미디어 변경 여부를 확인하는 데 사용됩니다.",
+        "en": "The hash helps detect media changes after package creation.",
+        "zh-Hans": "哈希用于检测证据包创建后媒体是否发生变化。"
+      }
+    },
+    {
+      "id": "signature-binds-claim",
+      "copy": {
+        "ko": "서명은 키와 정규화된 클레임의 결합을 검증합니다.",
+        "en": "The signature verifies the binding between a key and the canonical claim.",
+        "zh-Hans": "签名用于验证密钥与规范化声明之间的绑定。"
+      }
+    },
+    {
+      "id": "independent-verification",
+      "copy": {
+        "ko": "내장 공개키로 패키지를 독립적으로 검증할 수 있습니다.",
+        "en": "The package can be independently verified with its embedded public key.",
+        "zh-Hans": "可使用证据包内嵌的公钥进行独立验证。"
+      }
+    },
+    {
+      "id": "device-time-observation",
+      "copy": {
+        "ko": "기기에 표시된 촬영 시각을 기록합니다.",
+        "en": "The claim records the capture time reported by the device.",
+        "zh-Hans": "声明会记录设备报告的拍摄时间。"
+      }
+    },
+    {
+      "id": "device-location-observation",
+      "copy": {
+        "ko": "기기가 제공한 위치 관측값을 기록합니다.",
+        "en": "The claim records the location observation supplied by the device.",
+        "zh-Hans": "声明会记录设备提供的位置观测值。"
+      }
+    },
+    {
+      "id": "verification-is-bounded",
+      "copy": {
+        "ko": "검증 결과는 무결성 검사 범위와 한계를 함께 표시합니다.",
+        "en": "Verification presents both the integrity result and its limitations.",
+        "zh-Hans": "验证会同时展示完整性结果及其局限。"
+      }
+    },
+    {
+      "id": "shareable-package",
+      "copy": {
+        "ko": "미디어, 메타데이터, 검증 자료를 하나의 ZIP으로 내보낼 수 있습니다.",
+        "en": "Media, metadata, and verification material can be exported as one ZIP.",
+        "zh-Hans": "媒体、元数据和验证材料可导出为一个 ZIP 文件。"
+      }
+    }
+  ],
+  "limitations": [
+    "Integrity verification does not establish the truth of the recorded scene.",
+    "Device time is not an externally attested true time.",
+    "Device location is not guaranteed to be unspoofable or true.",
+    "Verification does not imply official recognition or certification.",
+    "Verification does not guarantee judicial or legal acceptance.",
+    "No package is represented as permanently tamper-proof."
+  ]
+}

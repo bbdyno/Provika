@@ -59,7 +59,7 @@ final class SettingsViewModel {
         do {
             publicKeyPEM = try signatureService.publicKeyPEM()
         } catch {
-            publicKeyPEM = "키를 불러올 수 없습니다"
+            publicKeyPEM = ProvikaStrings.Localizable.Settings.PublicKey.loadFailure
             logger.error("공개키 로드 실패: \(error.localizedDescription)")
         }
     }
@@ -102,10 +102,10 @@ final class SettingsViewModel {
 
         var displayName: String {
             switch self {
-            case .off: return "Off"
-            case .seconds5: return "5s"
-            case .seconds15: return "15s"
-            case .seconds30: return "30s"
+            case .off: return ProvikaStrings.Localizable.Settings.Value.off
+            case .seconds5: return ProvikaStrings.Localizable.Settings.Value.seconds5
+            case .seconds15: return ProvikaStrings.Localizable.Settings.Value.seconds15
+            case .seconds30: return ProvikaStrings.Localizable.Settings.Value.seconds30
             }
         }
     }
@@ -117,9 +117,9 @@ final class SettingsViewModel {
 
         var displayName: String {
             switch self {
-            case .off: return "Off"
-            case .days30: return "30일"
-            case .days90: return "90일"
+            case .off: return ProvikaStrings.Localizable.Settings.Value.off
+            case .days30: return ProvikaStrings.Localizable.Settings.Value.days30
+            case .days90: return ProvikaStrings.Localizable.Settings.Value.days90
             }
         }
     }

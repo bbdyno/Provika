@@ -31,7 +31,8 @@ struct CameraView: View {
         .onAppear {
             viewModel.configure(
                 locationManager: appEnvironment.locationManager,
-                modelContext: modelContext
+                modelContext: modelContext,
+                photoEvidencePackageRoot: photoEvidencePackageRoot
             )
             viewModel.onAppear()
             startRecordingIfRequested()
@@ -107,6 +108,19 @@ struct CameraView: View {
             .onAppear {
                 pinchStartZoom = viewModel.captureService.currentDisplayZoom
             }
+            #if DEBUG
+            .overlay {
+                if ScreenshotFixtures.isEnabled,
+                   let data = ScreenshotFixtures.cameraPreviewData,
+                   let image = UIImage(data: data) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                        .allowsHitTesting(false)
+                }
+            }
+            #endif
 
             // 녹화 중 빨간 테두리
             if viewModel.isRecording {
@@ -153,6 +167,8 @@ struct CameraView: View {
                 .padding(.bottom, 16)
 
             HStack {
+                photoEvidenceButton
+
                 Spacer()
 
                 Button(action: { viewModel.toggleFlash() }) {
@@ -161,10 +177,54 @@ struct CameraView: View {
                         .foregroundStyle(viewModel.isFlashOn ? .yellow : .white)
                         .frame(width: 50, height: 50)
                 }
+                .accessibilityLabel(ProvikaStrings.Localizable.Camera.Flash.Accessibility.label)
+                .accessibilityHint(ProvikaStrings.Localizable.Camera.Flash.Accessibility.hint)
+                .accessibilityValue(
+                    viewModel.isFlashOn
+                        ? ProvikaStrings.Localizable.Camera.Flash.Accessibility.on
+                        : ProvikaStrings.Localizable.Camera.Flash.Accessibility.off
+                )
+                .accessibilityIdentifier("cameraFlashButton")
             }
             .padding(.horizontal, 40)
         }
         .padding(.bottom, 8)
+    }
+
+    private var photoEvidencePackageRoot: URL {
+        let applicationSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        return applicationSupport.appendingPathComponent("PhotoEvidencePackages", isDirectory: true)
+    }
+
+    private var photoEvidenceButton: some View {
+        Button(action: { viewModel.capturePhotoEvidence() }) {
+            VStack(spacing: 4) {
+                if viewModel.photoEvidenceCoordinator?.state == .capturing {
+                    ProgressView()
+                } else {
+                    Image(systemName: "camera.circle.fill")
+                        .font(.title)
+                }
+                Text(photoEvidenceFeedbackText)
+                    .font(.caption2)
+            }
+            .foregroundStyle(.white)
+            .frame(minWidth: 74, minHeight: 50)
+        }
+        .disabled(viewModel.photoEvidenceCoordinator?.state == .capturing)
+        .accessibilityLabel(ProvikaStrings.Localizable.Camera.PhotoEvidence.Accessibility.label)
+        .accessibilityHint(ProvikaStrings.Localizable.Camera.PhotoEvidence.Accessibility.hint)
+        .accessibilityValue(photoEvidenceFeedbackText)
+        .accessibilityIdentifier("capturePhotoEvidenceButton")
+    }
+
+    private var photoEvidenceFeedbackText: String {
+        switch viewModel.photoEvidenceCoordinator?.state ?? .idle {
+        case .idle: ProvikaStrings.Localizable.Camera.PhotoEvidence.idle
+        case .capturing: ProvikaStrings.Localizable.Camera.PhotoEvidence.busy
+        case .succeeded: ProvikaStrings.Localizable.Camera.PhotoEvidence.success
+        case .failed: ProvikaStrings.Localizable.Camera.PhotoEvidence.failure
+        }
     }
 
     private var recordButton: some View {
@@ -185,12 +245,28 @@ struct CameraView: View {
                 }
             }
         }
+        .accessibilityLabel(
+            viewModel.isRecording
+                ? ProvikaStrings.Localizable.Camera.Record.stop
+                : ProvikaStrings.Localizable.Camera.Record.start
+        )
+        .accessibilityHint(
+            viewModel.isRecording
+                ? ProvikaStrings.Localizable.Camera.Record.stop
+                : ProvikaStrings.Localizable.Camera.Record.start
+        )
+        .accessibilityValue(
+            viewModel.isRecording
+                ? ProvikaStrings.Localizable.Camera.Recording.indicator
+                : ProvikaStrings.Localizable.Camera.Record.start
+        )
+        .accessibilityIdentifier("recordVideoButton")
     }
 
     private var permissionDeniedView: some View {
         VStack(spacing: 16) {
             Image(systemName: "camera.slash")
-                .font(.system(size: 60))
+                .font(.largeTitle)
                 .foregroundStyle(.secondary)
 
             Text(ProvikaStrings.Localizable.Camera.Permission.Denied.title)

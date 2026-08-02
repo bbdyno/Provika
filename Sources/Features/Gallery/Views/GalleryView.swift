@@ -16,22 +16,27 @@ struct GalleryView: View {
     @State private var isSelectionMode = false
     @State private var selectedIDs: Set<String> = []
     @State private var showDeleteConfirm = false
+    #if DEBUG
+    @State private var showScreenshotDetail = ScreenshotFixtures.requestedScreen == .detail
+    #endif
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 DatePicker(
-                    "날짜 선택",
+                    ProvikaStrings.Localizable.Gallery.DatePicker.label,
                     selection: $selectedDate,
                     displayedComponents: .date
                 )
                 .datePickerStyle(.graphical)
                 .padding(.horizontal)
                 .tint(.red)
+                .accessibilityLabel(ProvikaStrings.Localizable.Gallery.DatePicker.label)
+                .accessibilityIdentifier("galleryDatePicker")
 
                 Divider()
 
-                let filteredRecordings = viewModel.recordings(for: selectedDate, from: recordings)
+                let filteredRecordings = viewModel.recordings(for: selectedDate, from: displayedRecordings)
 
                 if filteredRecordings.isEmpty {
                     emptyView
@@ -82,9 +87,23 @@ struct GalleryView: View {
                 Text(ProvikaStrings.Localizable.Gallery.Detail.Delete.confirm)
             }
             .onAppear {
-                viewModel.loadRecordingDates(recordings: recordings)
+                viewModel.loadRecordingDates(recordings: displayedRecordings)
             }
+            #if DEBUG
+            .navigationDestination(isPresented: $showScreenshotDetail) {
+                VideoDetailView(recording: ScreenshotFixtures.primaryRecording)
+            }
+            #endif
         }
+    }
+
+    private var displayedRecordings: [Recording] {
+        #if DEBUG
+        if ScreenshotFixtures.isEnabled {
+            return ScreenshotFixtures.recordings
+        }
+        #endif
+        return recordings
     }
 
     private var emptyView: some View {
@@ -143,6 +162,15 @@ struct GalleryView: View {
                 }
             }
             .opacity(isSelected ? 0.8 : 1.0)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(ProvikaStrings.Localizable.Gallery.Recording.Accessibility.label)
+            .accessibilityHint(ProvikaStrings.Localizable.Gallery.Recording.Accessibility.hint)
+            .accessibilityValue(
+                isSelected
+                    ? ProvikaStrings.Localizable.Gallery.Selection.selected
+                    : ProvikaStrings.Localizable.Gallery.Selection.notSelected
+            )
+            .accessibilityIdentifier("gallerySelection.\(recording.id)")
             .onTapGesture {
                 toggleSelection(recording.id)
             }
