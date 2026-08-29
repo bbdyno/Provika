@@ -93,7 +93,7 @@ struct VideoDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label {
                 Text(recording.createdAt, style: .date)
-                + Text(" ")
+                + Text(verbatim: " ")  // 구분용 공백. 번역 대상이 아니므로 추출되지 않게 한다.
                 + Text(recording.createdAt, style: .time)
             } icon: {
                 Image(systemName: "calendar")
