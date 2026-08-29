@@ -664,10 +664,31 @@ h3 {
   letter-spacing: -0.01em;
 }
 
+/* 공식 배지 이미지는 아트워크를 그대로 쓰고 우리 테두리를 덧대지 않는다. */
+.store-badge-image {
+  padding: 0;
+  min-width: 0;
+  border: 0;
+  background: none;
+}
+
+.store-badge-image:hover,
+.store-badge-image:focus-visible {
+  background: none;
+  opacity: 0.86;
+}
+
+.store-badge-image img {
+  display: block;
+  height: 54px;
+  width: auto;
+}
+
 /* 아직 출시되지 않은 스토어는 눌러도 갈 곳이 없다는 걸 시각적으로 알린다. */
 .store-badge-pending {
   opacity: 0.72;
   border-style: dashed;
+  cursor: default;
 }
 
 /* ---------- 플랫폼 섹션 ---------- */

@@ -363,6 +363,14 @@ function applyTranslations(lang) {
     metaDescription.setAttribute("content", nextMeta.description);
   }
 
+  // 스토어 배지는 문자열이 아니라 이미지라 언어에 맞는 아트워크로 바꿔 준다.
+  const appStoreBadge = document.querySelector('[data-store-badge="ios"]');
+  if (appStoreBadge) {
+    const localized = lang === "ko" ? "ko-kr" : "en-us";
+    appStoreBadge.src = `./assets/badges/app-store-${localized}.svg`;
+    appStoreBadge.alt = lang === "ko" ? "App Store에서 다운로드하기" : "Download on the App Store";
+  }
+
   localStorage.setItem("provika-docs-lang", lang);
 }
 
