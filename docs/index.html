@@ -22,6 +22,7 @@
       <div class="topbar-actions">
         <nav class="topnav">
           <a href="#workflow" data-i18n="nav.workflow">증거 흐름</a>
+          <a href="#platforms" data-i18n="nav.platforms">iPhone · Android</a>
           <a href="#surfaces" data-i18n="nav.surfaces">핵심 화면</a>
           <a href="#trust" data-i18n="nav.trust">보관과 신뢰</a>
           <a href="#support" data-i18n="nav.support">지원</a>
@@ -44,6 +45,20 @@
             Provika는 영상에 타임스탬프와 GPS를 직접 기록하고, sidecar JSON, SHA-256 해시, ECDSA 서명, 갤러리 검토 흐름까지
             하나로 묶은 iPhone용 증거 캡처 서비스입니다.
           </p>
+          <!--
+            스토어 배지는 자리표시자다. 출시 전에 Apple 과 Google 이 제공하는 공식 배지 이미지로
+            교체해야 한다. 두 회사 모두 배지 아트워크를 자체 제작하는 것을 브랜드 지침으로 금지한다.
+          -->
+          <div class="store-badges">
+            <a class="store-badge" href="#platforms" data-store="ios">
+              <span class="store-badge-kicker" data-i18n="store.ios.kicker">Download on the</span>
+              <strong class="store-badge-name">App Store</strong>
+            </a>
+            <a class="store-badge store-badge-pending" href="#platforms" data-store="android">
+              <span class="store-badge-kicker" data-i18n="store.android.kicker">Coming soon on</span>
+              <strong class="store-badge-name">Google Play</strong>
+            </a>
+          </div>
           <div class="hero-actions">
             <a class="button button-primary" href="#workflow" data-i18n="hero.primary">증거 흐름 보기</a>
             <a class="button button-secondary" href="./privacy.html" data-i18n="hero.secondary">개인정보 처리방침</a>
@@ -74,9 +89,9 @@
             <div class="device-preview">
               <div class="road-grid" aria-hidden="true"></div>
               <div class="overlay-stack">
-                <span>2026-04-19 19:12:42.318</span>
+                <span>2026-08-29 13:15:33.421</span>
                 <span>GPS: 37.566532, 126.978021</span>
-                <span>Provika v1.0.0 · iPhone</span>
+                <span>Provika 2.0 · iPhone / Galaxy</span>
               </div>
               <div class="preview-badge" data-i18n="hero.visual.badge">Evidence Burn-In</div>
             </div>
@@ -134,6 +149,45 @@
             <p data-i18n="workflow.step4.body">날짜별 필터링, 재생, 공유, 신고 완료 표시, 삭제와 함께 서명 검증 상태를 다시 확인할 수 있습니다.</p>
           </article>
         </div>
+      </section>
+
+
+      <section class="platforms-section" id="platforms">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="platforms.eyebrow">ONE FORMAT, TWO PLATFORMS</p>
+          <h2 data-i18n="platforms.title">iPhone과 Android가 서로의 증거 패키지를 검증합니다</h2>
+          <p class="section-copy" data-i18n="platforms.body">
+            두 앱은 같은 증거 포맷을 씁니다. 한쪽에서 만든 패키지를 다른 쪽 검증기가 그대로 확인할 수 있습니다.
+            기기에 맞는 부분만 각 플랫폼의 방식을 따르고, 그 사실은 패키지 안에 그대로 기록됩니다.
+          </p>
+        </div>
+
+        <div class="platform-grid">
+          <article class="platform-card">
+            <p class="platform-kicker">iPhone</p>
+            <h3 data-i18n="platforms.ios.title">iOS 18 이상</h3>
+            <ul class="platform-list">
+              <li data-i18n="platforms.ios.item1">QuickTime 컨테이너 · Secure Enclave 서명 키</li>
+              <li data-i18n="platforms.ios.item2">제어 센터 · 잠금화면 · 액션 버튼 원터치 촬영</li>
+              <li data-i18n="platforms.ios.item3">잠금 상태 카메라 익스텐션</li>
+            </ul>
+          </article>
+
+          <article class="platform-card">
+            <p class="platform-kicker">Android</p>
+            <h3 data-i18n="platforms.android.title">Android 10 이상 · 갤럭시 최적화</h3>
+            <ul class="platform-list">
+              <li data-i18n="platforms.android.item1">MP4 컨테이너 · Android Keystore(StrongBox) 서명 키</li>
+              <li data-i18n="platforms.android.item2">빠른 설정 타일 · 홈 위젯 · 런처 숏컷 · 볼륨 키 촬영</li>
+              <li data-i18n="platforms.android.item3">잠금화면 바로가기와 측면 버튼 두 번 누르기 안내</li>
+              <li data-i18n="platforms.android.item4">하드웨어 키 증명서를 패키지에 함께 보관</li>
+            </ul>
+          </article>
+        </div>
+
+        <p class="platform-note" data-i18n="platforms.note">
+          하드웨어 키 증명은 서명 키가 실제 보안 하드웨어에서 만들어졌다는 사실만 말합니다. 촬영 내용의 진위나 법적 효력과는 무관합니다.
+        </p>
       </section>
 
       <section class="surfaces-section" id="surfaces">
@@ -242,6 +296,6 @@
     </footer>
   </div>
 
-  <script src="./app.js?v=2026041901"></script>
+  <script src="./app.js?v=2026082901"></script>
 </body>
 </html>
