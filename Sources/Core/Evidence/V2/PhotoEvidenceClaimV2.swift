@@ -9,6 +9,8 @@ struct PhotoEvidenceClaimV2: Codable, Equatable {
     let device: Device
     let location: Location?
     let context: Context?
+    /// 하드웨어 키 증명(Android). iOS 파이프라인은 채우지 않지만 값을 잃지 않도록 스키마에 둔다.
+    let attestation: EvidenceKeyAttestationV2?
 
     init(
         packageID: UUID,
@@ -17,7 +19,8 @@ struct PhotoEvidenceClaimV2: Codable, Equatable {
         app: App,
         device: Device,
         location: Location? = nil,
-        context: Context? = nil
+        context: Context? = nil,
+        attestation: EvidenceKeyAttestationV2? = nil
     ) {
         self.schemaVersion = "2.0"
         self.packageID = packageID
@@ -27,10 +30,11 @@ struct PhotoEvidenceClaimV2: Codable, Equatable {
         self.device = device
         self.location = location
         self.context = context
+        self.attestation = attestation
     }
 
     private enum CodingKeys: String, CodingKey {
-        case schemaVersion, packageID, media, capture, app, device, location, context
+        case schemaVersion, packageID, media, capture, app, device, location, context, attestation
     }
 
     init(from decoder: Decoder) throws {
@@ -48,6 +52,7 @@ struct PhotoEvidenceClaimV2: Codable, Equatable {
         self.device = try container.decode(Device.self, forKey: .device)
         self.location = try container.decodeIfPresent(Location.self, forKey: .location)
         self.context = try container.decodeIfPresent(Context.self, forKey: .context)
+        self.attestation = try container.decodeIfPresent(EvidenceKeyAttestationV2.self, forKey: .attestation)
     }
 
     struct Media: Codable, Equatable {
@@ -139,7 +144,7 @@ struct PhotoEvidenceClaimV2: Codable, Equatable {
             self.verticalAccuracyMeters = verticalAccuracyMeters
             self.headingDegrees = headingDegrees
             self.speedMetersPerSecond = speedMetersPerSecond
-            self.source = "core-location-device"
+            self.source = EvidenceLocationSourceContract.native
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -149,7 +154,7 @@ struct PhotoEvidenceClaimV2: Codable, Equatable {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let source = try container.decode(String.self, forKey: .source)
-            guard source == "core-location-device" else {
+            guard EvidenceLocationSourceContract.permits(source) else {
                 throw DecodingError.dataCorruptedError(forKey: .source, in: container, debugDescription: "Unsupported location source: \(source)")
             }
 

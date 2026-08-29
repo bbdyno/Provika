@@ -47,17 +47,21 @@ struct VideoEvidencePackageVerifierV2 {
         }
         guard isDirectory.boolValue else { return .incompletePackage }
 
-        let requiredNames = Set(["original.mov", "claim.json", "signature.json", "manifest.json"])
         let names: Set<String>
         do { names = Set(try fileManager.contentsOfDirectory(atPath: packageDirectory.path)) }
         catch { return .unreadableFile(packageDirectory.lastPathComponent) }
+        // 컨테이너는 패키지에 실제로 들어 있는 지원 파일명을 쓴다(iOS: .mov, Android: .mp4).
+        guard let mediaName = VideoEvidenceMediaContract.supportedFileNames.intersection(names).sorted().first else {
+            return .missingFile(VideoEvidenceMediaContract.nativeFileName)
+        }
+        let requiredNames = Set([mediaName, "claim.json", "signature.json", "manifest.json"])
         if let missing = requiredNames.subtracting(names).sorted().first { return .missingFile(missing) }
         guard names == requiredNames else { return .unexpectedArtifact }
         for name in requiredNames where !regularFile(packageDirectory.appendingPathComponent(name)) {
             return .incompletePackage
         }
 
-        let mediaURL = packageDirectory.appendingPathComponent("original.mov")
+        let mediaURL = packageDirectory.appendingPathComponent(mediaName)
         let claimURL = packageDirectory.appendingPathComponent("claim.json")
         let signatureURL = packageDirectory.appendingPathComponent("signature.json")
         let manifestURL = packageDirectory.appendingPathComponent("manifest.json")
@@ -101,6 +105,7 @@ struct VideoEvidencePackageVerifierV2 {
         let manifest: VideoEvidencePackageManifestV2
         do { claim = try JSONDecoder().decode(VideoEvidenceClaimV2.self, from: claimData) }
         catch { return .malformedClaim }
+        guard claim.media.fileName == mediaName else { return .unexpectedArtifact }
         guard (try? claim.canonicalData()) == claimData else { return .malformedClaim }
         do { envelope = try JSONDecoder().decode(EvidenceSignatureEnvelopeV2.self, from: signatureData) }
         catch { return .malformedSignature }
@@ -109,7 +114,7 @@ struct VideoEvidencePackageVerifierV2 {
 
         let mediaHash: String
         do { mediaHash = try HashCalculator.sha256(of: mediaURL) }
-        catch { return .unreadableFile("original.mov") }
+        catch { return .unreadableFile(mediaName) }
         let claimHash = HashCalculator.sha256(of: claimData)
         guard claim.media.sha256 == mediaHash, envelope.mediaHash.value == mediaHash else { return .mediaHashMismatch }
         guard envelope.claimHash.value == claimHash else { return .claimHashMismatch }
@@ -132,7 +137,7 @@ struct VideoEvidencePackageVerifierV2 {
         }
 
         let expectedManifest: [String: String] = [
-            "original.mov": mediaHash,
+            mediaName: mediaHash,
             "claim.json": claimHash,
             "signature.json": HashCalculator.sha256(of: signatureData)
         ]

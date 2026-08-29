@@ -70,7 +70,11 @@ final class VideoEvidencePackageFinalizerV2 {
             try fileManager.createDirectory(at: staging, withIntermediateDirectories: true)
             defer { try? fileManager.removeItem(at: staging) }
 
-            let original = staging.appendingPathComponent(VideoEvidenceClaimV2.originalFileName)
+            let mediaName = claim.media.fileName
+            guard VideoEvidenceMediaContract.permits(fileName: mediaName, mediaType: claim.media.mediaType) else {
+                throw Error.stagedVideoIsNotAFile
+            }
+            let original = staging.appendingPathComponent(mediaName)
             try fileManager.moveItem(at: stagedVideoURL, to: original)
             let mediaHash = try HashCalculator.sha256(of: original)
             let byteLength = (try fileManager.attributesOfItem(atPath: original.path)[.size] as? NSNumber)?.intValue ?? 0
@@ -100,7 +104,7 @@ final class VideoEvidencePackageFinalizerV2 {
                 packageID: frozenClaim.packageID,
                 requiredTracks: frozenClaim.requiredTracks,
                 artifacts: [
-                    .init(name: VideoEvidenceClaimV2.originalFileName, sha256: mediaHash),
+                    .init(name: mediaName, sha256: mediaHash),
                     .init(name: "claim.json", sha256: claimHash),
                     .init(name: "signature.json", sha256: HashCalculator.sha256(of: signatureData))
                 ]

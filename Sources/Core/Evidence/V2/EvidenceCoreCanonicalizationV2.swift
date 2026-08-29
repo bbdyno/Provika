@@ -31,7 +31,9 @@ enum EvidenceCoreCanonicalizationV2 {
             app: .init(name: canonicalAppName, version: claim.app.version, build: claim.app.build),
             device: .init(model: claim.device.model, systemVersion: claim.device.systemVersion),
             location: claim.location,
-            context: claim.context
+            context: claim.context,
+            // 키 증명은 사용자 입력이 아니라 플랫폼 관측값이므로 그대로 통과시킨다.
+            attestation: claim.attestation
         )
     }
 

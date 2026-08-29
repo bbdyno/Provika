@@ -1,9 +1,37 @@
 import Foundation
 
+/// 영상 컨테이너 계약.
+///
+/// iOS 는 QuickTime(`original.mov`), Android 는 MP4(`original.mp4`) 를 기록한다.
+/// Android `MediaMuxer` 는 MOV 를 출력하지 못하므로 플랫폼 네이티브 컨테이너를 각각 인정한다.
+/// 컨테이너 종류는 클레임에 그대로 남고 해시는 컨테이너와 무관하므로 증거력 차이는 없다.
+enum VideoEvidenceMediaContract {
+    static let quickTimeFileName = "original.mov"
+    static let quickTimeMediaType = "video/quicktime"
+    static let mp4FileName = "original.mp4"
+    static let mp4MediaType = "video/mp4"
+
+    /// 이 플랫폼이 새 패키지를 만들 때 쓰는 컨테이너.
+    static let nativeFileName = quickTimeFileName
+    static let nativeMediaType = quickTimeMediaType
+
+    static let supported: [String: String] = [
+        quickTimeFileName: quickTimeMediaType,
+        mp4FileName: mp4MediaType
+    ]
+
+    static var supportedFileNames: Set<String> { Set(supported.keys) }
+
+    static func permits(fileName: String, mediaType: String) -> Bool {
+        supported[fileName] == mediaType
+    }
+}
+
 /// Locale-neutral signed Core contract for finalized Video Evidence packages.
 struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
     static let currentSchemaVersion = "2.0"
-    static let originalFileName = "original.mov"
+    /// 이 플랫폼이 기록하는 컨테이너 파일명. 검증은 `VideoEvidenceMediaContract` 전체를 받아들인다.
+    static let originalFileName = VideoEvidenceMediaContract.nativeFileName
 
     let schemaVersion: String
     let packageID: UUID
@@ -17,6 +45,11 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
     let audioIncluded: Bool
     let microphoneAuthorization: VideoMicrophoneAuthorization
     let silentRecordingDecision: VideoSilentRecordingDecision
+    /// 촬영 시작 시점의 위치 관측값. iOS 파이프라인은 채우지 않지만, 다른 플랫폼이 기록한 값을
+    /// 정규 재직렬화에서 잃지 않도록 스키마에 둔다.
+    let location: PhotoEvidenceClaimV2.Location?
+    /// 하드웨어 키 증명(Android). iOS 에는 대응물이 없으나 같은 이유로 스키마에 둔다.
+    let attestation: EvidenceKeyAttestationV2?
 
     init(
         packageID: UUID,
@@ -29,7 +62,9 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
         audioTrack: Track?,
         audioIncluded: Bool,
         microphoneAuthorization: VideoMicrophoneAuthorization,
-        silentRecordingDecision: VideoSilentRecordingDecision
+        silentRecordingDecision: VideoSilentRecordingDecision,
+        location: PhotoEvidenceClaimV2.Location? = nil,
+        attestation: EvidenceKeyAttestationV2? = nil
     ) {
         self.schemaVersion = Self.currentSchemaVersion
         self.packageID = packageID
@@ -43,11 +78,14 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
         self.audioIncluded = audioIncluded
         self.microphoneAuthorization = microphoneAuthorization
         self.silentRecordingDecision = silentRecordingDecision
+        self.location = location
+        self.attestation = attestation
     }
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion, packageID, media, capture, app, device, finalization
         case videoTrack, audioTrack, audioIncluded, microphoneAuthorization, silentRecordingDecision
+        case location, attestation
     }
 
     init(from decoder: Decoder) throws {
@@ -57,7 +95,7 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
             throw DecodingError.dataCorruptedError(forKey: .schemaVersion, in: container, debugDescription: "Unsupported Video Evidence schemaVersion")
         }
         let media = try container.decode(Media.self, forKey: .media)
-        guard media.fileName == Self.originalFileName, media.mediaType == "video/quicktime" else {
+        guard VideoEvidenceMediaContract.permits(fileName: media.fileName, mediaType: media.mediaType) else {
             throw DecodingError.dataCorruptedError(forKey: .media, in: container, debugDescription: "Unsupported Video Evidence media contract")
         }
         let finalization = try container.decode(Finalization.self, forKey: .finalization)
@@ -86,6 +124,8 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
         self.audioIncluded = audioIncluded
         self.microphoneAuthorization = try container.decode(VideoMicrophoneAuthorization.self, forKey: .microphoneAuthorization)
         self.silentRecordingDecision = try container.decode(VideoSilentRecordingDecision.self, forKey: .silentRecordingDecision)
+        self.location = try container.decodeIfPresent(PhotoEvidenceClaimV2.Location.self, forKey: .location)
+        self.attestation = try container.decodeIfPresent(EvidenceKeyAttestationV2.self, forKey: .attestation)
     }
 
     func replacingMediaDigest(_ digest: String, byteLength: Int) -> Self {
@@ -100,7 +140,9 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
             audioTrack: audioTrack,
             audioIncluded: audioIncluded,
             microphoneAuthorization: microphoneAuthorization,
-            silentRecordingDecision: silentRecordingDecision
+            silentRecordingDecision: silentRecordingDecision,
+            location: location,
+            attestation: attestation
         )
     }
 
