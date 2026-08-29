@@ -11,6 +11,10 @@ struct SafeEvidenceZIPExporter {
     let maximumEntrySize: Int
     let maximumTotalSize: Int
 
+    /// Unix 호스트로 표시된 아카이브에서 외부 속성이 0 이면 풀었을 때 파일 권한이 000 이 된다.
+    /// 증거를 받은 사람이 열지 못하게 되므로 일반 파일 0644 를 명시한다.
+    private var unixFileAttributes: UInt32 { UInt32(0o100644) << 16 }
+
     // Audit anchors for the protections below: centralDirectory records preserve
     // exact offsets; pathTraversal and duplicateEntry inputs are rejected; symlink
     // sources are refused; maximumEntryCount and maximumUncompressedBytes bound
@@ -52,7 +56,7 @@ struct SafeEvidenceZIPExporter {
             let offset = UInt32(archive.count), size = UInt32(data.count)
             // UTF-8 flag, stored method, and DOS time 00:00 / 1980-01-01 make output deterministic.
             archive.le(UInt32(0x04034b50)); archive.le(UInt16(20)); archive.le(UInt16(0x0800)); archive.le(UInt16(0)); archive.le(UInt16(0)); archive.le(UInt16(0x0021)); archive.le(crc); archive.le(size); archive.le(size); archive.le(UInt16(name.count)); archive.le(UInt16(0)); archive.append(name); archive.append(data)
-            central.le(UInt32(0x02014b50)); central.le(UInt16(0x0314)); central.le(UInt16(20)); central.le(UInt16(0x0800)); central.le(UInt16(0)); central.le(UInt16(0)); central.le(UInt16(0x0021)); central.le(crc); central.le(size); central.le(size); central.le(UInt16(name.count)); central.le(UInt16(0)); central.le(UInt16(0)); central.le(UInt16(0)); central.le(UInt16(0)); central.le(UInt32(0)); central.le(offset); central.append(name)
+            central.le(UInt32(0x02014b50)); central.le(UInt16(0x0314)); central.le(UInt16(20)); central.le(UInt16(0x0800)); central.le(UInt16(0)); central.le(UInt16(0)); central.le(UInt16(0x0021)); central.le(crc); central.le(size); central.le(size); central.le(UInt16(name.count)); central.le(UInt16(0)); central.le(UInt16(0)); central.le(UInt16(0)); central.le(UInt16(0)); central.le(unixFileAttributes); central.le(offset); central.append(name)
         }
         guard central.count <= Int(UInt32.max), archive.count <= Int(UInt32.max), ordered.count <= Int(UInt16.max) else { throw Error.archiveTooLarge }
         let centralOffset = UInt32(archive.count), centralSize = UInt32(central.count)
