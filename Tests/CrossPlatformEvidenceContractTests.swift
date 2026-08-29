@@ -127,6 +127,33 @@ final class CrossPlatformEvidenceContractTests: XCTestCase {
         XCTAssertThrowsError(try JSONDecoder().decode(EvidenceKeyAttestationV2.self, from: Data(json.utf8)))
     }
 
+    func testVideoClaimCarriesCaptureContext() throws {
+        let claim = VideoEvidenceClaimV2(
+            packageID: UUID(uuidString: "E4F50617-2839-4ABC-DEF0-123456789012")!,
+            media: .init(fileName: "original.mp4", mediaType: "video/mp4",
+                         byteLength: 8192, sha256: String(repeating: "0", count: 64)),
+            capture: .init(deviceTimeUTC: "2026-08-29T04:20:11.008Z"),
+            app: .init(name: "Provika", version: "1.0", build: "1"),
+            device: .init(model: "SM-S928N", systemVersion: "Android 15"),
+            finalization: .init(completedAtUTC: "2026-08-29T04:20:42.113Z"),
+            videoTrack: .init(kind: "video", codec: "hvc1", durationMilliseconds: 31105,
+                              width: 1920, height: 1080, channelCount: nil),
+            audioTrack: nil,
+            audioIncluded: false,
+            microphoneAuthorization: .authorized,
+            silentRecordingDecision: .disallow,
+            context: .init(projectID: "project-1", projectName: "Gangnam", note: "메모")
+        )
+
+        let data = try claim.canonicalData()
+        let decoded = try JSONDecoder().decode(VideoEvidenceClaimV2.self, from: data)
+
+        XCTAssertEqual(decoded.context?.projectName, "Gangnam")
+        XCTAssertEqual(decoded.context?.note, "메모")
+        // 재직렬화 바이트가 같아야 영상 검증기의 정규형 검사를 통과한다.
+        XCTAssertEqual(try decoded.canonicalData(), data)
+    }
+
     func testVideoClaimRoundTripsAndroidOnlyFields() throws {
         let claim = VideoEvidenceClaimV2(
             packageID: UUID(uuidString: "E4F50617-2839-4ABC-DEF0-123456789012")!,

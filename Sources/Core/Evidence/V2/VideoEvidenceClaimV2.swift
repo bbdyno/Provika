@@ -50,6 +50,8 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
     let location: PhotoEvidenceClaimV2.Location?
     /// 하드웨어 키 증명(Android). iOS 에는 대응물이 없으나 같은 이유로 스키마에 둔다.
     let attestation: EvidenceKeyAttestationV2?
+    /// 사용자가 붙인 분류(프로젝트·조직·메모). 사진 클레임과 같은 구조를 쓴다.
+    let context: PhotoEvidenceClaimV2.Context?
 
     init(
         packageID: UUID,
@@ -64,7 +66,8 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
         microphoneAuthorization: VideoMicrophoneAuthorization,
         silentRecordingDecision: VideoSilentRecordingDecision,
         location: PhotoEvidenceClaimV2.Location? = nil,
-        attestation: EvidenceKeyAttestationV2? = nil
+        attestation: EvidenceKeyAttestationV2? = nil,
+        context: PhotoEvidenceClaimV2.Context? = nil
     ) {
         self.schemaVersion = Self.currentSchemaVersion
         self.packageID = packageID
@@ -80,12 +83,13 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
         self.silentRecordingDecision = silentRecordingDecision
         self.location = location
         self.attestation = attestation
+        self.context = context
     }
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion, packageID, media, capture, app, device, finalization
         case videoTrack, audioTrack, audioIncluded, microphoneAuthorization, silentRecordingDecision
-        case location, attestation
+        case location, attestation, context
     }
 
     init(from decoder: Decoder) throws {
@@ -126,6 +130,7 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
         self.silentRecordingDecision = try container.decode(VideoSilentRecordingDecision.self, forKey: .silentRecordingDecision)
         self.location = try container.decodeIfPresent(PhotoEvidenceClaimV2.Location.self, forKey: .location)
         self.attestation = try container.decodeIfPresent(EvidenceKeyAttestationV2.self, forKey: .attestation)
+        self.context = try container.decodeIfPresent(PhotoEvidenceClaimV2.Context.self, forKey: .context)
     }
 
     func replacingMediaDigest(_ digest: String, byteLength: Int) -> Self {
@@ -142,7 +147,8 @@ struct VideoEvidenceClaimV2: Codable, Equatable, Sendable {
             microphoneAuthorization: microphoneAuthorization,
             silentRecordingDecision: silentRecordingDecision,
             location: location,
-            attestation: attestation
+            attestation: attestation,
+            context: context
         )
     }
 
