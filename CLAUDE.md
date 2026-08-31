@@ -114,6 +114,13 @@ xcodebuild -workspace Provika.xcworkspace -scheme Provika \
 ## 7. 사이트와 정책 문서
 
 - `docs/` — Firebase Hosting(프로젝트 `provika-ios`). `firebase deploy` 로 배포합니다.
+  공개 주소는 **`https://provika-ios.web.app`** 입니다.
+- **`provika.app` 은 우리 도메인이 아닙니다.** 2026-08-31 확인 결과 "Provika Reviews"라는
+  스페인어권 구글 리뷰 서비스가 쓰고 있고 `/privacy`, `/support` 는 404 입니다.
+  등록정보에 그 주소를 넣으면 사용자가 남의 회사 사이트로 갑니다. 자체 도메인을 잡기 전까지
+  스토어 주소는 `provika-ios.web.app` 을 씁니다.
+- **App Store Connect 의 라이브 등록정보에도 같은 주소가 들어가 있을 수 있습니다.**
+  저장소 파일만 고쳐서는 이미 게시된 링크가 바뀌지 않습니다. Connect 에서 직접 확인하십시오.
 - `docs/terms.html`, `docs/privacy.html` — **iOS 와 Android 공통 문서**입니다. 한쪽 플랫폼만 고치지 마십시오. 스토어에 따라 달라지는 결제·환불만 조항 안에서 나눠 두었습니다.
 - 문구는 `docs/app.js` 의 `translations` 에 ko/en 두 벌로 들어 있습니다. HTML 의 `data-i18n` 키와 사전이 어긋나면 번역이 빠집니다.
 - 로컬 미리보기: `.claude/launch.json` 의 `docs` 설정으로 정적 서버를 띄울 수 있습니다.
