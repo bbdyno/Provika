@@ -79,6 +79,27 @@ final class CameraViewModel {
         activeAppPhysicalCaptureControl?.performOnScreenPhoto()
     }
 
+    // 외부 트리거로 열렸을 때 캡처 세션이 실제로 돌기 시작할 때까지 기다린다.
+    func waitUntilSessionRunning(timeout: Duration = .seconds(5)) async -> Bool {
+        let deadline = ContinuousClock.now + timeout
+        while !captureService.isSessionRunning {
+            guard ContinuousClock.now < deadline else { return false }
+            try? await Task.sleep(for: .milliseconds(50))
+        }
+        return true
+    }
+
+    func perform(_ action: QuickLaunchAction) {
+        switch action {
+        case .startVideo:
+            if !isRecording { toggleRecording() }
+        case .capturePhoto:
+            capturePhotoEvidence()
+        case .openCamera:
+            break
+        }
+    }
+
     func handlePinchZoom(scale: CGFloat, initialZoom: CGFloat) {
         let newFactor = initialZoom * scale
         captureService.setDisplayZoom(newFactor)

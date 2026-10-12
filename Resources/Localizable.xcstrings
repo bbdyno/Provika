@@ -1477,6 +1477,150 @@
         }
       }
     },
+    "intent.capturePhoto.description" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Launches Provika and captures one signed photo evidence package."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provikaを起動して、署名付きの証拠写真パッケージを1枚撮影します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provika를 열고 서명된 사진 증거 패키지 한 장을 촬영합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "启动 Provika 并拍摄一份已签名的照片证据包。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "啟動 Provika 並拍攝一份已簽署的照片證據套件。"
+          }
+        }
+      }
+    },
+    "intent.capturePhoto.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture Photo Evidence"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "証拠写真を撮影"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진 증거 촬영"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "拍摄照片证据"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拍攝照片證據"
+          }
+        }
+      }
+    },
+    "intent.openCamera.description" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens Provika's capture screen. On a locked device it opens the locked-screen camera."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provikaの撮影画面を開きます。デバイスがロックされている場合は、ロック画面用カメラを開きます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provika 촬영 화면을 엽니다. 기기가 잠겨 있으면 잠금 화면 카메라를 엽니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "打开 Provika 拍摄画面。设备锁定时会打开锁定屏幕相机。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開 Provika 拍攝畫面。裝置鎖定時會打開鎖定畫面相機。"
+          }
+        }
+      }
+    },
+    "intent.openCamera.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provika Camera"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provikaカメラ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provika 카메라"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Provika 相机"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provika 相機"
+          }
+        }
+      }
+    },
     "intent.startRecording.description" : {
       "comment" : "zh-Hans translation is provisional and requires human approval.",
       "extractionState" : "stale",
@@ -1909,6 +2053,654 @@
         }
       }
     },
+    "settings.quickCapture.guide.actionButton.body" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the Settings app, open Action Button, choose Controls, then pick Provika Record or Provika Camera. Choosing Shortcut instead lets you pick Start Recording or Capture Photo Evidence."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定アプリの「アクションボタン」で「コントロール」を選び、「Provikaで録画」または「Provikaカメラ」を選択します。「ショートカット」を選ぶと、「録画を開始」または「証拠写真を撮影」を割り当てられます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정 앱의 동작 버튼에서 제어를 고른 뒤 Provika 녹화 또는 Provika 카메라를 선택하세요. 단축어를 고르면 녹화 시작이나 사진 증거 촬영을 지정할 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "在“设置”应用的“操作按钮”中选择“控制”，然后选择“Provika 录制”或“Provika 相机”。改选“快捷指令”可指定“开始录制”或“拍摄照片证据”。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在「設定」App 的「動作按鈕」中選擇「控制項目」，然後選擇「Provika 錄影」或「Provika 相機」。改選「捷徑」可指定「開始錄影」或「拍攝照片證據」。"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.actionButton.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Action Button"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクションボタン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "동작 버튼"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "操作按钮"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動作按鈕"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.cameraControl.body" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On an iPhone with Camera Control, open Settings, then Camera, then Camera Control, and choose Provika as the app to launch."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カメラコントロール搭載のiPhoneでは、設定アプリの「カメラ」から「カメラコントロール」を開き、起動するアプリとしてProvikaを選びます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카메라 컨트롤이 있는 iPhone에서는 설정 앱의 카메라에서 카메라 컨트롤로 들어가 실행할 앱으로 Provika를 고르세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "在配备相机控制的 iPhone 上，前往“设置”应用的“相机”，进入“相机控制”，将要启动的应用选为 Provika。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在配備相機控制的 iPhone 上，前往「設定」App 的「相機」，進入「相機控制」，將要啟動的 App 選為 Provika。"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.cameraControl.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera Control"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カメラコントロール"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카메라 컨트롤"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "相机控制"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "相機控制"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.controlCenter.body" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Control Center, touch and hold an empty area, tap Add a Control, then search for Provika."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コントロールセンターを開き、何もない部分を長押しして「コントロールを追加」をタップし、Provikaを検索します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제어 센터를 열고 빈 곳을 길게 누른 뒤 제어 항목 추가를 눌러 Provika를 검색하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "打开控制中心，按住空白处，轻点“添加控制”，然后搜索 Provika。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開控制中心，按住空白處，點一下「加入控制項目」，然後搜尋 Provika。"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.controlCenter.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control Center"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コントロールセンター"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제어 센터"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "控制中心"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "控制中心"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.intro" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS lets only you assign these buttons. Pick the ones you want and set them up once."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "これらのボタンは、iOSでご自身が割り当てる必要があります。使いたい方法を選んで、一度だけ設定してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아래 버튼은 iOS에서 사용자가 직접 지정해야 합니다. 원하는 방법을 골라 한 번만 설정하세요."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "以下按钮需要你在 iOS 中自行指定。选择想用的方式并设置一次即可。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以下按鈕需要你在 iOS 中自行指定。選擇想用的方式並設定一次即可。"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.lockedNote" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photos and videos taken from the locked screen are signed only after you unlock and open Provika. Location is not recorded while locked, and locked-screen videos have no on-screen overlay."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロック画面で撮影した写真とビデオは、ロックを解除してProvikaを開いた後に署名されます。ロック中は位置情報が記録されず、ロック画面で撮影したビデオにはオーバーレイが入りません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잠금 화면에서 찍은 사진과 영상은 잠금을 풀고 Provika를 연 뒤에 서명됩니다. 잠금 상태에서는 위치가 기록되지 않으며, 잠금 화면 영상에는 화면 오버레이가 들어가지 않습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "在锁定屏幕拍摄的照片和视频，会在你解锁并打开 Provika 之后才签名。锁定期间不会记录位置，锁定屏幕拍摄的视频不带画面叠加信息。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在鎖定畫面拍攝的照片和影片，會在你解鎖並打開 Provika 之後才簽署。鎖定期間不會記錄位置，鎖定畫面拍攝的影片不含畫面疊加資訊。"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.lockScreen.body" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touch and hold the Lock Screen, tap Customize, and replace one of the bottom buttons with Provika Camera. It opens the capture screen without unlocking."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロック画面を長押しして「カスタマイズ」をタップし、下部のボタンのいずれかを「Provikaカメラ」に置き換えます。ロックを解除せずに撮影画面が開きます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잠금 화면을 길게 눌러 사용자화를 누른 뒤 아래쪽 버튼 하나를 Provika 카메라로 바꾸세요. 잠금을 풀지 않고 촬영 화면이 열립니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "按住锁定屏幕，轻点“自定”，将底部的一个按钮换成“Provika 相机”。无需解锁即可打开拍摄画面。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按住鎖定畫面，點一下「自訂」，將底部的一個按鈕換成「Provika 相機」。不需解鎖即可打開拍攝畫面。"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.lockScreen.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock Screen"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ロック画面"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "잠금 화면"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "锁定屏幕"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "鎖定畫面"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.siri.body" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Recording and Capture Photo Evidence appear in the Shortcuts app under Provika and can be run with Siri."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「録画を開始」と「証拠写真を撮影」は、ショートカットアプリのProvikaの項目に表示され、Siriでも実行できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "녹화 시작과 사진 증거 촬영이 단축어 앱의 Provika 항목에 나타나며 Siri로도 실행할 수 있습니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "“开始录制”和“拍摄照片证据”会显示在“快捷指令”应用的 Provika 项目下，也可以通过 Siri 运行。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「開始錄影」和「拍攝照片證據」會顯示在「捷徑」App 的 Provika 項目下，也可以透過 Siri 執行。"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.siri.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siri and Shortcuts"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siriとショートカット"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siri 및 단축어"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Siri 与快捷指令"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siri 與捷徑"
+          }
+        }
+      }
+    },
+    "settings.quickCapture.guide.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Up Quick Capture"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クイック撮影の設定方法"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빠른 촬영 설정 방법"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "如何设置快速拍摄"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何設定快速拍攝"
+          }
+        }
+      }
+    },
+    "settings.quickLaunch.action.capturePhoto" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Take One Photo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "写真を1枚撮影"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진 한 장 촬영"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "拍摄一张照片"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拍攝一張照片"
+          }
+        }
+      }
+    },
+    "settings.quickLaunch.action.openCamera" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Camera Only"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カメラを開くだけ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "카메라만 열기"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "仅打开相机"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "僅打開相機"
+          }
+        }
+      }
+    },
+    "settings.quickLaunch.action.startVideo" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Recording"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "録画を開始"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영상 녹화 시작"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "开始录制"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始錄影"
+          }
+        }
+      }
+    },
+    "settings.quickLaunch.footer" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applies when the app is opened from the Provika Camera control. The Record control and shortcuts always do what their names say."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provikaカメラのコントロールからアプリを開いたときに適用されます。録画コントロールとショートカットは、常に名前どおりに動作します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provika 카메라 컨트롤로 앱을 열었을 때 적용됩니다. 녹화 컨트롤과 단축어는 항상 이름대로 동작합니다."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "从 Provika 相机控制项打开应用时生效。录制控制项和快捷指令始终按名称执行。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從 Provika 相機控制項目打開 App 時生效。錄影控制項目和捷徑一律依名稱執行。"
+          }
+        }
+      }
+    },
+    "settings.quickLaunch.title" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick Launch Action"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クイック起動の動作"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빠른 실행 동작"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "快速启动操作"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快速啟動動作"
+          }
+        }
+      }
+    },
     "settings.section.about" : {
       "comment" : "zh-Hans translation is provisional and requires human approval.",
       "extractionState" : "stale",
@@ -1977,6 +2769,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "疊加資訊"
+          }
+        }
+      }
+    },
+    "settings.section.quickCapture" : {
+      "comment" : "zh-Hans translation is provisional and requires human approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick Capture"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クイック撮影"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빠른 촬영"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "快速拍摄"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快速拍攝"
           }
         }
       }

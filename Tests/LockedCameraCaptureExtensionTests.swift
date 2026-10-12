@@ -16,6 +16,7 @@ final class LockedCameraCaptureExtensionTests: XCTestCase {
         let source = try [
             text("Sources/LockedCaptureExtension/ProvikaLockedCaptureExtension.swift"),
             text("Sources/LockedCaptureExtension/LockedCaptureView.swift"),
+            text("Sources/LockedCaptureExtension/LockedCaptureCameraModel.swift"),
             text("Sources/Shared/Intents/ProvikaCameraCaptureIntent.swift")
         ].joined(separator: "\n")
         for forbidden in ["SignatureService", "SecItem", "Keychain", "privateKey", "sign("] {
@@ -77,6 +78,59 @@ final class LockedCameraCaptureExtensionTests: XCTestCase {
         guard case .imported = await coordinator.importSessionContent(at: root) else { return XCTFail("expected retry import") }
     }
 
+    func testEveryCaptureInSessionIsImportedBeforeInvalidation() async throws {
+        let root = try temporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        for byte in [UInt8(1), 2, 3] {
+            _ = try LockedCapturePendingHandoffWriter.publish(mediaData: Data([byte]), fileExtension: "jpg", mediaType: "image/jpeg", to: root)
+        }
+        var persisted = 0, invalidated = 0
+        let coordinator = coordinator(persist: { _, _ in persisted += 1 })
+        guard case .imported = await coordinator.importSessionContent(at: root, invalidateSessionContent: { invalidated += 1 }) else { return XCTFail("expected import") }
+        XCTAssertEqual(persisted, 3)
+        XCTAssertEqual(invalidated, 1)
+    }
+
+    func testSealFailureKeepsSessionContentForRetry() async throws {
+        let root = try handoffFixture(); defer { try? FileManager.default.removeItem(at: root) }
+        struct SealFailure: Error {}
+        var shouldFail = true, invalidated = 0
+        let coordinator = coordinator(persist: { _, _ in if shouldFail { throw SealFailure() } })
+        guard case .pending = await coordinator.importSessionContent(at: root, invalidateSessionContent: { invalidated += 1 }) else { return XCTFail("expected pending") }
+        XCTAssertEqual(invalidated, 0)
+        XCTAssertFalse(try FileManager.default.contentsOfDirectory(atPath: root.path).filter { $0.hasPrefix("pending-") }.isEmpty)
+        shouldFail = false
+        guard case .imported = await coordinator.importSessionContent(at: root, invalidateSessionContent: { invalidated += 1 }) else { return XCTFail("expected retry import") }
+        XCTAssertEqual(invalidated, 1)
+    }
+
+    func testHandoffCarriesExtensionCaptureTime() throws {
+        let root = try temporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        let capturedAt = Date(timeIntervalSince1970: 1_760_000_000.25)
+        let pending = try LockedCapturePendingHandoffWriter.publish(mediaData: Data([1]), fileExtension: "jpg", mediaType: "image/jpeg", capturedAt: capturedAt, to: root)
+        let handoff = try JSONDecoder().decode(LockedCaptureHandoff.self, from: Data(contentsOf: pending.appendingPathComponent("handoff.json")))
+        XCTAssertEqual(try XCTUnwrap(handoff.capturedDate).timeIntervalSince1970, capturedAt.timeIntervalSince1970, accuracy: 0.001)
+    }
+
+    func testFileBasedPublishMovesMediaIntoHandoff() throws {
+        let root = try temporaryDirectory(); defer { try? FileManager.default.removeItem(at: root) }
+        let recording = root.appendingPathComponent(".recording-test.mov")
+        try Data([9, 9, 9, 9]).write(to: recording)
+        let pending = try LockedCapturePendingHandoffWriter.publish(mediaFileAt: recording, fileExtension: "mov", mediaType: "video/quicktime", capturedAt: Date(), to: root)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: recording.path))
+        let handoff = try JSONDecoder().decode(LockedCaptureHandoff.self, from: Data(contentsOf: pending.appendingPathComponent("handoff.json")))
+        XCTAssertEqual(handoff.byteCount, 4)
+        XCTAssertEqual(handoff.mediaFileName, "original.mov")
+    }
+
+    func testHandoffWithoutCaptureTimeIsRejectedInsteadOfBackfilled() async throws {
+        let root = try handoffFixture(); defer { try? FileManager.default.removeItem(at: root) }
+        let pending = try XCTUnwrap(try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil).first { $0.lastPathComponent.hasPrefix("pending-") })
+        let handoff = try JSONDecoder().decode(LockedCaptureHandoff.self, from: Data(contentsOf: pending.appendingPathComponent("handoff.json")))
+        XCTAssertNil(handoff.capturedDate)
+        let verified = await LockedCaptureEvidenceSealer.verify(pending.appendingPathComponent(handoff.mediaFileName), handoff)
+        XCTAssertEqual(verified, false)
+    }
+
     func testUnsupportedCapabilityPreservesNormalAppFlow() throws {
         let app = try text("Sources/App/ProvikaApp.swift")
         let camera = try text("Sources/Features/Camera/Views/CameraView.swift")
@@ -84,7 +138,7 @@ final class LockedCameraCaptureExtensionTests: XCTestCase {
         XCTAssertTrue(camera.contains("CameraPreviewView"))
     }
 
-    private func coordinator(persist: @escaping (URL, LockedCaptureHandoff) throws -> Void = { _, _ in }) -> LockedCaptureImportCoordinator {
+    private func coordinator(persist: @escaping (URL, LockedCaptureHandoff) async throws -> Void = { _, _ in }) -> LockedCaptureImportCoordinator {
         LockedCaptureImportCoordinator(dependencies: .init(protectedDataAvailable: { true }, verify: { _, _ in true }, persist: persist, quarantine: { _, _ in }))
     }
 

@@ -35,6 +35,25 @@ struct SettingsView: View {
                     }
                 }
 
+                // 빠른 촬영
+                Section {
+                    Picker(ProvikaStrings.Localizable.Settings.QuickLaunch.title, selection: $viewModel.quickLaunchAction) {
+                        ForEach(QuickLaunchAction.allCases, id: \.self) { action in
+                            Text(action.displayName).tag(action)
+                        }
+                    }
+
+                    NavigationLink {
+                        QuickCaptureGuideView()
+                    } label: {
+                        Label(ProvikaStrings.Localizable.Settings.QuickCapture.Guide.title, systemImage: "bolt.fill")
+                    }
+                } header: {
+                    Text(ProvikaStrings.Localizable.Settings.Section.quickCapture)
+                } footer: {
+                    Text(ProvikaStrings.Localizable.Settings.QuickLaunch.footer)
+                }
+
                 // 저장소
                 Section(ProvikaStrings.Localizable.Settings.Section.storage) {
                     Picker(ProvikaStrings.Localizable.Settings.autoDelete, selection: $viewModel.autoDeletePolicy) {

@@ -32,7 +32,7 @@ final class LocalizationFoundationTests: XCTestCase {
     ]
 
     func testCatalogsHaveRequiredLocalesAndExactLegacyParity() throws {
-        for path in ["Resources/Localizable.xcstrings", "Resources/InfoPlist.xcstrings", "Resources/Widgets/Localizable.xcstrings", "Resources/EvidenceReport.xcstrings"] {
+        for path in ["Resources/Localizable.xcstrings", "Resources/InfoPlist.xcstrings", "Resources/Widgets/Localizable.xcstrings", "Resources/EvidenceReport.xcstrings", "Resources/LockedCapture/Localizable.xcstrings", "Resources/AppShortcuts.xcstrings"] {
             let catalog = try loadCatalog(path)
             XCTAssertEqual(catalog.sourceLanguage, "en", path)
             for entry in catalog.strings.values {
@@ -42,7 +42,8 @@ final class LocalizationFoundationTests: XCTestCase {
 
         XCTAssertGreaterThanOrEqual(try loadCatalog("Resources/Localizable.xcstrings").strings.count, 61)
         XCTAssertEqual(try loadCatalog("Resources/InfoPlist.xcstrings").strings.count, 4)
-        XCTAssertEqual(try loadCatalog("Resources/Widgets/Localizable.xcstrings").strings.count, 5)
+        // 녹화 컨트롤 3 + 녹화 인텐트 2 + 잠금 카메라 컨트롤 3 + 카메라 인텐트 2
+        XCTAssertEqual(try loadCatalog("Resources/Widgets/Localizable.xcstrings").strings.count, 10)
         XCTAssertEqual(try loadCatalog("Resources/EvidenceReport.xcstrings").strings.count, 5)
     }
 
@@ -57,7 +58,7 @@ final class LocalizationFoundationTests: XCTestCase {
     }
 
     func testChineseIsExplicitlyProvisionalAndNeverHumanApproved() throws {
-        for path in ["Resources/Localizable.xcstrings", "Resources/InfoPlist.xcstrings", "Resources/Widgets/Localizable.xcstrings"] {
+        for path in ["Resources/Localizable.xcstrings", "Resources/InfoPlist.xcstrings", "Resources/Widgets/Localizable.xcstrings", "Resources/LockedCapture/Localizable.xcstrings", "Resources/AppShortcuts.xcstrings"] {
             let catalog = try loadCatalog(path)
             for (key, entry) in catalog.strings {
                 XCTAssertEqual(entry.comment, "zh-Hans translation is provisional and requires human approval.", "\\(path): \\(key)")

@@ -44,26 +44,35 @@ final class PhotoEvidenceVerticalSliceCoordinator {
                 }
             },
             persist: { claim, packageDirectory in
-                let record = EvidenceRecord(
-                    id: "photo-package:\(claim.packageID.uuidString.lowercased())",
-                    schemaVersion: 2,
-                    capturedAt: Self.captureDate(from: claim),
-                    evidenceKindRawValue: "photo_evidence",
-                    verificationStateRawValue: EvidenceVerificationState.verified.rawValue,
-                    packagePath: packageDirectory.path,
-                    contentHash: claim.media.sha256,
-                    startLatitude: claim.location?.lat,
-                    startLongitude: claim.location?.lng
-                )
-                modelContext.insert(record)
-                do {
-                    try modelContext.save()
-                } catch {
-                    modelContext.delete(record)
-                    throw error
-                }
+                try Self.persistRecord(claim: claim, packageDirectory: packageDirectory, modelContext: modelContext)
             }
         )
+    }
+
+    static func recordID(forPackageID packageID: UUID) -> String {
+        "photo-package:\(packageID.uuidString.lowercased())"
+    }
+
+    /// 파이프라인이 이미 검증까지 끝낸 패키지를 기록으로 남긴다. 잠금 촬영 가져오기도 같은 경로를 쓴다.
+    static func persistRecord(claim: PhotoEvidenceClaimV2, packageDirectory: URL, modelContext: ModelContext) throws {
+        let record = EvidenceRecord(
+            id: recordID(forPackageID: claim.packageID),
+            schemaVersion: 2,
+            capturedAt: captureDate(from: claim),
+            evidenceKindRawValue: "photo_evidence",
+            verificationStateRawValue: EvidenceVerificationState.verified.rawValue,
+            packagePath: packageDirectory.path,
+            contentHash: claim.media.sha256,
+            startLatitude: claim.location?.lat,
+            startLongitude: claim.location?.lng
+        )
+        modelContext.insert(record)
+        do {
+            try modelContext.save()
+        } catch {
+            modelContext.delete(record)
+            throw error
+        }
     }
 
     func capturePhotoEvidence() {

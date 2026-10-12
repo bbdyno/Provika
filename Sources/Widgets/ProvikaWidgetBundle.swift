@@ -12,5 +12,6 @@ import WidgetKit
 struct ProvikaWidgetBundle: WidgetBundle {
     var body: some Widget {
         LaunchCameraControlWidget()
+        LockedCameraControlWidget()
     }
 }

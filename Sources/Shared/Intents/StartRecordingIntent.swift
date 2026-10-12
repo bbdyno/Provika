@@ -18,7 +18,7 @@ struct StartRecordingIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        PendingLaunchAction.shared.shouldStartRecording = true
+        PendingLaunchAction.shared.request = .startVideo
         return .result()
     }
 }

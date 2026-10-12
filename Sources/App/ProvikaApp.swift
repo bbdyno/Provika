@@ -13,7 +13,6 @@ import SwiftUI
 struct ProvikaApp: App {
     @State private var appEnvironment = AppEnvironment()
     @State private var pendingLaunchAction = PendingLaunchAction.shared
-    @State private var lockedCaptureImportCoordinator = LockedCaptureImportCoordinator()
 
     init() {
         // 공개 저장소의 깨끗한 체크아웃에서도 앱과 테스트를 실행할 수 있어야 한다.
@@ -30,7 +29,6 @@ struct ProvikaApp: App {
                 .environment(pendingLaunchAction)
                 .onAppear {
                     appEnvironment.locationManager.requestAuthorization()
-                    lockedCaptureImportCoordinator.startObserving()
                 }
         }
         // Register legacy and evidence-domain models together so existing

@@ -13,6 +13,7 @@ struct CameraView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = CameraViewModel()
     @State private var pinchStartZoom: CGFloat = 1.0
+    @State private var launchRequestTask: Task<Void, Never>?
 
     private let zoomDialBottomPadding: CGFloat = 108
 
@@ -35,49 +36,46 @@ struct CameraView: View {
                 photoEvidencePackageRoot: photoEvidencePackageRoot
             )
             viewModel.onAppear()
-            startRecordingIfRequested()
+            performLaunchRequestIfNeeded()
         }
         .onChange(of: isActiveTab) { _, active in
             if active {
                 viewModel.onAppear()
-                startRecordingIfRequested()
+                performLaunchRequestIfNeeded()
             } else {
                 viewModel.onDisappear()
             }
         }
-        .onChange(of: pendingLaunchAction.shouldStartRecording) { _, shouldStart in
-            if shouldStart {
-                startRecordingIfRequested()
+        .onChange(of: pendingLaunchAction.request) { _, request in
+            if request != nil {
+                performLaunchRequestIfNeeded()
             }
         }
         .onChange(of: viewModel.cameraPermissionGranted) { _, granted in
             // 권한을 나중에 승인한 경우에도 pending 요청 소비.
             if granted {
-                startRecordingIfRequested()
+                performLaunchRequestIfNeeded()
             }
         }
     }
 
-    // 위젯·액션 버튼 경로로 들어온 녹화 요청을 카메라 준비 상태에서 소비한다.
-    // 세션이 활성화되지 않았거나 이미 녹화 중이면 스킵하고 플래그는 유지하여 다음 기회에 재시도.
-    private func startRecordingIfRequested() {
-        guard pendingLaunchAction.shouldStartRecording else { return }
+    // 위젯·액션 버튼·단축어 경로로 들어온 요청을 카메라 준비 상태에서 소비한다.
+    // 탭이 비활성이거나 권한이 없으면 요청을 유지해 다음 기회에 재시도한다.
+    private func performLaunchRequestIfNeeded() {
+        guard pendingLaunchAction.request != nil else { return }
         guard isActiveTab else { return }
         guard viewModel.cameraPermissionGranted else { return }
-        guard !viewModel.isRecording else {
-            pendingLaunchAction.shouldStartRecording = false
-            return
-        }
-        // 세션 startSession() 직후 첫 프레임이 올 때까지 약간의 딜레이 필요.
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(400))
-            guard pendingLaunchAction.shouldStartRecording else { return }
-            guard !viewModel.isRecording else {
-                pendingLaunchAction.shouldStartRecording = false
-                return
-            }
-            viewModel.toggleRecording()
-            pendingLaunchAction.shouldStartRecording = false
+        guard launchRequestTask == nil else { return }
+
+        launchRequestTask = Task { @MainActor in
+            defer { launchRequestTask = nil }
+            // 콜드 스타트에서는 세션이 뜨는 데 걸리는 시간이 일정하지 않다. 고정 지연 대신 실제로 돌 때까지 기다린다.
+            let sessionReady = await viewModel.waitUntilSessionRunning()
+            guard let request = pendingLaunchAction.request else { return }
+            // 세션이 끝내 뜨지 않았으면 요청을 버린다. 남겨 두면 한참 뒤 엉뚱한 시점에 촬영이 시작된다.
+            pendingLaunchAction.request = nil
+            guard sessionReady else { return }
+            viewModel.perform(QuickLaunchAction.resolve(request))
         }
     }
 
@@ -191,10 +189,7 @@ struct CameraView: View {
         .padding(.bottom, 8)
     }
 
-    private var photoEvidencePackageRoot: URL {
-        let applicationSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        return applicationSupport.appendingPathComponent("PhotoEvidencePackages", isDirectory: true)
-    }
+    private var photoEvidencePackageRoot: URL { FileStorage.photoEvidencePackageRoot }
 
     private var photoEvidenceButton: some View {
         Button(action: { viewModel.capturePhotoEvidence() }) {

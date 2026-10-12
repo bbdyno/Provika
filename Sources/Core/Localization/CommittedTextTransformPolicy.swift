@@ -95,9 +95,46 @@ enum ProvikaStrings {
                 static var loadFailure: String { value("settings.publicKey.loadFailure") }
                 static var show: String { value("settings.publicKey.show") }
             }
+            enum QuickCapture {
+                enum Guide {
+                    static var intro: String { value("settings.quickCapture.guide.intro") }
+                    static var lockedNote: String { value("settings.quickCapture.guide.lockedNote") }
+                    static var title: String { value("settings.quickCapture.guide.title") }
+                    enum ActionButton {
+                        static var body: String { value("settings.quickCapture.guide.actionButton.body") }
+                        static var title: String { value("settings.quickCapture.guide.actionButton.title") }
+                    }
+                    enum CameraControl {
+                        static var body: String { value("settings.quickCapture.guide.cameraControl.body") }
+                        static var title: String { value("settings.quickCapture.guide.cameraControl.title") }
+                    }
+                    enum ControlCenter {
+                        static var body: String { value("settings.quickCapture.guide.controlCenter.body") }
+                        static var title: String { value("settings.quickCapture.guide.controlCenter.title") }
+                    }
+                    enum LockScreen {
+                        static var body: String { value("settings.quickCapture.guide.lockScreen.body") }
+                        static var title: String { value("settings.quickCapture.guide.lockScreen.title") }
+                    }
+                    enum Siri {
+                        static var body: String { value("settings.quickCapture.guide.siri.body") }
+                        static var title: String { value("settings.quickCapture.guide.siri.title") }
+                    }
+                }
+            }
+            enum QuickLaunch {
+                static var footer: String { value("settings.quickLaunch.footer") }
+                static var title: String { value("settings.quickLaunch.title") }
+                enum Action {
+                    static var capturePhoto: String { value("settings.quickLaunch.action.capturePhoto") }
+                    static var openCamera: String { value("settings.quickLaunch.action.openCamera") }
+                    static var startVideo: String { value("settings.quickLaunch.action.startVideo") }
+                }
+            }
             enum Section {
                 static var about: String { value("settings.section.about") }
                 static var overlay: String { value("settings.section.overlay") }
+                static var quickCapture: String { value("settings.section.quickCapture") }
                 static var recording: String { value("settings.section.recording") }
                 static var security: String { value("settings.section.security") }
                 static var storage: String { value("settings.section.storage") }

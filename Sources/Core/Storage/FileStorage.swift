@@ -16,6 +16,11 @@ enum FileStorage {
         return docs.appendingPathComponent("Recordings", isDirectory: true)
     }
 
+    static var photoEvidencePackageRoot: URL {
+        let applicationSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        return applicationSupport.appendingPathComponent("PhotoEvidencePackages", isDirectory: true)
+    }
+
     static func directoryForDate(_ date: Date) -> URL {
         let dir = recordingsDirectory.appendingPathComponent(date.folderName, isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)

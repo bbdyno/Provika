@@ -5,7 +5,7 @@ import ProjectDescription
 let deploymentTargets: DeploymentTargets = .iOS("18.0")
 
 var appResources: ResourceFileElements = [
-    .glob(pattern: "Resources/**", excluding: ["Resources/Widgets/**"])
+    .glob(pattern: "Resources/**", excluding: ["Resources/Widgets/**", "Resources/LockedCapture/**"])
 ]
 
 // GoogleService-Info.plist는 로컬 Firebase 설정이며 저장소에 포함하지 않는다.
@@ -107,14 +107,17 @@ let project = Project(
                     "EXExtensionPointIdentifier": "com.apple.securecapture"
                 ],
                 "NSCameraUsageDescription": "Provika uses the camera to create a pending capture for import after unlock.",
-                "NSPhotoLibraryUsageDescription": "The simulator fallback can select a photo to exercise the pending import flow."
+                "NSMicrophoneUsageDescription": "Provika records audio with locked-screen videos for import after unlock."
             ]),
             sources: [
                 "Sources/LockedCaptureExtension/**",
                 "Sources/Shared/Intents/ProvikaCameraCaptureIntent.swift",
+                "Sources/Shared/Launch/**",
                 "Sources/Core/LockedCapture/LockedCapturePolicies.swift"
             ],
-            resources: [],
+            resources: [
+                "Resources/LockedCapture/**"
+            ],
             dependencies: []
         ),
         .target(

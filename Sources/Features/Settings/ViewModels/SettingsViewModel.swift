@@ -26,6 +26,11 @@ final class SettingsViewModel {
         set { UserDefaults.standard.set(newValue.rawValue, forKey: "preRecordDuration") }
     }
 
+    // 빠른 촬영 — 저장 프로퍼티로 두어 Picker 가 선택 변경을 바로 반영하게 한다.
+    var quickLaunchAction = QuickLaunchAction.preferred() {
+        didSet { UserDefaults.standard.set(quickLaunchAction.rawValue, forKey: QuickLaunchAction.defaultsKey) }
+    }
+
     // 저장소 설정
     var autoDeletePolicy: AutoDeletePolicy {
         get { AutoDeletePolicy(rawValue: UserDefaults.standard.integer(forKey: "autoDeletePolicy")) ?? .off }
