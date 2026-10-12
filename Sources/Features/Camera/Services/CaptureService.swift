@@ -46,6 +46,13 @@ final class CaptureService: NSObject {
     weak var locationManager: LocationManager?
 
     private var videoDeviceInput: AVCaptureDeviceInput?
+    private var audioDeviceInput: AVCaptureDeviceInput?
+    // 다른 클라이언트(통화·Siri·CarPlay)가 마이크를 가져가 오디오 입력만 떼어 둔 상태.
+    private var audioInputSuspended = false
+    // 사용자가 세션을 켜 둔 상태인지. 런타임 오류·인터럽션 뒤 재시작 여부를 이 값으로 판단한다.
+    private var wantsSessionRunning = false
+    private var lastRuntimeErrorRestart: Date?
+    private var sessionEventObservers: [NSObjectProtocol] = []
     private var videoDataOutput: AVCaptureVideoDataOutput?
     private var audioDataOutput: AVCaptureAudioDataOutput?
     private var photoOutput: AVCapturePhotoOutput?
@@ -81,6 +88,7 @@ final class CaptureService: NSObject {
     private var recordedVideoDimensions = CMVideoDimensions(width: 1080, height: 1920)
 
     deinit {
+        sessionEventObservers.forEach(NotificationCenter.default.removeObserver)
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
     }
 
@@ -101,6 +109,7 @@ final class CaptureService: NSObject {
         )
 
         startObservingOrientationChangesIfNeeded()
+        startObservingSessionEventsIfNeeded()
 
         sessionQueue.async { [weak self] in
             self?.setupSession()
@@ -109,7 +118,9 @@ final class CaptureService: NSObject {
 
     func startSession() {
         sessionQueue.async { [weak self] in
-            guard let self, !session.isRunning else { return }
+            guard let self else { return }
+            wantsSessionRunning = true
+            guard !session.isRunning else { return }
             session.startRunning()
             DispatchQueue.main.async {
                 self.isSessionRunning = self.session.isRunning
@@ -120,7 +131,9 @@ final class CaptureService: NSObject {
 
     func stopSession() {
         sessionQueue.async { [weak self] in
-            guard let self, session.isRunning else { return }
+            guard let self else { return }
+            wantsSessionRunning = false
+            guard session.isRunning else { return }
             session.stopRunning()
             DispatchQueue.main.async {
                 self.isSessionRunning = self.session.isRunning
@@ -335,6 +348,11 @@ final class CaptureService: NSObject {
     }
 
     private func setupSession() {
+        // 기본값(자동 구성)은 다른 앱과 섞이지 않는 오디오 세션을 만든다. 그러면 CarPlay 로 음악·내비 안내가
+        // 재생되는 순간 마이크를 빼앗겨 캡처 세션 전체가 멈추므로 직접 구성한다.
+        session.automaticallyConfiguresApplicationAudioSession = false
+        configureAudioSession()
+
         session.beginConfiguration()
 
         // 기존 입출력 제거 (중복 방지)
@@ -392,6 +410,8 @@ final class CaptureService: NSObject {
                 let audioInput = try AVCaptureDeviceInput(device: audioDevice)
                 if session.canAddInput(audioInput) {
                     session.addInput(audioInput)
+                    audioDeviceInput = audioInput
+                    audioInputSuspended = false
                 }
             } catch {
                 logger.warning("오디오 입력 추가 실패: \(error.localizedDescription)")
@@ -474,6 +494,162 @@ final class CaptureService: NSObject {
             self?.lockPreviewToPortrait()
         }
         logger.info("캡처 세션 구성 완료")
+    }
+
+    // MARK: - 오디오 세션·인터럽션 복구
+
+    // 차량·다른 앱의 오디오와 공존하도록 섞임을 허용한다. 통화용 블루투스(HFP)는 열지 않아
+    // 차량 블루투스가 통화 모드로 넘어가지 않게 한다.
+    private func configureAudioSession() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(
+                .playAndRecord,
+                mode: .videoRecording,
+                options: [.mixWithOthers, .allowBluetoothA2DP, .defaultToSpeaker]
+            )
+            try audioSession.setActive(true)
+        } catch {
+            // 통화 중에는 활성화가 실패할 수 있다. 이때는 인터럽션 처리에서 오디오 입력만 떼어 낸다.
+            logger.warning("오디오 세션 구성 실패: \(error.localizedDescription)")
+        }
+        applyPreferredMicrophone()
+    }
+
+    private func applyPreferredMicrophone() {
+        let audioSession = AVAudioSession.sharedInstance()
+        let available = audioSession.availableInputs ?? []
+        guard CaptureSessionRecoveryPolicy.shouldPreferBuiltInMicrophone(
+            currentInputs: audioSession.currentRoute.inputs.map(\.portType),
+            availableInputs: available.map(\.portType)
+        ), let builtInMic = available.first(where: { $0.portType == .builtInMic }) else { return }
+        do {
+            try audioSession.setPreferredInput(builtInMic)
+            logger.info("오디오 입력을 내장 마이크로 전환")
+        } catch {
+            logger.warning("내장 마이크 전환 실패: \(error.localizedDescription)")
+        }
+    }
+
+    private func startObservingSessionEventsIfNeeded() {
+        guard sessionEventObservers.isEmpty else { return }
+        let center = NotificationCenter.default
+        sessionEventObservers = [
+            center.addObserver(
+                forName: AVCaptureSession.wasInterruptedNotification, object: session, queue: nil
+            ) { [weak self] in self?.handleSessionInterruption($0) },
+            center.addObserver(
+                forName: AVCaptureSession.interruptionEndedNotification, object: session, queue: nil
+            ) { [weak self] _ in self?.recoverSession(reason: "인터럽션 종료") },
+            center.addObserver(
+                forName: AVCaptureSession.runtimeErrorNotification, object: session, queue: nil
+            ) { [weak self] in self?.handleSessionRuntimeError($0) },
+            center.addObserver(
+                forName: AVAudioSession.interruptionNotification, object: nil, queue: nil
+            ) { [weak self] in self?.handleAudioSessionInterruption($0) },
+            center.addObserver(
+                forName: AVAudioSession.routeChangeNotification, object: nil, queue: nil
+            ) { [weak self] in self?.handleAudioRouteChange($0) },
+            center.addObserver(
+                forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil
+            ) { [weak self] _ in self?.recoverSession(reason: "앱 활성화") }
+        ]
+    }
+
+    private func handleSessionInterruption(_ notification: Notification) {
+        let rawReason = notification.userInfo?[AVCaptureSessionInterruptionReasonKey] as? Int
+        let reason = rawReason.flatMap(AVCaptureSession.InterruptionReason.init(rawValue:))
+        logger.warning("캡처 세션 인터럽션: reason=\(rawReason ?? -1)")
+
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
+            if CaptureSessionRecoveryPolicy.response(to: reason) == .suspendAudioInput {
+                suspendAudioInput()
+            }
+            publishSessionRunningState()
+        }
+    }
+
+    private func handleSessionRuntimeError(_ notification: Notification) {
+        let error = notification.userInfo?[AVCaptureSessionErrorKey] as? AVError
+        logger.error("캡처 세션 런타임 오류: \(error?.localizedDescription ?? "unknown")")
+
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
+            defer { publishSessionRunningState() }
+            guard wantsSessionRunning, !session.isRunning else { return }
+            let now = Date()
+            guard CaptureSessionRecoveryPolicy.shouldRestartAfterRuntimeError(
+                lastRestart: lastRuntimeErrorRestart, now: now
+            ) else { return }
+            lastRuntimeErrorRestart = now
+            if error?.code == .mediaServicesWereReset {
+                configureAudioSession()
+            }
+            session.startRunning()
+            logger.info("런타임 오류 후 캡처 세션 재시작")
+        }
+    }
+
+    private func handleAudioSessionInterruption(_ notification: Notification) {
+        guard let rawType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+              AVAudioSession.InterruptionType(rawValue: rawType) == .ended else { return }
+        recoverSession(reason: "오디오 인터럽션 종료")
+    }
+
+    private func handleAudioRouteChange(_ notification: Notification) {
+        let rawReason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt
+        let reason = rawReason.flatMap(AVAudioSession.RouteChangeReason.init(rawValue:))
+        guard CaptureSessionRecoveryPolicy.shouldReapplyPreferredInput(after: reason) else { return }
+        sessionQueue.async { [weak self] in
+            self?.applyPreferredMicrophone()
+        }
+    }
+
+    // sessionQueue 전용. 마이크만 빼앗긴 경우 오디오 입력을 떼어 영상 캡처를 살린다.
+    // 그 구간의 오디오는 기록되지 않으며, 없는 소리를 채워 넣지 않는다.
+    private func suspendAudioInput() {
+        guard let audioDeviceInput, session.inputs.contains(audioDeviceInput) else { return }
+        session.beginConfiguration()
+        session.removeInput(audioDeviceInput)
+        session.commitConfiguration()
+        audioInputSuspended = true
+        logger.warning("오디오 입력 일시 분리 — 영상만 계속 캡처")
+        if wantsSessionRunning, !session.isRunning {
+            session.startRunning()
+        }
+    }
+
+    // sessionQueue 전용. 마이크가 아직 점유 중이면 다시 인터럽션이 와서 suspendAudioInput 으로 돌아간다.
+    private func restoreAudioInputIfNeeded() {
+        guard audioInputSuspended, let audioDeviceInput else { return }
+        configureAudioSession()
+        session.beginConfiguration()
+        if session.canAddInput(audioDeviceInput) {
+            session.addInput(audioDeviceInput)
+            audioInputSuspended = false
+            logger.info("오디오 입력 복구")
+        }
+        session.commitConfiguration()
+    }
+
+    private func recoverSession(reason: String) {
+        sessionQueue.async { [weak self] in
+            guard let self, wantsSessionRunning else { return }
+            restoreAudioInputIfNeeded()
+            if !session.isRunning {
+                session.startRunning()
+                logger.info("캡처 세션 재개: \(reason)")
+            }
+            publishSessionRunningState()
+        }
+    }
+
+    private func publishSessionRunningState() {
+        let running = session.isRunning
+        DispatchQueue.main.async { [weak self] in
+            self?.isSessionRunning = running
+        }
     }
 
     // 회전 알림 구독 없이 UIDevice.current.orientation만 유효하게 한다.
