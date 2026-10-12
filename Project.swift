@@ -24,8 +24,8 @@ let project = Project(
     settings: .settings(
         base: [
             "DEVELOPMENT_TEAM": "M79H9K226Y",
-            "MARKETING_VERSION": "2.0",
-            "CURRENT_PROJECT_VERSION": "2026.8.2.1",
+            "MARKETING_VERSION": "2.0.1",
+            "CURRENT_PROJECT_VERSION": "2026.10.12.1",
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "SWIFT_VERSION": "5.9",
             "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
